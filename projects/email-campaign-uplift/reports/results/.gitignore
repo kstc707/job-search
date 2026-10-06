@@ -1,0 +1,2 @@
+# 64,000 rows; regenerate with `python -m email_uplift.report`
+customer_scores.csv

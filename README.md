@@ -19,6 +19,7 @@ boundaries.
 | Project | Track | Status |
 |---|---|---|
 | [llm-data-analyst](projects/llm-data-analyst) | AI Engineering + Data Science (hybrid) | Working scaffold |
+| [email-campaign-uplift](projects/email-campaign-uplift) | Data Science (experimentation, uplift modeling) | Complete: results, dashboard, slides |
 
 ## Working on a project
 
