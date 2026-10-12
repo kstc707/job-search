@@ -11,6 +11,7 @@ def clean(text):
     text = _BOLD.sub(r"\1", text)
     text = text.replace("\\%", "%").replace("\\$", "$").replace("\\&", "&")
     text = text.replace("$-$", "-").replace("--", "-")
+    text = text.replace("−", "-").replace("–", "-").replace("’", "'")
     text = re.sub(r"\\[a-zA-Z]+\{([^}]*)\}", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()
 

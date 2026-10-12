@@ -11,7 +11,7 @@ gives the same answer every time.
 |---|---|
 | `jobagent/audit.py` | Checks a built resume: page count, do-not-claim terms (read from the facts file), copies of the layout example, reused bullets without a success record, and how many job requirements have real evidence |
 | `jobagent/gaps.py` | Counts the skills job postings ask for that the resume can't honestly claim, across all job maps |
-| `jobagent/bullets.py` | Bullet library: records each bullet's uses and outcomes, and releases a wording for reuse only when it has a proven success rate |
+| `jobagent/bullets.py` | Bullet library: when an application succeeds, finds the same wording across every sent resume (from the PDFs) to count uses and successes, and releases a wording for reuse only with a proven success rate |
 | `prompts/cycle.md` | The steps one scheduled agent run follows, starting with a cheap gate |
 | `tests/` | Tests with synthetic fixtures |
 
@@ -25,14 +25,16 @@ cd agent
 python -m jobagent audit resume.tex --facts facts.md --example example.tex \
     --pdf resume.pdf --jd-map jd_map.md --others resumes/ --approved work/bullets.json
 python -m jobagent gaps resumes/*/jd_map.md
-python -m jobagent bullets use work/bullets.json resume.tex --app APP_ID --title "Data Analyst"
-python -m jobagent bullets outcome work/bullets.json --app APP_ID
+python -m jobagent bullets scan work/sent --success APP1,APP2 --families APP1=ai --out work/bullets.json
 python -m jobagent bullets reusable work/bullets.json --family ai
 ```
 
 `audit` exits 1 when a resume fails, so a build script can stop on it.
 
 ## The reuse rule
+
+`work/sent/` holds one PDF per sent application, named `<application id>.pdf` (the agent
+downloads them from the tracker). Two bullets count as the same wording at 0.8 similarity.
 
 A bullet's wording may appear on more than one resume only after it has been used at least
 twice and at least one of those applications got a positive outcome (interview, offer, or a

@@ -2,8 +2,8 @@
 
   audit   TEX --facts F --example E [--pdf P] [--jd-map M] [--others DIR] [--approved LIB.json] [--ban PHRASE ...]
   gaps    JD_MAP [JD_MAP ...]
-  bullets use     LIB.json TEX --app ID --title "Job title"
-  bullets outcome LIB.json --app ID
+  bullets scan DIR --success APP[,APP...] [--families APP=ai,APP=da ...] [--out LIB.json]
+               DIR holds one PDF per sent application, named <application id>.pdf
   bullets reusable LIB.json [--family ai|ds|da]
 """
 import argparse
@@ -16,7 +16,7 @@ from . import audit, bullets, gaps
 
 
 def _load(path):
-    return json.load(open(path)) if os.path.exists(path) else []
+    return json.load(open(path)) if os.path.exists(path) else {}
 
 
 def main(argv=None):
@@ -38,12 +38,12 @@ def main(argv=None):
     g.add_argument("maps", nargs="+")
 
     b = sub.add_parser("bullets")
-    b.add_argument("action", choices=["use", "outcome", "reusable"])
-    b.add_argument("library")
-    b.add_argument("tex", nargs="?")
-    b.add_argument("--app")
-    b.add_argument("--title", default="")
+    b.add_argument("action", choices=["scan", "reusable"])
+    b.add_argument("path", help="scan: folder of <app>.pdf files; reusable: library JSON")
+    b.add_argument("--success", default="", help="comma-separated application ids")
+    b.add_argument("--families", default="", help="comma-separated APP=family pairs")
     b.add_argument("--family")
+    b.add_argument("--out")
 
     args = p.parse_args(argv)
 
@@ -61,17 +61,21 @@ def main(argv=None):
         print(gaps.table(gaps.count(texts), len(texts)))
         return 0
 
-    lib = _load(args.library)
-    if args.action == "use":
-        fam = args.family or bullets.family_for_title(args.title)
-        bullets.record_use(lib, open(args.tex).read(), args.app, fam)
-    elif args.action == "outcome":
-        bullets.record_outcome(lib, args.app)
-    else:
-        print(json.dumps(bullets.reusable(lib, args.family), indent=2))
+    if args.action == "scan":
+        resumes = {}
+        for pdf in sorted(glob.glob(os.path.join(args.path, "*.pdf"))):
+            app = os.path.splitext(os.path.basename(pdf))[0]
+            resumes[app] = bullets.pdf_bullets(audit.pdf_text(pdf))
+        fams = dict(x.split("=", 1) for x in args.families.split(",") if "=" in x)
+        lib = bullets.scan(resumes, [x for x in args.success.split(",") if x], fams)
+        text = json.dumps(lib, indent=1)
+        if args.out:
+            open(args.out, "w").write(text)
+            print(f"{len(lib['bullets'])} bullets from {lib['applications']} applications -> {args.out}")
+        else:
+            print(text)
         return 0
-    json.dump(lib, open(args.library, "w"), indent=1)
-    print(f"library: {len(lib)} bullets")
+    print(json.dumps(bullets.reusable(_load(args.path), args.family), indent=2))
     return 0
 
 

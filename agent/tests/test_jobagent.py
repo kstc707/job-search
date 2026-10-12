@@ -6,7 +6,6 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from jobagent import audit, bullets, gaps, texparse  # noqa: E402
-from jobagent.__main__ import main  # noqa: E402
 
 FACTS = """# Facts
 ## Do not claim (list as gaps instead)
@@ -129,28 +128,60 @@ def test_family_for_title():
     assert bullets.family_for_title("Pricing Data Analyst") == "da"
 
 
+PDF_TEXT = """Professional Experience
+Data Analyst | Example Org
+
+• Built a pipeline in Python that checks 8 rules on every
+
+incoming file.
+• Reduced report prep from two days to 3 hours with SQL and Excel.
+Projects
+• Trained a logistic regression on 50,000 rows and reported AUC
+0.81 on a holdout set.
+"""
+
+
+def test_pdf_bullets_joins_wrapped_lines():
+    items = bullets.pdf_bullets(PDF_TEXT)
+    assert items == [
+        "Built a pipeline in Python that checks 8 rules on every incoming file.",
+        "Reduced report prep from two days to 3 hours with SQL and Excel.",
+        "Trained a logistic regression on 50,000 rows and reported AUC 0.81 on a holdout set.",
+    ]
+
+
+SHARED = "Built a pipeline in Python that checks 8 rules on every incoming file."
+RESUMES = {
+    "app1": [SHARED, "Reduced report prep from two days to 3 hours."],
+    "app2": [SHARED + " Used by 3 teams.", "Trained a model on 50,000 rows."],
+    "app3": ["Wrote SQL for weekly KPIs.", "Trained a model on 50,000 rows."],
+    "app4": ["Something else entirely, about dashboards."],
+}
+
+
+def test_scan_counts_similar_wording_as_uses():
+    lib = bullets.scan(RESUMES, ["app1"], {"app1": "da"})
+    assert lib["baseline"] == 0.25 and lib["applications"] == 4
+    shared = next(b for b in lib["bullets"] if b["text"] == SHARED)
+    assert shared["uses"] == ["app1", "app2"]       # near-identical wording counts
+    assert shared["successes"] == ["app1"]
+    assert shared["family"] == "da"
+    assert len(lib["bullets"]) == 2                  # only bullets on successful resumes
+
+
 def test_reuse_requires_success_rate():
-    lib = []
-    bullets.record_use(lib, RESUME_A, "app1", "da")
-    bullets.record_use(lib, RESUME_B, "app2", "da")
-    shared = texparse.bullet_id(texparse.bullets(RESUME_A)[0])
-    assert bullets.reusable(lib) == []          # no successes yet
-    bullets.record_outcome(lib, "app1")
+    lib = bullets.scan(RESUMES, ["app1"])
     ok = bullets.reusable(lib)
-    assert [b["id"] for b in ok] == [shared]   # 2 uses, 1 success, rate 0.5 >= baseline 0.5
-    assert ok[0]["rate"] == 0.5
+    assert [b["text"] for b in ok] == [SHARED]       # 2 uses, 1 success, 0.5 >= 0.25
+    assert bullets.reusable(bullets.scan(RESUMES, [])) == []
 
 
 def test_single_use_not_enough():
-    lib = []
-    bullets.record_use(lib, RESUME_B, "app9", "ai")
-    bullets.record_outcome(lib, "app9")
-    assert bullets.reusable(lib) == []          # min_uses=2
+    lib = bullets.scan(RESUMES, ["app4"])
+    assert bullets.reusable(lib) == []               # used once only
 
 
-def test_cli_bullets_roundtrip(tmp_path, capsys):
-    libp = str(tmp_path / "lib.json")
-    tex = write(tmp_path, "a.tex", RESUME_A)
-    assert main(["bullets", "use", libp, tex, "--app", "x1", "--title", "Data Analyst"]) == 0
-    lib = json.load(open(libp))
-    assert len(lib) == 2 and lib[0]["family"] == "da"
+def test_family_filter():
+    lib = bullets.scan(RESUMES, ["app1"], {"app1": "da"})
+    assert bullets.reusable(lib, family="ai") == []
+    assert len(bullets.reusable(lib, family="da")) == 1

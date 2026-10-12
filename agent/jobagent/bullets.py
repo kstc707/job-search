@@ -1,21 +1,23 @@
-"""Bullet library: track every bullet's uses and outcomes, and release a wording for reuse
-only after it has a proven success rate (Sai's rule, 2026-10-12).
+"""Bullet library: release a bullet's wording for reuse only after it has a proven success
+rate (Sai's rule, 2026-10-12).
 
-Library format (a JSON list, synced with the Notion "Bullet Library" database):
-  {"id", "family", "text", "uses": [application ids], "successes": [application ids]}
-
-A success is an application whose tracker Status reached Interview Scheduled or Offer
-(or that got a recruiter reply / next-step email, recorded by the agent).
+The library is built lazily. Every sent resume's PDF is already stored on its tracker row, so
+nothing is copied ahead of time. When an application succeeds (interview, offer, or a recruiter
+reply), the agent passes all sent resumes to `scan`: each bullet of the successful resumes is
+matched by similarity against every other resume, which gives its uses and successes. Only
+those bullets go into the Notion "Bullet Library" database.
 """
 import re
 
 from . import texparse
+from .audit import best_match
 
 FAMILIES = {
     "ai": r"\bai\b|machine learning|\bml\b|llm|genai|generative|agentic|forward deployed|nlp",
     "ds": r"data scientist|scientist|research|measurement|statistic",
     "da": r"analyst|\bbi\b|business intelligence|analytics|insights|reporting",
 }
+SAME_WORDING = 0.8  # similarity at which two bullets count as the same wording
 
 
 def family_for_title(title):
@@ -26,43 +28,66 @@ def family_for_title(title):
     return "da"
 
 
-def record_use(library, tex, application_id, family):
-    """Add one application's bullets to the library."""
-    by_id = {b["id"]: b for b in library}
-    for text in texparse.bullets(tex):
-        bid = texparse.bullet_id(text)
-        entry = by_id.get(bid)
-        if entry is None:
-            entry = {"id": bid, "family": family, "text": text, "uses": [], "successes": []}
-            library.append(entry)
-            by_id[bid] = entry
-        if application_id not in entry["uses"]:
-            entry["uses"].append(application_id)
-    return library
+def pdf_bullets(pdf_text):
+    """Bullets from `pdftotext` output: a bullet starts at '•' and wraps onto at most one
+    more line (the resume skill caps bullets at two lines)."""
+    lines = [l.strip() for l in pdf_text.replace("ﬁ", "fi").replace("ﬂ", "fl").splitlines()]
+    lines = [l for l in lines if l]
+    out = []
+    for i, line in enumerate(lines):
+        if not line.startswith("•"):
+            continue
+        text = line.lstrip("• ").strip()
+        j = i + 1
+        # Bullets end with a period; keep joining wrapped lines until one does (max 2 more).
+        while not text.endswith(".") and j < len(lines) and j <= i + 2 and _continues(lines[j]):
+            text = text + " " + lines[j]
+            j += 1
+        out.append(texparse.clean(text))
+    return out
 
 
-def record_outcome(library, application_id):
-    """Mark every bullet used on a successful application."""
-    for b in library:
-        if application_id in b["uses"] and application_id not in b["successes"]:
-            b["successes"].append(application_id)
-    return library
+_DATES = re.compile(r"^(?:[A-Z][a-z]{2} )?\d{4}\s*[–-]\s*(?:Present|(?:[A-Z][a-z]{2} )?\d{4})$")
 
 
-def baseline_rate(library):
-    """Share of all applications in the library that succeeded."""
-    apps = {a for b in library for a in b["uses"]}
-    wins = {a for b in library for a in b["successes"]}
-    return len(wins) / len(apps) if apps else 0.0
+def _continues(line):
+    """True when a line can be the wrapped tail of a bullet, not a new heading or bullet."""
+    return not (line.startswith("•") or " | " in line or _DATES.match(line))
+
+
+def scan(resumes, successes, families=None, threshold=SAME_WORDING):
+    """Library entries for every bullet on a successful resume.
+
+    resumes: {application id: [bullet text, ...]} for every sent resume
+    successes: application ids with a positive outcome
+    families: optional {application id: "ai" | "ds" | "da"}
+    """
+    families = families or {}
+    entries, seen = [], set()
+    for app in sorted(set(successes) & set(resumes)):
+        for text in resumes[app]:
+            bid = texparse.bullet_id(text)
+            if bid in seen:
+                continue
+            seen.add(bid)
+            uses = [a for a, items in resumes.items()
+                    if a == app or best_match(text, items, threshold) >= threshold]
+            entries.append({
+                "id": bid, "family": families.get(app, ""), "text": text,
+                "uses": sorted(uses), "successes": sorted(u for u in uses if u in successes),
+            })
+    baseline = len(set(successes) & set(resumes)) / len(resumes) if resumes else 0.0
+    return {"baseline": round(baseline, 3), "applications": len(resumes), "bullets": entries}
 
 
 def reusable(library, family=None, min_uses=2):
-    """Bullets cleared for reuse: at least one success, enough uses to judge, and a
-    success rate at or above the baseline. Ranked by success rate."""
-    base = baseline_rate(library)
+    """Bullets cleared for reuse: 1+ success, at least `min_uses` uses, and a success rate at
+    or above the baseline (the share of all applications that succeeded). Ranked by rate."""
+    base = library.get("baseline", 0.0) if isinstance(library, dict) else 0.0
+    items = library.get("bullets", []) if isinstance(library, dict) else library
     out = []
-    for b in library:
-        if family and b["family"] != family:
+    for b in items:
+        if family and b.get("family") and b["family"] != family:
             continue
         uses, wins = len(b["uses"]), len(b["successes"])
         if wins == 0 or uses < min_uses:
