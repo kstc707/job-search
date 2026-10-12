@@ -7,3 +7,6 @@ venv/
 *.egg-info/
 .pytest_cache/
 .ipynb_checkpoints/
+
+# job-search agent: personal working data never goes in this public repo
+agent/work/

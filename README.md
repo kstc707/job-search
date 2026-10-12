@@ -20,6 +20,11 @@ boundaries.
 |---|---|---|
 | [llm-data-analyst](projects/llm-data-analyst) | AI Engineering + Data Science (hybrid) | Working scaffold |
 
+## Job-search agent
+
+[`agent/`](agent) holds the scripts and prompts behind the job-search agents: resume audit,
+gap ledger and bullet library. See [agent/README.md](agent/README.md).
+
 ## Working on a project
 
 ```
