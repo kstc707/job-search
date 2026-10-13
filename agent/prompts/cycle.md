@@ -4,6 +4,13 @@ Placeholders in braces are filled in the scheduled trigger's prompt, not stored 
 `{CONFIG}` is the person's config JSON (see `config.example.json`): their limits, thresholds
 and daily cap. Nothing personal is stored in this repo.
 
+## Tracker
+`{TRACKER}` is a Google Sheet (tab `Tracker`, columns A-J: Job, Company, Location, Status,
+Submit?, Score, Date, Apply URL, Resume, Notes). Read it with one `get_values Tracker!A:J`. Add a
+run's new rows with ONE `append_values` call; change a status with `update_values` on that cell.
+Resume PDFs are kept as attachments on a Notion row (one `create-pages` call per run, resumes
+attached) and column I links to it, until resumes move to a private repo.
+
 ## 0. Gate (always first, keep it cheap)
 Run one query on the tracker `{TRACKER}`:
 - rows with `Submit? = Yes` and Status in (Drafted, Approved, empty)
