@@ -4,11 +4,11 @@ Placeholders in braces are filled in the scheduled trigger's prompt, not stored 
 `{CONFIG}` is the person's config JSON (see `config.example.json`): their limits, thresholds,
 feed filter and daily cap. Nothing personal is stored in this repo.
 
-## Where everything lives (one Google Sheet `{SHEET}` + one Drive folder `{FOLDER}`)
+## Where everything lives (one Google Sheet `{SHEET}` + a resume store `{RESUME_STORE}`)
 
 | Tab | Columns | Who writes it |
 |---|---|---|
-| `Tracker` | A Job, B Company, C Location, D Status, E Submit?, F Score, G Date, H Apply URL, I Resume (Drive link), J Notes | agent; the person only sets E |
+| `Tracker` | A Job, B Company, C Location, D Status, E Submit?, F Score, G Date, H Apply URL, I Resume (link), J Notes | agent; the person only sets E |
 | `State` | Item, Value | agent rewrites it at the end of every run; read it first |
 | `Memory` | Section, Rule or fact, Set by | decisions, selection rules, lessons, QC rules, open questions |
 | `Run Log` | Run, Date, What happened, Credits after | one row appended per run |
@@ -38,14 +38,14 @@ and stop.
   `LEFT after 2 failures: <reason>`.
 - `list-inbox-messages` since the last run: REJECTION -> Status Rejected; INTERVIEW / OFFER ->
   Interview Scheduled / Offer; ASSESSMENT or needsReply -> add to `State` under "Manual for <name>".
-- Interview or offer -> bullet scan: download each sent resume PDF from Drive to `work/sent/<row>.pdf`,
+- Interview or offer -> bullet scan: download each sent resume PDF from its link to `work/sent/<row>.pdf`,
   run `python -m jobagent bullets scan work/sent --success <apps> --families <app=family,...>
   --out LIB.json`, append its bullets to `Bullets`.
 
 ## 3. Apply (Submit? = Yes rows only)
 Check the posting is still open. Tsenta `request-resume-upload`, `curl -X PUT` the row's PDF
-(the local build, or download it from the Drive link), `check-custom-resume`, then
-`apply-with-custom-resume`. The PDF in Drive is the record of what was sent. Status -> Waiting,
+(the local build, or download it from the row's link), `check-custom-resume`, then
+`apply-with-custom-resume`. The linked PDF is the record of what was sent. Status -> Waiting,
 then Applied once Tsenta reports it sent.
 
 ## 4. Scout and score (once a day, at most `daily_cap` jobs, default 15)
@@ -76,10 +76,14 @@ title, student-only) and anything under `thresholds.build`, and returns the rest
       python -m jobagent score jds/<slug>.md --config {CONFIG} --facts <facts.md> \
           --jd-map <jd_map.md> --tex <tex> --pdf <pdf> [--signal 0-1]
 
-- Upload: write `base64 -w 76` of each passing PDF plus its md5 and size to an upload list, and
-  give the whole list to ONE small-model uploader agent. It calls Drive `create_file` (parentId
-  `{FOLDER}`, application/pdf, no conversion), checks size/md5 with `get_file_metadata`, and
-  returns the view links. A file that fails twice is noted, not retried.
+- Resume store (`{RESUME_STORE}`), in order of preference:
+  1. A private GitHub repo: copy the PDF and .tex into it, commit, push, and link the file's GitHub
+     URL. Free and reliable. Push only after GitHub reports the repo `private: true`.
+  2. Until then, a Notion attachment: Tsenta `request-resume-upload` + `curl -X PUT` +
+     `check-custom-resume`, then Notion `create-attachment` with `source_url` = the view link and
+     one `create-pages` call for all of the run's PDFs; link the Notion page.
+  Never send a PDF through a tool argument as base64 (Drive `create_file`): a model cannot copy
+  100 KB of base64 exactly, and the 2026-10-13 test failed on the first file.
 - Then ONE `append_values` to `Tracker` with every new row: Status Drafted, Score, Resume link,
   Notes (gaps, flags). `auto` (score >= thresholds.auto) rows get Submit? = Yes and are applied in
   step 3 of the next run; `review` rows leave Submit? empty for the person; `skip` rows are not added.

@@ -1,7 +1,7 @@
 # Job-search agent toolkit
 
 Deterministic helpers for an agent system that scouts jobs, builds an honest tailored resume for
-each one, and applies only after a human says yes in a Notion tracker. The model does the
+each one, and applies only after a human says yes in a Google Sheet tracker. The model does the
 reading and writing; everything that can be a rule is a script here, so it costs no tokens and
 gives the same answer every time.
 
@@ -19,7 +19,7 @@ gives the same answer every time.
 | `tests/` | Tests with synthetic fixtures |
 
 Personal data (the facts file, resumes, job maps, the bullet library, ledgers) is never stored
-in this repo. It lives in Notion and in a local working folder (`agent/work/`, git-ignored).
+in this repo. It lives in the person's Google Sheet, a private resume store, and a local working folder (`agent/work/`, git-ignored).
 
 ## Usage
 
