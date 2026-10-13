@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Notion",
+      "mcp__Notion__*",
+      "mcp__Notion__notion-update-page",
+      "mcp__Notion__notion-create-pages",
+      "mcp__Notion__notion-create-attachment",
+      "mcp__Notion__notion-query-data-sources",
+      "mcp__Notion__notion-fetch",
+      "mcp__Notion__notion-update-data-source",
+      "mcp__Tsenta",
+      "mcp__Tsenta__*",
+      "mcp__Tsenta__apply-with-custom-resume",
+      "mcp__Tsenta__request-resume-upload",
+      "mcp__Tsenta__check-custom-resume",
+      "mcp__Tsenta__get-application-status",
+      "mcp__Tsenta__get-job-recommendations",
+      "mcp__Tsenta__get-jobs-by-ids",
+      "mcp__Tsenta__list-inbox-messages",
+      "Bash(curl *)",
+      "Bash(pdflatex *)",
+      "Bash(pdftotext *)",
+      "Bash(pdftoppm *)",
+      "Bash(python3 *)",
+      "Bash(bash *)"
+    ]
+  }
+}

@@ -61,6 +61,12 @@ Attach the PDF and write the score to the row. `auto` (>= thresholds.auto): set 
 and apply in step 3 of the next run. `review` (>= thresholds.review): leave `Submit?` empty
 for the person. `skip`: note why and do not apply.
 
+### Keep Notion writes few
+Every Notion write can need approval, so batch them: one `create-pages` call per run for all
+new rows (properties, Notes, Score, and the Resume file IDs from `create-attachment` in the
+same call), one `update-page` per row only when its Status changes, and one rewrite of the
+State Index at the end.
+
 ## 6. Update state
 Rewrite the State Index (under 2,000 tokens), append the run log, and refresh the Gap Ledger
 `{GAPS}` with `python -m jobagent gaps <all jd_map.md>`.
