@@ -19,6 +19,7 @@ boundaries.
 | Project | Track | Status |
 |---|---|---|
 | [llm-data-analyst](projects/llm-data-analyst) | AI Engineering + Data Science (hybrid) | Working scaffold |
+| [gemma4-paper-track](projects/gemma4-paper-track) | AI Engineering research (Kaggle paper track) | Plan + tooling |
 
 ## Working on a project
 
