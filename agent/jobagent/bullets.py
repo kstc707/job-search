@@ -1,5 +1,5 @@
 """Bullet library: release a bullet's wording for reuse only after it has a proven success
-rate (Sai's rule, 2026-10-12).
+rate (the owner's rule).
 
 The library is built lazily. Every sent resume's PDF is already stored on its tracker row, so
 nothing is copied ahead of time. When an application succeeds (interview, offer, or a recruiter

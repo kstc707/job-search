@@ -1,0 +1,15 @@
+{
+  "name": "Alex Rivera",
+  "email": "alex.rivera@example.com",
+  "years_experience": 1.5,
+  "max_required_years": 2,
+  "degrees": ["BACHELORS", "MASTERS"],
+  "student": false,
+  "work_authorization": {"needs_sponsorship": false, "us_citizen": false, "clearance_eligible": false},
+  "target_families": ["ai", "ds", "da"],
+  "skip_title_terms": ["senior", "sr.", "staff", "principal", "lead", "manager", "director", "head of", "architect"],
+  "section_order": ["Professional Summary", "Education", "Technical Skills", "Professional Experience", "Projects"],
+  "extra_terms": [],
+  "thresholds": {"build": 50, "review": 65, "auto": 80},
+  "daily_cap": 15
+}

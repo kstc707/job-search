@@ -5,6 +5,10 @@
   bullets scan DIR --success APP[,APP...] [--families APP=ai,APP=da ...] [--out LIB.json]
                DIR holds one PDF per sent application, named <application id>.pdf
   bullets reusable LIB.json [--family ai|ds|da]
+  screen  JD [JD ...] --config C
+  score   JD --config C --facts F [--jd-map M] [--tex T] [--pdf P] [--signal 0-1]
+  rank    JD [JD ...] --config C --facts F [--cap N]   (pre-build gate: today's jobs, best first)
+          JD files: optional JSON header from the job feed, then the posting text
 """
 import argparse
 import glob
@@ -12,7 +16,7 @@ import json
 import os
 import sys
 
-from . import audit, bullets, gaps
+from . import audit, bullets, gaps, jd, score, screen, texparse
 
 
 def _load(path):
@@ -45,7 +49,58 @@ def main(argv=None):
     b.add_argument("--family")
     b.add_argument("--out")
 
+    sc = sub.add_parser("screen")
+    sc.add_argument("jds", nargs="+")
+    sc.add_argument("--config", required=True)
+
+    for name in ("score", "rank"):
+        x = sub.add_parser(name)
+        x.add_argument("jds", nargs="+" if name == "rank" else 1)
+        x.add_argument("--config", required=True)
+        x.add_argument("--facts", required=True)
+        if name == "score":
+            x.add_argument("--jd-map")
+            x.add_argument("--tex")
+            x.add_argument("--pdf")
+            x.add_argument("--signal", type=float)
+        else:
+            x.add_argument("--cap", type=int)
+
     args = p.parse_args(argv)
+
+    if args.cmd in ("screen", "score", "rank"):
+        cfg = json.load(open(args.config))
+    if args.cmd == "screen":
+        out = {}
+        for path in args.jds:
+            meta, text = jd.load(path)
+            out[path] = screen.screen(meta, text, cfg)
+        print(json.dumps(out, indent=2))
+        return 0
+    if args.cmd in ("score", "rank"):
+        facts = open(args.facts).read()
+    if args.cmd == "score":
+        meta, text = jd.load(args.jds[0])
+        res = score.score(
+            meta, text, cfg, facts,
+            jd_map_text=open(args.jd_map).read() if args.jd_map else None,
+            resume_text=texparse.clean(open(args.tex).read()) if args.tex else None,
+            pdf_text=score.pdf_text_or_none(args.pdf), signal=args.signal)
+        print(json.dumps(res, indent=2))
+        return 0
+    if args.cmd == "rank":
+        results = []
+        for path in args.jds:
+            meta, text = jd.load(path)
+            r = score.score(meta, text, cfg, facts)
+            r["file"] = path
+            results.append(r)
+        cap = args.cap or cfg.get("daily_cap", 15)
+        print(json.dumps({"act": score.rank(results, cap),
+                          "skipped": [{"file": r["file"], "score": r["score"],
+                                       "knockouts": r["knockouts"]}
+                                      for r in results if r["decision"] == "skip"]}, indent=2))
+        return 0
 
     if args.cmd == "audit":
         others = glob.glob(os.path.join(args.others, "*", "*.tex")) if args.others else []
