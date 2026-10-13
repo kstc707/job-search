@@ -4,7 +4,7 @@ Placeholders in braces are filled in the scheduled trigger's prompt, not stored 
 `{CONFIG}` is the person's config JSON (see `config.example.json`): their limits, thresholds,
 feed filter and daily cap. Nothing personal is stored in this repo.
 
-## Where everything lives (one Google Sheet `{SHEET}` + a resume store `{RESUME_STORE}`)
+## Where everything lives (one Google Sheet `{SHEET}` + resumes on the person's computer)
 
 | Tab | Columns | Who writes it |
 |---|---|---|
@@ -76,14 +76,12 @@ title, student-only) and anything under `thresholds.build`, and returns the rest
       python -m jobagent score jds/<slug>.md --config {CONFIG} --facts <facts.md> \
           --jd-map <jd_map.md> --tex <tex> --pdf <pdf> [--signal 0-1]
 
-- Resume store (`{RESUME_STORE}`), in order of preference:
-  1. A private GitHub repo: copy the PDF and .tex into it, commit, push, and link the file's GitHub
-     URL. Free and reliable. Push only after GitHub reports the repo `private: true`.
-  2. Until then, a Notion attachment: Tsenta `request-resume-upload` + `curl -X PUT` +
-     `check-custom-resume`, then Notion `create-attachment` with `source_url` = the view link and
-     one `create-pages` call for all of the run's PDFs; link the Notion page.
-  Never send a PDF through a tool argument as base64 (Drive `create_file`): a model cannot copy
-  100 KB of base64 exactly, and the 2026-10-13 test failed on the first file.
+- Resume store: the person's own computer. Send each run's passing PDFs to them in ONE
+  `SendUserFile` call (display `attach`, status `proactive`) so they save them to their resumes
+  folder; column I holds the file name. Keep the build in `work/resumes/` too: step 3 applies with
+  that local copy. If it is gone (container reset), rebuild from the .tex or ask for the saved PDF.
+  When a session runs on the person's computer (desktop app or `claude remote-control`), write the
+  PDF straight into their folder instead. Never send a PDF as base64 through a tool argument.
 - Then ONE `append_values` to `Tracker` with every new row: Status Drafted, Score, Resume link,
   Notes (gaps, flags). `auto` (score >= thresholds.auto) rows get Submit? = Yes and are applied in
   step 3 of the next run; `review` rows leave Submit? empty for the person; `skip` rows are not added.
