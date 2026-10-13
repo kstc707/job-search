@@ -5,7 +5,7 @@ The library is built lazily. Every sent resume's PDF is already stored on its tr
 nothing is copied ahead of time. When an application succeeds (interview, offer, or a recruiter
 reply), the agent passes all sent resumes to `scan`: each bullet of the successful resumes is
 matched by similarity against every other resume, which gives its uses and successes. Only
-those bullets go into the tracker's Bullets tab.
+those bullets go into the Notion "Bullet Library" database.
 """
 import re
 
