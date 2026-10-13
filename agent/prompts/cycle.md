@@ -29,7 +29,9 @@ Check the posting is still open. Apply with `apply-with-custom-resume` using the
 the row. The PDF on the row is the record of which bullets were used.
 
 ## 4. Scout and score (once a day, at most `daily_cap` jobs, default 15)
-Tsenta recommendations, then web search for the same targets. Save each job description to
+Tsenta recommendations, filtered at the source with the config's `feed_query` (title terms in
+`search`, senior/intern/clearance words in `excludeSearch`, `maxYearsExperience`, `jobTypes`) so
+only matching titles reach the JD read; then web search for the same targets. Save each job description to
 `jds/<slug>.md`: a JSON header with the feed fields (`title`, `companyName`, `locations`,
 `yearsOfExperienceMin`, `degreeRequirements`, `sponsorship`, `clearanceRequired`,
 `datePosted`), a blank line, then the posting text. Skip anything already in the tracker.

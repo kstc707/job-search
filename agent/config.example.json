@@ -3,13 +3,54 @@
   "email": "alex.rivera@example.com",
   "years_experience": 1.5,
   "max_required_years": 2,
-  "degrees": ["BACHELORS", "MASTERS"],
+  "degrees": [
+    "BACHELORS",
+    "MASTERS"
+  ],
   "student": false,
-  "work_authorization": {"needs_sponsorship": false, "us_citizen": false, "clearance_eligible": false},
-  "target_families": ["ai", "ds", "da"],
-  "skip_title_terms": ["senior", "sr.", "staff", "principal", "lead", "manager", "director", "head of", "architect"],
-  "section_order": ["Professional Summary", "Education", "Technical Skills", "Professional Experience", "Projects"],
+  "work_authorization": {
+    "needs_sponsorship": false,
+    "us_citizen": false,
+    "clearance_eligible": false
+  },
+  "target_families": [
+    "ai",
+    "ds",
+    "da"
+  ],
+  "skip_title_terms": [
+    "senior",
+    "sr.",
+    "staff",
+    "principal",
+    "lead",
+    "manager",
+    "director",
+    "head of",
+    "architect"
+  ],
+  "section_order": [
+    "Professional Summary",
+    "Education",
+    "Technical Skills",
+    "Professional Experience",
+    "Projects"
+  ],
   "extra_terms": [],
-  "thresholds": {"build": 50, "review": 65, "auto": 80},
-  "daily_cap": 15
+  "thresholds": {
+    "build": 50,
+    "review": 65,
+    "auto": 80
+  },
+  "daily_cap": 15,
+  "feed_query": {
+    "search": "data analyst|data scientist|AI engineer|machine learning engineer|analytics|business intelligence|research analyst",
+    "excludeSearch": "senior|sr.|staff|principal|lead|manager|director|intern|clearance",
+    "maxYearsExperience": 2,
+    "jobTypes": [
+      "ENTRY_LEVEL",
+      "MID_LEVEL"
+    ],
+    "needsSponsorship": false
+  }
 }
