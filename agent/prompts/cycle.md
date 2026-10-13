@@ -45,7 +45,9 @@ returns the rest best first, capped. Build resumes only for those. Optionally as
 agent for a hiring signal (0-1) on each.
 
 ## 5. Build, audit and score resumes
-Sub-agents, 4-5 jobs each, using the resume skill. Bullet wording may repeat an earlier resume
+Sub-agents: deploy half as many builders as there are jobs to build, rounded up (Sai's rule,
+2026-10-13), so each builder takes 2 jobs (12 jobs -> 6 builders, 15 -> 8). Launch them all at once,
+using the resume skill. Bullet wording may repeat an earlier resume
 only if `python -m jobagent bullets reusable LIB.json --family <ai|ds|da>` lists it (proven
 success rate). Every PDF must pass:
 
