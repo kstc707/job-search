@@ -1,7 +1,14 @@
 """
 Convert header-less tabular data in a PDF into an Excel file with headers.
 
-Usage examples
+Running from VS Code
+--------------------
+  1. Put this script and your PDF in the same folder.
+  2. Edit the SETTINGS block below (headers + rows to skip).
+  3. Press the Run button (top-right) or F5. The Excel file is saved
+     next to the PDF.
+
+Command-line usage examples (optional; overrides SETTINGS)
 --------------
   # Headers given on the command line, skip the first 2 rows
   python pdf_to_excel.py data.pdf -o output.xlsx \
@@ -21,11 +28,45 @@ Requires:  pip install pdfplumber pandas openpyxl
 import argparse
 import re
 import sys
+from pathlib import Path
 
 import pandas as pd
 import pdfplumber
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter
+
+# ============================ SETTINGS ============================
+# Used when you press Run in VS Code (no command-line arguments).
+
+# PDF file name in the same folder as this script.
+# Leave as "" to automatically use the first .pdf found in the folder.
+PDF_FILE = ""
+
+# Name of the Excel file to create (saved in the same folder).
+OUTPUT_FILE = "output.xlsx"
+
+# Your column headers, in order.
+HEADERS = ["ID", "Name", "Date", "Amount"]
+
+# Number of rows to skip at the very top (titles, notes, etc.).
+SKIP_FIRST = 0
+
+# Specific row numbers to drop (see PREVIEW output; counting starts at 0).
+SKIP_ROWS = []
+
+# Drop any row whose text matches one of these regex patterns.
+SKIP_PATTERNS = [r"Page \d+ of \d+"]
+
+# Pages to read, e.g. "1,3-5". None = all pages.
+PAGES = None
+
+# "auto", "table" (PDF has grid lines) or "text" (space-aligned columns).
+MODE = "auto"
+
+# True = only print the extracted rows with their numbers (no Excel).
+# Run once with True to decide SKIP_FIRST / SKIP_ROWS, then set to False.
+PREVIEW = True
+# ==================================================================
 
 
 def parse_pages(spec, total):
@@ -154,7 +195,34 @@ def main():
                     help="keep every column as text")
     ap.add_argument("--preview", action="store_true",
                     help="print the raw extracted rows with their numbers and exit")
-    args = ap.parse_args()
+    if len(sys.argv) == 1:
+        # Launched from VS Code's Run button: use the SETTINGS block.
+        folder = Path(__file__).resolve().parent
+        if PDF_FILE:
+            pdf_path = folder / PDF_FILE
+        else:
+            pdfs = sorted(folder.glob("*.pdf"))
+            if not pdfs:
+                sys.exit(f"No PDF found in {folder}. Put your PDF there "
+                         "or set PDF_FILE.")
+            pdf_path = pdfs[0]
+        if not pdf_path.exists():
+            sys.exit(f"PDF not found: {pdf_path}")
+        print(f"Reading {pdf_path.name}")
+        argv = [str(pdf_path), "-o", str(folder / OUTPUT_FILE),
+                "--headers", ",".join(HEADERS),
+                "--skip-first", str(SKIP_FIRST),
+                "--skip-rows", ",".join(map(str, SKIP_ROWS)),
+                "--mode", MODE]
+        for pat in SKIP_PATTERNS:
+            argv += ["--skip-pattern", pat]
+        if PAGES:
+            argv += ["--pages", PAGES]
+        if PREVIEW:
+            argv.append("--preview")
+        args = ap.parse_args(argv)
+    else:
+        args = ap.parse_args()
 
     raw = extract_rows(args.pdf, args.pages, args.mode)
     if not raw:
@@ -163,6 +231,8 @@ def main():
     if args.preview:
         for i, r in enumerate(raw):
             print(f"{i:>4}: {r}")
+        print("\nPreview only. Set PREVIEW = False (or drop --preview) "
+              "to create the Excel file.")
         return
 
     if not args.headers:
