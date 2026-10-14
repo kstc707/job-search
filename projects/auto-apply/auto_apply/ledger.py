@@ -64,7 +64,10 @@ class Ledger:
         return None
 
     def count_on(self, day: date) -> int:
-        return sum(
-            1 for e in self.entries()
-            if datetime.fromisoformat(e.at).astimezone().date() == day
-        )
+        """Distinct applications started on `day`. Later status-update lines for the same
+        job (the log is append-only) do not count again."""
+        first_seen: dict[str, date] = {}
+        for e in self.entries():
+            key = e.application_id or e.job_id or (normalize_url(e.url) if e.url else e.at)
+            first_seen.setdefault(key, datetime.fromisoformat(e.at).astimezone().date())
+        return sum(1 for d in first_seen.values() if d == day)

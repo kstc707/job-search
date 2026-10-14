@@ -63,6 +63,14 @@ def test_ledger_counts_today(tmp_path):
     assert ledger.count_on(date.today()) == 1
 
 
+def test_status_updates_do_not_count_twice(tmp_path):
+    ledger = Ledger(tmp_path / "ledger.jsonl")
+    ledger.add(Entry(company="A", title="t", application_id="app1", status="READY"))
+    ledger.add(Entry(company="A", title="t", application_id="app1", status="COMPLETED"))
+    ledger.add(Entry(company="B", title="t", job_id="J2"))
+    assert ledger.count_on(date.today()) == 2
+
+
 # --- upload ------------------------------------------------------------------
 
 def test_validate_pdf_accepts_minimal_pdf():
