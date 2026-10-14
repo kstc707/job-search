@@ -25,17 +25,38 @@ Two consequences drive the design:
 2. **Form answers come from the profile, not the PDF.** `profile` builds and validates that
    JSON, and `gate` warns when profile and resume disagree (e.g. different emails).
 
-## Flow
+## Workflow
 
 ```
-get-job-recommendations ─▶ get-jobs-by-ids ─▶ sai-resume-tailor ─▶ resume.pdf
-                                                                       │
-             cli gate (dedupe · daily cap · never-claim · banned phrases · fixed titles)
-                                                                       │ pass
-request-resume-upload ─▶ cli upload (PUT to presigned URL) ─▶ check-custom-resume
-                                                                       │
-             apply-with-custom-resume { jobId|url, uploadId, profile } ─▶ cli record
+ FIND            Tsenta get-job-recommendations → get-jobs-by-ids (full JD)
+   │             filter: supported ATS, YOE, degree, sponsorship, eligibility
+   ▼
+ TAILOR          Claude + sai-resume-tailor → runs/<job>/resume.pdf
+   │             (evidence map → LaTeX → build → visual check → originality)
+   ▼
+ GATE            cli gate: dedupe · daily cap · never-claim · banned phrases · fixed titles
+   │             blocked → fix the resume, never the rules
+   ▼
+ ROUTE by ATS ───────────────────────────────┬──────────────────────────────────────
+   │ Greenhouse (later: Lever, Ashby)         │ everything else (Workday, Oracle,
+   ▼                                          ▼  iCIMS, SuccessFactors, SmartRecruiters…)
+ FILLER (ours)                              TSENTA
+   plan  : read form from public API,         request-resume-upload → cli upload
+           answer each field from approved    → check-custom-resume
+           data; unknown required → STOP      → apply-with-custom-resume
+   fill  : real browser, read-back verify,      (PDF verbatim, form from profile)
+           screenshot                         
+   review: Sai approves the screenshot        
+   submit: --submit (captcha → hand to Sai)   
+   │                                          │
+   └──────────────────┬───────────────────────┘
+                      ▼
+ RECORD          cli record → ledger.jsonl ; Tsenta get-application-status for Tsenta jobs
 ```
+
+Why two submit paths: our filler is free, shows every answer before sending and keeps the
+answers under your control, but only covers public, login-free forms. Tsenta handles the
+login-based ATSes and costs one credit per application.
 
 ## Modules
 
@@ -50,6 +71,18 @@ request-resume-upload ─▶ cli upload (PUT to presigned URL) ─▶ check-cust
 - `auto_apply/ledger.py`: JSONL log; dedupes on normalized URLs (tracking parameters
   stripped) and job ids; counts today's applications for the cap.
 - `auto_apply/cli.py`: `profile`, `gate`, `upload`, `record`, `list`.
+- `auto_apply/filler/`: our own form filler (Greenhouse).
+  - `schema.py` reads the form from `boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}?questions=true`
+    (field names there are the DOM ids on the form, so nothing is guessed from HTML).
+  - `answers.py` resolves each field from the profile, `runs/answers.json` rules and optional
+    per-job answers. `"ASK"` rules and unknown required questions block the run.
+  - `greenhouse.py` fills with Playwright (text, file upload, type-ahead selects, checkboxes),
+    reads every value back, screenshots, and submits only with `--submit`.
+  - `cli.py`: `python -m auto_apply.filler.cli plan|fill <job url> --pdf <resume> [--submit]`.
+
+The design follows how client-side autofill tools are built (per-ATS form locators, a
+field-category/answer layer, events that React forms register), learned by static analysis
+of public extensions; the code here is written from scratch.
 
 ## Setup
 
@@ -58,7 +91,7 @@ cd projects/auto-apply
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 ```
 
-Needs `pdftotext` (poppler-utils) for `gate`, and LaTeX for the resume build
+Needs `pdftotext` (poppler-utils) for `gate`, Chromium for the filler (set `REA_CHROMIUM` to its path), and LaTeX for the resume build
 (`texlive-latex-base texlive-latex-extra texlive-fonts-recommended`).
 
 Personal data (profile, instructions, resumes, job descriptions, ledger) lives in `runs/`,
