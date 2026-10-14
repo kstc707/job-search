@@ -7,3 +7,6 @@ venv/
 *.egg-info/
 .pytest_cache/
 .ipynb_checkpoints/
+
+# auto-apply: personal data (profile, resumes, ledger)
+projects/auto-apply/runs/
