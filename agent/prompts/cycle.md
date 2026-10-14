@@ -20,6 +20,8 @@ Rules, Learned Lessons). Do not reread old conversation to rebuild state.
 For every Waiting row, read the Tsenta application status. Sent -> Applied. Failed -> write the
 reason to the Failure Ledger `{FAILURES}`; second failure for the same employer + ATS -> set
 `Submit? = No`, note `LEFT after 2 failures: <reason>`.
+Every outcome also goes into the outcome log (step 6 saves it):
+`python -m jobagent outcomes set <app> <recruiter_reply|screen|interview|offer|rejected>`.
 Interview Scheduled / Offer (or a recruiter reply) -> download every sent resume PDF to
 `work/sent/<app>.pdf`, run `python -m jobagent bullets scan work/sent --success <all successful
 apps> --families <app=family,...> --out LIB.json`, and write its bullets to `{BULLETS}`.
@@ -27,6 +29,8 @@ apps> --families <app=family,...> --out LIB.json`, and write its bullets to `{BU
 ## 3. Apply (Yes rows only)
 Check the posting is still open. Apply with `apply-with-custom-resume` using the exact PDF on
 the row. The PDF on the row is the record of which bullets were used.
+Once it is sent, log it for calibration:
+`python -m jobagent outcomes add <app> --score-json work/scores/<slug>.json --source <tsenta|web>`.
 
 ## 4. Scout and score (once a day, at most `daily_cap` jobs, default 15)
 Tsenta recommendations, filtered at the source with the config's `feed_query` (title terms in
@@ -61,6 +65,7 @@ changing). Then score the finished resume:
     python -m jobagent score jds/<slug>.md --config {CONFIG} --facts <facts.md> \
         --jd-map <jd_map.md> --tex <tex> --pdf <pdf> [--signal 0-1]
 
+Save that JSON to `work/scores/<slug>.json` (the outcome log needs its parts at apply time).
 Attach the PDF and write the score to the row. `auto` (>= thresholds.auto): set `Submit? = Yes`
 and apply in step 3 of the next run. `review` (>= thresholds.review): leave `Submit?` empty
 for the person. `skip`: note why and do not apply.
@@ -73,6 +78,9 @@ State Index at the end.
 
 ## 6. Update state
 Rewrite the State Index (under 2,000 tokens), append the run log, and refresh the Gap Ledger
-`{GAPS}` with `python -m jobagent gaps <all jd_map.md>`.
+`{GAPS}` with `python -m jobagent gaps <all jd_map.md>`. Save `work/outcomes.csv` and `work/scores/`
+wherever the rest of `work/` is kept between runs, so the log survives a container restart.
+Once a week, add `python -m jobagent outcomes report` to the reply. Do not change thresholds
+until the report stops saying "Not enough data".
 
 ## 7. Reply in 5-8 lines.

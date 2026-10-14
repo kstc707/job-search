@@ -8,6 +8,9 @@
   screen  JD [JD ...] --config C
   score   JD --config C --facts F [--jd-map M] [--tex T] [--pdf P] [--signal 0-1]
   rank    JD [JD ...] --config C --facts F [--cap N]   (pre-build gate: today's jobs, best first)
+  outcomes add APP --score-json S [--applied DATE] [--source tsenta|web] [--log CSV]
+  outcomes set APP OUTCOME [--date DATE] [--log CSV]
+  outcomes report [--log CSV] [--window DAYS] [--json]
           JD files: optional JSON header from the job feed, then the posting text
 """
 import argparse
@@ -16,7 +19,7 @@ import json
 import os
 import sys
 
-from . import audit, bullets, gaps, jd, score, screen, texparse
+from . import audit, bullets, gaps, jd, outcomes, score, screen, texparse
 
 
 def _load(path):
@@ -66,7 +69,23 @@ def main(argv=None):
         else:
             x.add_argument("--cap", type=int)
 
+    o = sub.add_parser("outcomes")
+    o.add_argument("action", choices=["add", "set", "report"])
+    o.add_argument("app", nargs="?")
+    o.add_argument("outcome", nargs="?", help="set: " + ", ".join(
+        sorted(outcomes.POSITIVE | outcomes.NEGATIVE | {"no_response"})))
+    o.add_argument("--log", default="work/outcomes.csv")
+    o.add_argument("--score-json", help="add: file holding `jobagent score` output")
+    o.add_argument("--applied", help="add: ISO date sent (default today)")
+    o.add_argument("--source", default="tsenta")
+    o.add_argument("--date", help="set: ISO date of the outcome (default today)")
+    o.add_argument("--window", type=int, default=30, help="days without reply that count as no")
+    o.add_argument("--json", action="store_true")
+
     args = p.parse_args(argv)
+
+    if args.cmd == "outcomes":
+        return _outcomes(args)
 
     if args.cmd in ("screen", "score", "rank"):
         cfg = json.load(open(args.config))
@@ -131,6 +150,33 @@ def main(argv=None):
             print(text)
         return 0
     print(json.dumps(bullets.reusable(_load(args.path), args.family), indent=2))
+    return 0
+
+
+def _outcomes(args):
+    import datetime as dt
+    rows = outcomes.load(args.log) if os.path.exists(args.log) else []
+    today = dt.date.today().isoformat()
+    if args.action == "report":
+        res = outcomes.report(rows, window=args.window)
+        print(json.dumps(res, indent=2) if args.json else outcomes.text(res))
+        return 0
+    if not args.app:
+        sys.exit("outcomes add/set: give the application id")
+    known = {r["app_id"]: r for r in rows}
+    if args.action == "add":
+        if args.app in known:
+            sys.exit(f"{args.app} is already in {args.log}")
+        res = json.load(open(args.score_json))
+        rows.append(outcomes.row_from_score(args.app, args.applied or today, res, args.source))
+    else:
+        allowed = outcomes.POSITIVE | outcomes.NEGATIVE | {"no_response"}
+        if args.app not in known or args.outcome not in allowed:
+            sys.exit(f"outcomes set: unknown app or outcome (allowed: {sorted(allowed)})")
+        known[args.app].update(outcome=args.outcome, outcome_date=args.date or today)
+    os.makedirs(os.path.dirname(args.log) or ".", exist_ok=True)
+    outcomes.write(args.log, rows)
+    print(f"{args.action} {args.app} -> {args.log} ({len(rows)} rows)")
     return 0
 
 
