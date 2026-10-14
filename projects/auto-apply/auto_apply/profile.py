@@ -68,3 +68,17 @@ def build_apply_profile(payload: dict[str, Any]) -> dict[str, Any]:
     if missing:
         raise ValueError("profile is missing: " + ", ".join(missing))
     return data
+
+
+def set_path(data: dict[str, Any], dotted: str, value: Any) -> None:
+    """Set an existing profile field by dotted path. Refuses unknown paths so a typo
+    cannot silently add a field the ATS form never reads."""
+    keys = dotted.split(".")
+    node: Any = data
+    for key in keys[:-1]:
+        if not isinstance(node, dict) or key not in node:
+            raise ValueError(f"unknown profile path: {dotted}")
+        node = node[key]
+    if not isinstance(node, dict) or keys[-1] not in node:
+        raise ValueError(f"unknown profile path: {dotted}")
+    node[keys[-1]] = value

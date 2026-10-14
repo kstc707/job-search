@@ -16,7 +16,7 @@ mkdir -p runs
 ```
 Then fill `runs/` (git-ignored; never commit it):
 - `runs/instructions.txt` ← `resumeInstructions` from Tsenta `get-apply-preferences`
-- `runs/profile_raw.json` ← `get-resume-profile` (default profile) → `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json`
+- `runs/profile_raw.json` ← `get-resume-profile` (default profile) → `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male` (Sai, 2026-10-14; the Tsenta tools cannot edit gender)
 - `runs/answers.json` ← the JSON code block under **Form Answers** on the memory page
 - `runs/never_claim.txt` ← the facts file's "Do not claim" list
 

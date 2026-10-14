@@ -22,7 +22,7 @@ from pathlib import Path
 
 from .guard import GuardRules, _split_terms, check_resume, parse_instructions, pdf_text
 from .ledger import Entry, Ledger
-from .profile import build_apply_profile
+from .profile import build_apply_profile, set_path
 from .upload import put_pdf
 
 RUNS = Path(__file__).resolve().parent.parent / "runs"
@@ -49,6 +49,11 @@ def cmd_profile(args: argparse.Namespace) -> int:
     raw = json.loads(Path(args.source).read_text())
     try:
         profile = build_apply_profile(raw)
+        for assignment in args.set or []:
+            path, _, value = assignment.partition("=")
+            if not path or not _:
+                raise ValueError(f"--set needs path=value, got '{assignment}'")
+            set_path(profile, path, value)
     except ValueError as e:
         print(f"BLOCKED: {e}")
         return 2
@@ -114,6 +119,9 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("profile", help="build apply profile from a get-resume-profile response")
     s.add_argument("source")
     s.add_argument("-o", "--out", help="default: <runs>/profile.json")
+    s.add_argument("--set", action="append", metavar="PATH=VALUE",
+                   help="override a profile field the Tsenta tools cannot edit, "
+                        "e.g. diversityEquityInclusion.gender=Male (repeatable)")
     s.set_defaults(func=cmd_profile)
 
     s = sub.add_parser("gate", help="all pre-submit checks; exit 2 if anything blocks")

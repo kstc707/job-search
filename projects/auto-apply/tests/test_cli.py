@@ -51,3 +51,15 @@ def test_record_stores_resume_hash(runs):
               "--pdf", str(runs / "resume.pdf"), "--application-id", "app1"])
     entry = json.loads((runs / "ledger.jsonl").read_text().splitlines()[0])
     assert entry["application_id"] == "app1" and len(entry["resume_sha256"]) == 64
+
+
+def test_profile_set_overrides_known_fields_only(tmp_path):
+    import copy
+    prof = copy.deepcopy(PROFILE)
+    prof["diversityEquityInclusion"] = {"gender": ""}
+    raw = tmp_path / "raw.json"
+    raw.write_text(json.dumps({"data": prof}))
+    assert cli.main(["--runs", str(tmp_path), "profile", str(raw),
+                     "--set", "diversityEquityInclusion.gender=Male"]) == 0
+    assert json.loads((tmp_path / "profile.json").read_text())["diversityEquityInclusion"]["gender"] == "Male"
+    assert cli.main(["--runs", str(tmp_path), "profile", str(raw), "--set", "diversityEquityInclusion.gendr=Male"]) == 2
