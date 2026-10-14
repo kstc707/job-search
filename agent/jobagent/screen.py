@@ -1,7 +1,7 @@
 """Knockout screen: hard requirements checked before any resume is built (no model tokens).
 
 A job fails the screen when the posting asks for something the candidate cannot meet:
-citizenship or clearance, sponsorship they would need, too many years, a degree they lack,
+citizenship or clearance, sponsorship they would need, OPT when they are on it, too many years, a degree they lack,
 a senior title, or student-only status. Every rule reads the candidate from the user config,
 so the same screen works for anyone.
 """
@@ -20,6 +20,9 @@ _CLEARANCE = re.compile(
 _NO_SPONSOR = re.compile(
     r"(not|unable to|cannot|can't|will not|won't)\s+(provide\s+|offer\s+)?sponsor"
     r"|no\s+(visa\s+)?sponsorship|without\s+(the\s+need\s+for\s+)?sponsorship", re.I)
+_NO_OPT = re.compile(
+    r"\b(f-?1|opt|stem\s+opt|cpt)\b[^.\n]{0,60}?\b(not\s+eligi\w*|ineligi\w*|not\s+(be\s+)?(accepted|considered|supported)|does\s+not\s+qualify)"
+    r"|\b(not|unable\s+to|cannot|won't)\b[^.\n]{0,60}?\b(support|accept|sponsor|consider)\w*\b[^.\n]{0,40}?\b(f-?1|opt|stem\s+opt|cpt)\b", re.I)
 _STUDENT = re.compile(
     r"must\s+be\s+(currently\s+)?(enrolled|a\s+(current\s+)?student)"
     r"|currently\s+enrolled\s+(in|as)|returning\s+to\s+school", re.I)
@@ -61,6 +64,9 @@ def screen(meta, text, cfg):
     sponsorship = str(meta.get("sponsorship", "")).upper()
     if auth.get("needs_sponsorship") and (sponsorship == "NO_SPONSORSHIP" or _NO_SPONSOR.search(text)):
         reasons.append("no visa sponsorship")
+
+    if auth.get("on_opt") and _NO_OPT.search(text):
+        reasons.append("does not accept OPT work authorization")
 
     years = required_years(meta, text)
     limit = cfg.get("max_required_years")

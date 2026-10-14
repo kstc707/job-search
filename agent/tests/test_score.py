@@ -105,3 +105,17 @@ def test_rank_caps_and_drops_skips():
     rs = [{"score": s, "decision": d} for s, d in
           [(70, "build"), (90, "build"), (0, "skip"), (60, "build")]]
     assert [r["score"] for r in score.rank(rs, 2)] == [90, 70]
+
+
+def test_screen_drops_jobs_that_exclude_opt():
+    from jobagent import screen
+    cfg = {"work_authorization": {"on_opt": True}}
+    text = "We do not sponsor visas. Candidates on F-1, OPT, or STEM OPT are not eligible for this role."
+    assert "does not accept OPT work authorization" in screen.screen({}, text, cfg)
+    text2 = "The company will not support F-1 OPT or STEM OPT work authorization."
+    assert "does not accept OPT work authorization" in screen.screen({}, text2, cfg)
+    assert screen.screen({}, "Optimize reporting; option to work remote.", cfg) == []
+    assert screen.screen({}, text, {"work_authorization": {"on_opt": False}}) == []
+    # wording seen in real postings (Aperia, Public Storage)
+    assert screen.screen({}, "candidates currently on F-1, OPT, STEM OPT status are not eligiable for this role.", cfg)
+    assert screen.screen({}, "We do not provide training plans or support for F-1 OPT, STEM OPT extensions.", cfg)

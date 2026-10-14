@@ -12,7 +12,7 @@ gives the same answer every time.
 | `jobagent/audit.py` | Checks a built resume: page count, do-not-claim terms (read from the facts file), copies of the layout example, reused bullets without a success record, and how many job requirements have real evidence |
 | `jobagent/gaps.py` | Counts the skills job postings ask for that the resume can't honestly claim, across all job maps |
 | `jobagent/bullets.py` | Bullet library: when an application succeeds, finds the same wording across every sent resume (from the PDFs) to count uses and successes, and releases a wording for reuse only with a proven success rate |
-| `jobagent/screen.py` | Knockout screen run before any resume is built: citizenship, clearance, sponsorship (only when the person needs it), years asked, degree, senior titles, student-only |
+| `jobagent/screen.py` | Knockout screen run before any resume is built: citizenship, clearance, sponsorship (only when the person needs it), OPT exclusions (only when `work_authorization.on_opt` is true), years asked, degree, senior titles, student-only |
 | `jobagent/score.py` | Fit score 0-100: match (required and preferred coverage, posting keywords in the resume) plus hireability (level, PDF readability, freshness, hiring signal). Before a build it is a cheap gate; after a build it decides auto-apply, wait for the person, or skip |
 | `config.example.json` | Per-person settings the screen and score read: experience, degrees, work authorization, target role families, thresholds, daily cap. Copy it to `work/config.json` and fill it in |
 | `prompts/cycle.md` | The steps one scheduled agent run follows, starting with a cheap gate |

@@ -11,7 +11,8 @@
   "work_authorization": {
     "needs_sponsorship": false,
     "us_citizen": false,
-    "clearance_eligible": false
+    "clearance_eligible": false,
+    "on_opt": false
   },
   "target_families": [
     "ai",
