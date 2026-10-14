@@ -67,7 +67,7 @@ def test_career_page_urls_are_rejected_not_guessed():
 def test_questions_include_compliance_sections():
     qs = questions_from_api(API)
     assert [q.section for q in qs][-1] == "compliance:eeoc"
-    assert len(qs) == 9
+    assert len(qs) == 9  # no race field in API, so no added Hispanic question
 
 
 def test_match_option_exact_prefix_substring_and_ambiguity():
@@ -114,3 +114,18 @@ def test_answer_matching_no_option_blocks(bank):
     bank.rules.insert(0, (__import__("re").compile("authori"), "Absolutely", ""))
     r = by_label(bank.plan(questions_from_api(API)), "Are you legally")
     assert r.status == "no-option" and r.blocking
+
+
+def test_single_select_rule_can_list_alternatives(bank):
+    import re
+    bank.rules.insert(0, (re.compile("legally"), ["Absolutely", "Yes"], ""))
+    assert by_label(bank.plan(questions_from_api(API)), "Are you legally").value == "Yes"
+
+
+def test_eeoc_race_adds_hispanic_question_first():
+    import copy
+    api = copy.deepcopy(API)
+    api["compliance"][0]["questions"].append({"label": "Race", "required": False, "fields": [
+        {"name": "race", "type": "multi_value_single_select", "values": [{"label": "Decline To Self Identify", "value": 8}]}]})
+    labels = [q.label for q in questions_from_api(api)]
+    assert labels.index("Are you Hispanic/Latino?") < labels.index("Race")

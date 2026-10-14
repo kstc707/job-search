@@ -64,7 +64,8 @@ def main(argv: list[str] | None = None) -> int:
     shot = str(pdf.parent / "form-filled.png")
     rep = fill_form(data["absolute_url"] if "greenhouse.io" in data.get("absolute_url", "") else a.url,
                     plan, shot, submit=a.submit)
-    print(f"\nfilled {len(rep.filled)} fields; failed {len(rep.failed)}; captcha on page: {rep.captcha}")
+    print(f"\nfilled {len(rep.filled)} fields; failed {len(rep.failed)}; not shown by the form {len(rep.hidden)}; "
+          f"captcha on page: {rep.captcha}")
     for f in rep.failed:
         print(f"  FAILED {f}")
     print(f"screenshot: {rep.screenshot}")

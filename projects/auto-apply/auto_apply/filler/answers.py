@@ -121,7 +121,10 @@ class AnswerBank:
             return Resolution(q, f, "ask" if q.required else "skip", source=source, note=note or "needs your answer")
 
         if f.type == "multi_value_single_select":
-            hit = match_option(str(answer), f.options)
+            # A rule may list alternatives (forms word the same answer differently):
+            # the first one that names exactly one option wins.
+            candidates = answer if isinstance(answer, list) else [answer]
+            hit = next((h for h in (match_option(str(c), f.options) for c in candidates) if h), None)
             if hit is None:
                 return Resolution(q, f, "no-option", answer, source,
                                   f"'{answer}' matches no single option: {[o.label for o in f.options][:8]}")

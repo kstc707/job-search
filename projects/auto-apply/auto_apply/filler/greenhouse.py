@@ -24,6 +24,7 @@ CHROMIUM = os.environ.get("REA_CHROMIUM", "/opt/pw-browsers/chromium-1194/chrome
 class FillReport:
     filled: list[str] = field(default_factory=list)
     failed: list[str] = field(default_factory=list)  # "label: reason"
+    hidden: list[str] = field(default_factory=list)  # optional fields the form did not show
     captcha: bool = False
     screenshot: str = ""
     submitted: bool = False
@@ -32,6 +33,14 @@ class FillReport:
 
 def _css_id(name: str) -> str:
     return f'[id="{name}"]'
+
+
+def _on_page(page, f) -> bool:
+    """Whether the form rendered this field (checkbox groups have one id per option)."""
+    if page.locator(_css_id(f.name)).count():
+        return True
+    return f.type == "multi_value_multi_select" and bool(f.options) and \
+        page.locator(_css_id(f"{f.name}[]_{f.options[0].value}")).count() > 0
 
 
 def _fill_one(page, r: Resolution) -> str | None:
@@ -87,6 +96,10 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
         page.goto(url, wait_until="networkidle", timeout=60000)
         for r in plan:
             if r.status != "fill":
+                continue
+            if not r.question.required and not _on_page(page, r.field):
+                # Conditional optional field (e.g. Race after a declined Hispanic/Latino answer).
+                report.hidden.append(r.question.label)
                 continue
             try:
                 reason = _fill_one(page, r)

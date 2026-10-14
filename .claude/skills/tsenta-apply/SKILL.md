@@ -43,14 +43,17 @@ job title. Fix the resume (never the rules) and rerun. Read every WARNING; the
 - Anything else, or a Greenhouse job only reachable through a career page → **Tsenta** (5b).
 
 ## 5a. Our filler (Greenhouse)
-1. `.venv/bin/python -m auto_apply.filler.cli plan <url> --pdf runs/<job>/resume.pdf`
+1. If this resume was not built by the cycle (so `jobagent audit` never ran on it), run the audit first
+   (cycle step 5 command): it catches copies of the example resume and bullets repeated from
+   earlier resumes, which `cli gate` does not check.
+2. `.venv/bin/python -m auto_apply.filler.cli plan <url> --pdf runs/<job>/resume.pdf`
    Exit 3 lists required questions without an approved answer. Ask Sai; save one-off answers
    in `runs/<job>/answers.json` (`{"exact label": "answer"}`), standing ones as rules in
    `runs/answers.json`. Never invent answers. Free-text answers: draft from facts.md only,
    show Sai, then save.
-2. `… filler.cli fill <url> --pdf …` → fills, reads back, writes `runs/<job>/form-filled.png`.
+3. `… filler.cli fill <url> --pdf …` → fills, reads back, writes `runs/<job>/form-filled.png`.
    Show Sai the screenshot and the plan table.
-3. Only after Sai approves that job: `… filler.cli fill <url> --pdf … --submit`.
+4. Only after Sai approves that job: `… filler.cli fill <url> --pdf … --submit`.
    "NOT SUBMITTED" after a captcha → give Sai the URL to finish by hand, or route to 5b.
 
 ## 5b. Tsenta (everything else)

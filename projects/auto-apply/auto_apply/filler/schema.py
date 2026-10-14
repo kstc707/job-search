@@ -81,7 +81,14 @@ def questions_from_api(data: dict) -> list[Question]:
     add(data.get("questions"), "questions")
     add(data.get("location_questions"), "location")
     for block in data.get("compliance") or []:
-        add(block.get("questions"), f"compliance:{block.get('type', '')}")
+        items = block.get("questions") or []
+        if block.get("type") == "eeoc" and any(f["name"] == "race" for q in items for f in q["fields"]):
+            # Greenhouse shows Race only after "Are you Hispanic/Latino?" is answered, and that
+            # question is rendered on the form but missing from the API. Add it, first.
+            out.append(Question("Are you Hispanic/Latino?", False, [Field("hispanic_ethnicity", "multi_value_single_select",
+                [Option("Yes", "Yes"), Option("No", "No"), Option("Decline To Self Identify", "Decline To Self Identify")])],
+                f"compliance:{block.get('type')}"))
+        add(items, f"compliance:{block.get('type', '')}")
     demo = data.get("demographic_questions") or {}
     for q in demo.get("questions") or []:
         # Demographic questions use answer_options instead of fields; model them as one
