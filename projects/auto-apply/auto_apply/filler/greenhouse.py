@@ -61,11 +61,24 @@ def _on_page(page, f) -> bool:
         page.locator(_css_id(f"{_group(f.name)}[]_{f.options[0].value}")).count() > 0
 
 
+def _pick(page, name: str, value: str) -> str | None:
+    """Choose one option in a type-ahead select and check it is shown as chosen."""
+    box = page.locator(_css_id(name))
+    box.click()
+    box.fill(value)
+    option = page.get_by_role("option", name=value, exact=True)
+    if option.count() == 0:
+        option = page.locator('[role="option"]', has_text=value)
+    option.first.click()
+    # The chosen label is rendered next to the combobox input.
+    container = box.locator("xpath=ancestor::div[contains(@class,'select__control') or contains(@class,'select-shell')][1]")
+    shown = container.inner_text() if container.count() else ""
+    return None if value in shown else f"selected value not shown (saw '{shown[:40]}')"
+
+
 def _fill_one(page, r: Resolution) -> str | None:
     """Fill one field; return None on success or a reason string on failure."""
     f, label = r.field, r.question.label
-    if f.name.startswith("demographic_") and f.type != "multi_value_single_select":
-        return "multi-choice demographic questions are not automated yet"
     if f.type == "input_file":
         page.set_input_files(_css_id(f.name), r.value)
         name = Path(r.value).name
@@ -88,17 +101,14 @@ def _fill_one(page, r: Resolution) -> str | None:
             same = got.strip() == r.value.strip()
         return None if same else f"read back '{got[:40]}'"
     if f.type == "multi_value_single_select":
-        box = page.locator(_css_id(f.name))
-        box.click()
-        box.fill(r.value)
-        option = page.get_by_role("option", name=r.value, exact=True)
-        if option.count() == 0:
-            option = page.locator('[role="option"]', has_text=r.value)
-        option.first.click()
-        # The chosen label is rendered next to the combobox input.
-        container = box.locator("xpath=ancestor::div[contains(@class,'select__control') or contains(@class,'select-shell')][1]")
-        shown = container.inner_text() if container.count() else ""
-        return None if r.value in shown else f"selected value not shown (saw '{shown[:40]}')"
+        return _pick(page, f.name, r.value)
+    if f.type == "multi_value_multi_select" and f.name.startswith("demographic_"):
+        # Multi-choice demographic questions are type-ahead boxes too, one pick per option.
+        for value in r.value:
+            reason = _pick(page, f.name, value)
+            if reason:
+                return reason
+        return None
     if f.type == "multi_value_multi_select":
         values = {o.label: o.value for o in f.options}
         for lab in r.value:
@@ -128,9 +138,8 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
         for r in plan:
             if r.status != "fill":
                 continue
-            if not r.question.required and (not _on_page(page, r.field) or (
-                    r.field.name.startswith("demographic_") and r.field.type != "multi_value_single_select")):
-                # Hidden conditional fields, and optional multi-choice demographic questions.
+            if not r.question.required and not _on_page(page, r.field):
+                # Conditional optional field (e.g. Race after a declined Hispanic/Latino answer).
                 # Conditional optional field (e.g. Race after a declined Hispanic/Latino answer).
                 report.hidden.append(r.question.label)
                 continue
