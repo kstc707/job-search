@@ -129,3 +129,9 @@ def test_eeoc_race_adds_hispanic_question_first():
         {"name": "race", "type": "multi_value_single_select", "values": [{"label": "Decline To Self Identify", "value": 8}]}]})
     labels = [q.label for q in questions_from_api(api)]
     assert labels.index("Are you Hispanic/Latino?") < labels.index("Race")
+
+
+def test_checkbox_ids_and_demographic_ids():
+    from auto_apply.filler.greenhouse import _css_id, _group
+    assert _group("question_1[]") == "question_1" and _group("question_1") == "question_1"
+    assert _css_id("demographic_605") == '[id="605"]'

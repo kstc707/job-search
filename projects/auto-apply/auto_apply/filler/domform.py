@@ -211,15 +211,16 @@ def fill_field(page, r) -> str | None:
     if f.type == "input_file":
         loc.set_input_files(r.value)
         # Lever/Ashby parse the resume and may autofill fields from it: wait until the upload
-        # shows as done (Lever's "Success!" marker, or the file name on the page) and no
-        # "analyzing" spinner is left, so parsing cannot overwrite answers typed afterwards.
+        # shows as done (Lever: the visible "Success!" marker and no visible "Analyzing"
+        # spinner, which stays in the page hidden; Ashby: the file name), so parsing cannot
+        # overwrite answers typed afterwards.
         try:
             page.wait_for_function(
                 """name => {
-                  const t = document.body.innerText.toLowerCase();
-                  const ok = [...document.querySelectorAll('.resume-upload-success')].some(e => e.offsetParent)
-                          || t.includes(name.toLowerCase());
-                  return ok && !/analy[sz]ing (your )?resume/.test(t);
+                  const shown = sel => [...document.querySelectorAll(sel)].some(e => e.offsetParent);
+                  if (document.querySelector('.resume-upload-success'))  // Lever
+                    return shown('.resume-upload-success') && !shown('.resume-upload-working');
+                  return document.body.innerText.toLowerCase().includes(name.toLowerCase());
                 }""", arg=Path(r.value).name, timeout=30000)
         except Exception:
             return "resume upload did not finish in 30s"

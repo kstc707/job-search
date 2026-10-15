@@ -43,7 +43,14 @@ def _settle(page) -> None:
 
 
 def _css_id(name: str) -> str:
+    if name.startswith("demographic_"):  # demographic questions render with the question id
+        name = name[len("demographic_"):]
     return f'[id="{name}"]'
+
+
+def _group(name: str) -> str:
+    """Checkbox ids are "<name>[]_<value>"; some boards already end the name with "[]"."""
+    return name[:-2] if name.endswith("[]") else name
 
 
 def _on_page(page, f) -> bool:
@@ -51,14 +58,14 @@ def _on_page(page, f) -> bool:
     if page.locator(_css_id(f.name)).count():
         return True
     return f.type == "multi_value_multi_select" and bool(f.options) and \
-        page.locator(_css_id(f"{f.name}[]_{f.options[0].value}")).count() > 0
+        page.locator(_css_id(f"{_group(f.name)}[]_{f.options[0].value}")).count() > 0
 
 
 def _fill_one(page, r: Resolution) -> str | None:
     """Fill one field; return None on success or a reason string on failure."""
     f, label = r.field, r.question.label
-    if f.name.startswith("demographic_"):
-        return "demographic questions are not automated yet"
+    if f.name.startswith("demographic_") and f.type != "multi_value_single_select":
+        return "multi-choice demographic questions are not automated yet"
     if f.type == "input_file":
         page.set_input_files(_css_id(f.name), r.value)
         name = Path(r.value).name
@@ -95,7 +102,7 @@ def _fill_one(page, r: Resolution) -> str | None:
     if f.type == "multi_value_multi_select":
         values = {o.label: o.value for o in f.options}
         for lab in r.value:
-            cb = page.locator(_css_id(f"{f.name}[]_{values[lab]}"))
+            cb = page.locator(_css_id(f"{_group(f.name)}[]_{values[lab]}"))
             try:
                 cb.check(timeout=5000)
             except Exception:  # styled checkbox: the real input is hidden, click its label
@@ -121,8 +128,9 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
         for r in plan:
             if r.status != "fill":
                 continue
-            if not r.question.required and (not _on_page(page, r.field) or r.field.name.startswith("demographic_")):
-                # Hidden conditional fields, and optional demographic questions (not automated).
+            if not r.question.required and (not _on_page(page, r.field) or (
+                    r.field.name.startswith("demographic_") and r.field.type != "multi_value_single_select")):
+                # Hidden conditional fields, and optional multi-choice demographic questions.
                 # Conditional optional field (e.g. Race after a declined Hispanic/Latino answer).
                 report.hidden.append(r.question.label)
                 continue
