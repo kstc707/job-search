@@ -33,6 +33,15 @@ class FillReport:
     confirmation: str = ""
 
 
+def _settle(page) -> None:
+    """Wait until the form's scripts are running: a file attached before that is silently
+    ignored. Some boards never go fully network-idle, so this wait is bounded."""
+    try:
+        page.wait_for_load_state("networkidle", timeout=15000)
+    except Exception:
+        pass
+
+
 def _css_id(name: str) -> str:
     return f'[id="{name}"]'
 
@@ -87,7 +96,10 @@ def _fill_one(page, r: Resolution) -> str | None:
         values = {o.label: o.value for o in f.options}
         for lab in r.value:
             cb = page.locator(_css_id(f"{f.name}[]_{values[lab]}"))
-            cb.check()
+            try:
+                cb.check(timeout=5000)
+            except Exception:  # styled checkbox: the real input is hidden, click its label
+                cb.evaluate("e => (document.querySelector(`label[for='${e.id}']`) || e.closest('label') || e).click()")
             if not cb.is_checked():
                 return f"checkbox '{lab}' did not stay checked"
         return None
@@ -103,11 +115,14 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
         browser = p.chromium.launch(executable_path=CHROMIUM, headless=headless)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
         page.goto(form_url(url), wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_selector('[id="first_name"]', timeout=30000)  # "network idle" never comes on some boards
+        page.wait_for_selector('[id="first_name"]', timeout=30000)
+        _settle(page)
+        page.set_default_timeout(10000)  # one stuck field must not hold the run for long
         for r in plan:
             if r.status != "fill":
                 continue
-            if not r.question.required and not _on_page(page, r.field):
+            if not r.question.required and (not _on_page(page, r.field) or r.field.name.startswith("demographic_")):
+                # Hidden conditional fields, and optional demographic questions (not automated).
                 # Conditional optional field (e.g. Race after a declined Hispanic/Latino answer).
                 report.hidden.append(r.question.label)
                 continue

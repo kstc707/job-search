@@ -151,6 +151,7 @@ class _Session:
         self.page = self._browser.new_page(viewport={"width": 1280, "height": 900})
         self.page.goto(apply_url(url, ats), wait_until="networkidle", timeout=60000)
         self.page.wait_for_selector(PROFILES[ats]["container"], timeout=30000)
+        self.page.set_default_timeout(10000)  # one stuck field must not hold the run for long
         self.title = self.page.title()
         self.questions = read_form(self.page, ats)
         self.plan = bank.plan(self.questions)
