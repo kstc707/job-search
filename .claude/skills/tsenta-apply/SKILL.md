@@ -39,10 +39,12 @@ job title. Fix the resume (never the rules) and rerun. Read every WARNING; the
 `contact-mismatch` warning means the form will use a different email than the PDF.
 
 ## 4. Route by ATS
-- `atsType == "greenhouse"` and a hosted `*.greenhouse.io` URL → **our filler** (step 5a).
+- `atsType == "greenhouse"` and a hosted `*.greenhouse.io` URL, or an Ashby job (`jobs.ashbyhq.com`)
+  → **our filler** (step 5a). Lever is supported by the filler but stays on Tsenta until the
+  benchmark shows the filler is at least as reliable.
 - Anything else, or a Greenhouse job only reachable through a career page → **Tsenta** (5b).
 
-## 5a. Our filler (Greenhouse)
+## 5a. Our filler (Greenhouse, Ashby)
 1. If this resume was not built by the cycle (so `jobagent audit` never ran on it), run the audit first
    (cycle step 5 command): it catches copies of the example resume and bullets repeated from
    earlier resumes, which `cli gate` does not check.

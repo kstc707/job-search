@@ -30,6 +30,19 @@ _PROFILE_FIELDS = {
     "phone": "personalInformation.phone",
 }
 
+# Forms read from the page (Lever, Ashby) have no stable field names, so the contact
+# questions are recognised by label instead. Anchored: "Preferred name" is not "Name".
+_PROFILE_LABELS = [
+    (re.compile(r"^(full |legal )?name$"), ("personalInformation.firstName", "personalInformation.lastName")),
+    (re.compile(r"^first name$"), ("personalInformation.firstName",)),
+    (re.compile(r"^last name$"), ("personalInformation.lastName",)),
+    (re.compile(r"^(e ?mail|email address)$"), ("personalInformation.email",)),
+    (re.compile(r"^(phone|phone number|mobile|mobile phone)$"), ("personalInformation.phone",)),
+]
+
+# Field types where the answer must name exactly one of the options.
+_SINGLE_CHOICE = ("multi_value_single_select", "native_select", "radio", "yesno")
+
 
 @dataclass
 class Resolution:
@@ -50,13 +63,16 @@ def _norm(s: str) -> str:
 
 
 def match_option(answer: str, options: list) -> str | None:
-    """The single option label an answer refers to: exact, then prefix, then substring."""
+    """The single option label an answer refers to: exact, then prefix, then whole words inside.
+
+    Whole words only: "No" must not pick "I am not a veteran" because "no" is inside "not".
+    """
     a = _norm(answer)
     labels = [o.label for o in options]
     for test in (
         lambda l: _norm(l) == a,
         lambda l: _norm(l).startswith(a),
-        lambda l: a in _norm(l),
+        lambda l: re.search(rf"(?<![a-z0-9]){re.escape(a)}(?![a-z0-9])", _norm(l)) is not None,
     ):
         hits = [l for l in labels if test(l)]
         if len(hits) == 1:
@@ -88,6 +104,33 @@ class AnswerBank:
             node = node.get(key) if isinstance(node, dict) else None
         return node
 
+    def _profile_by_label(self, label: str) -> str | None:
+        key = _norm(label)
+        for pattern, paths in _PROFILE_LABELS:
+            if pattern.match(key):
+                parts = [self._profile_value(path) for path in paths]
+                return " ".join(str(x) for x in parts) if all(parts) else None
+        return None
+
+    def _years_threshold(self, q: Question, f: Field) -> "Resolution | None":
+        """'Do you have at least N years of …?' answered from the approved years-of-experience rule.
+
+        More years asked than you have → "No" (true whatever the skill). Fewer or equal is only
+        safe for experience overall; for a specific skill ("5 years in AWS") it must be asked.
+        """
+        m = re.search(r"(?:minimum of|at least|\bover)\s+(\d+)\+?\s+years", q.label, re.IGNORECASE)
+        found = self._lookup("years of experience")
+        if not m or not found or not str(found[0]).isdigit():
+            return None
+        asked, have = int(m.group(1)), int(found[0])
+        if asked > have:
+            hit = match_option("No", f.options)
+            if hit:
+                return Resolution(q, f, "fill", hit, f"derived: asks {asked} years, you have {have}")
+            return None
+        return Resolution(q, f, "ask" if q.required else "skip", source="years rule",
+                          note=f"asks {asked} years; you have {have} overall — confirm for this skill")
+
     def _lookup(self, label: str) -> tuple[Any, str, str] | None:
         key = _norm(label)
         if key in self.job_answers:
@@ -110,6 +153,15 @@ class AnswerBank:
             v = self._profile_value(_PROFILE_FIELDS[f.name])
             if v:
                 return Resolution(q, f, "fill", str(v), "profile")
+        if f.type == "input_text":
+            v = self._profile_by_label(q.label)
+            if v:
+                return Resolution(q, f, "fill", v, "profile")
+
+        if f.type in _SINGLE_CHOICE:
+            derived = self._years_threshold(q, f)
+            if derived:
+                return derived
 
         found = self._lookup(q.label)
         if found is None:
@@ -120,7 +172,7 @@ class AnswerBank:
         if answer == ASK:
             return Resolution(q, f, "ask" if q.required else "skip", source=source, note=note or "needs your answer")
 
-        if f.type == "multi_value_single_select":
+        if f.type in _SINGLE_CHOICE:
             # A rule may list alternatives (forms word the same answer differently):
             # the first one that names exactly one option wins.
             candidates = answer if isinstance(answer, list) else [answer]

@@ -29,12 +29,14 @@ Then fill `runs/` (git-ignored; never commit it):
 3. **Gate.** `.venv/bin/python -m auto_apply.cli gate runs/<slug>/resume.pdf --url <apply url> --job-id <tsenta id>`
    Exit 2 → fix the resume once and re-gate; still blocked → Notes "Gate: <finding>", leave it.
 4. **Route.**
-   - **Greenhouse** (hosted `*.greenhouse.io` URL) → our filler; free, saves a Tsenta credit:
+   - **Greenhouse** (hosted `*.greenhouse.io` URL) or **Ashby** (`jobs.ashbyhq.com`) → our filler;
+     free, saves a Tsenta credit:
      `.venv/bin/python -m auto_apply.filler.cli fill <url> --pdf runs/<slug>/resume.pdf --submit`
      - exit 3 (required question with no approved answer) → Notes "Needs answer: <questions>",
        add them under Open Questions on the memory page, leave Submit? = Yes. Next run retries.
      - "NOT SUBMITTED" (captcha or validation) → apply through Tsenta below instead.
-   - **Ashby** → Tsenta always fails here: Notes "Manual apply: Ashby", leave the resume on the row.
+     - Ashby "NOT SUBMITTED" → Tsenta always fails on Ashby: Notes "Manual apply: Ashby", leave
+       the resume on the row.
    - **Everything else** → Tsenta: `request-resume-upload` → `cli upload <pdf> '<uploadUrl>'`
      → `check-custom-resume` → `apply-with-custom-resume { jobId|url, uploadId, profile: runs/profile.json }`.
      Never `apply-to-job` (it re-tailors and waits for approval).

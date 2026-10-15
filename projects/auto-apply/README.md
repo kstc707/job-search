@@ -38,7 +38,7 @@ Two consequences drive the design:
    │             blocked → fix the resume, never the rules
    ▼
  ROUTE by ATS ───────────────────────────────┬──────────────────────────────────────
-   │ Greenhouse (later: Lever, Ashby)         │ everything else (Workday, Oracle,
+   │ Greenhouse, Ashby (Lever: built, on test) │ everything else (Workday, Oracle,
    ▼                                          ▼  iCIMS, SuccessFactors, SmartRecruiters…)
  FILLER (ours)                              TSENTA
    plan  : read form from public API,         request-resume-upload → cli upload
@@ -71,14 +71,19 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/ledger.py`: JSONL log; dedupes on normalized URLs (tracking parameters
   stripped) and job ids; counts today's applications for the cap.
 - `auto_apply/cli.py`: `profile`, `gate`, `upload`, `record`, `list`.
-- `auto_apply/filler/`: our own form filler (Greenhouse).
+- `auto_apply/filler/`: our own form filler (Greenhouse, Lever, Ashby).
   - `schema.py` reads the form from `boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}?questions=true`
     (field names there are the DOM ids on the form, so nothing is guessed from HTML).
   - `answers.py` resolves each field from the profile, `runs/answers.json` rules and optional
     per-job answers. `"ASK"` rules and unknown required questions block the run.
   - `greenhouse.py` fills with Playwright (text, file upload, type-ahead selects, checkboxes),
     reads every value back, screenshots, and submits only with `--submit`.
+  - `domform.py` handles Lever and Ashby, which publish no form API: it opens the apply page,
+    reads every question from the page (one small selector profile per system), and fills
+    text, files, dropdowns, radios, checkboxes, Ashby Yes/No buttons and location look-ups.
+    Name, email and phone are recognised by label; everything else uses the same answer rules.
   - `cli.py`: `python -m auto_apply.filler.cli plan|fill <job url> --pdf <resume> [--submit]`.
+    `--test-fill` fills a blocked form for testing and can never be combined with `--submit`.
 
 The design follows how client-side autofill tools are built (per-ATS form locators, a
 field-category/answer layer, events that React forms register), learned by static analysis
