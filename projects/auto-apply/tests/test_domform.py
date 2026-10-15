@@ -103,3 +103,16 @@ def test_greenhouse_embed_url_and_hidden_location_fields():
         {"label": "Latitude", "required": True, "fields": [{"name": "latitude", "type": "input_hidden", "values": []}]},
         {"label": "Location", "required": True, "fields": [{"name": "location", "type": "input_text", "values": []}]}]}
     assert [q.label for q in questions_from_api(data)] == ["Location"]
+
+
+def test_alternatives_pick_one_checkbox_and_zip_from_profile():
+    raw = [{"label": "I identify my race/ethnicity as (mark all that apply):", "required": True, "fields": [
+                {"name": "r", "type": "multi_value_multi_select", "options": [
+                    {"label": "Asian", "value": "#a"}, {"label": "I don't wish to answer", "value": "#d"}]}]},
+           {"label": "Zip Code / Postal Code", "required": True,
+            "fields": [{"name": "z", "type": "input_text", "options": []}]}]
+    rules = [{"match": "race", "answer": ["decline", "I don't wish to answer"]}]
+    profile = {"personalInformation": {**PROFILE["personalInformation"], "zipCode": "62701"}}
+    plan = AnswerBank(profile, rules, {}).plan(questions_from_raw(raw))
+    assert plan[0].value == ["I don't wish to answer"]
+    assert plan[1].value == "62701"

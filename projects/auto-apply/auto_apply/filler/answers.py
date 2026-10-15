@@ -38,6 +38,7 @@ _PROFILE_LABELS = [
     (re.compile(r"^last name$"), ("personalInformation.lastName",)),
     (re.compile(r"^(e ?mail|email address)$"), ("personalInformation.email",)),
     (re.compile(r"^(phone|phone number|mobile|mobile phone)$"), ("personalInformation.phone",)),
+    (re.compile(r"^(zip|postal)\b"), ("personalInformation.zipCode",)),
 ]
 
 # Field types where the answer must name exactly one of the options.
@@ -185,6 +186,11 @@ class AnswerBank:
             wanted = answer if isinstance(answer, list) else [answer]
             hits = [match_option(str(a), f.options) for a in wanted]
             if None in hits:
+                # A list can also be alternative wordings of one answer ("decline", "I don't
+                # wish to answer"): accept it when exactly one of them names an option.
+                found = [h for h in hits if h]
+                if len(found) == 1:
+                    return Resolution(q, f, "fill", found, source, note)
                 return Resolution(q, f, "no-option", answer, source, f"options: {[o.label for o in f.options][:8]}")
             return Resolution(q, f, "fill", hits, source, note)
         return Resolution(q, f, "fill", str(answer), source, note)
