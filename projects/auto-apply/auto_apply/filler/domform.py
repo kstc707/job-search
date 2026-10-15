@@ -10,7 +10,7 @@ Option values are selectors too (one per checkbox/radio) or the option label (na
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from pathlib import Path
 
 from .schema import Field, Option, Question
 
@@ -162,6 +162,10 @@ class _Session:
         for r in self.plan:
             if r.status != "fill":
                 continue
+            if not r.question.required and not _visible(self.page, r.field):
+                # Optional field the form keeps hidden (e.g. the disability form's signature).
+                report.hidden.append(r.question.label)
+                continue
             try:
                 reason = fill_field(self.page, r)
             except Exception as e:  # one bad field must not abort the rest
@@ -190,19 +194,34 @@ class _Session:
         self._pw.stop()
 
 
+def _visible(page, f) -> bool:
+    sel = f.options[0].value if f.type in ("radio", "multi_value_multi_select") and f.options else f.name
+    loc = page.locator(sel).first
+    if f.type in ("radio", "multi_value_multi_select", "input_file"):
+        # Real inputs are often hidden behind styled labels; judge by the label/container.
+        return loc.count() > 0 and loc.evaluate("e => !!(e.closest('label, li, div') || e).offsetParent")
+    return loc.count() > 0 and loc.is_visible()
+
+
 def fill_field(page, r) -> str | None:
     """Fill one page-read field; return None on success or why it failed."""
     f, sel = r.field, r.field.name
     loc = page.locator(sel).first
     if f.type == "input_file":
         loc.set_input_files(r.value)
-        # Lever/Ashby parse the resume and may autofill fields from it; wait until that is
-        # done so it cannot overwrite answers typed afterwards.
+        # Lever/Ashby parse the resume and may autofill fields from it: wait until the upload
+        # shows as done (Lever's "Success!" marker, or the file name on the page) and no
+        # "analyzing" spinner is left, so parsing cannot overwrite answers typed afterwards.
         try:
             page.wait_for_function(
-                "() => !/analy[sz]ing resume|parsing|uploading/i.test(document.body.innerText)", timeout=30000)
+                """name => {
+                  const t = document.body.innerText.toLowerCase();
+                  const ok = [...document.querySelectorAll('.resume-upload-success')].some(e => e.offsetParent)
+                          || t.includes(name.toLowerCase());
+                  return ok && !/analy[sz]ing (your )?resume/.test(t);
+                }""", arg=Path(r.value).name, timeout=30000)
         except Exception:
-            return "resume upload/analysis did not finish in 30s"
+            return "resume upload did not finish in 30s"
         return None
     if f.type in ("input_text", "textarea"):
         loc.fill(r.value)
@@ -218,7 +237,11 @@ def fill_field(page, r) -> str | None:
         values = {o.label: o.value for o in f.options}
         for lab in (r.value if isinstance(r.value, list) else [r.value]):
             box = page.locator(values[lab]).first
-            box.check(force=True)
+            try:
+                box.check(force=True)
+            except Exception:
+                # Custom-styled choices hide the real input: click its label instead.
+                box.evaluate("e => (e.closest('label') || document.querySelector(`label[for='${e.id}']`) || e).click()")
             if not box.is_checked():
                 return f"'{lab}' did not stay checked"
         return None
@@ -229,29 +252,65 @@ def fill_field(page, r) -> str | None:
         active = btn.evaluate("b => /active|selected/i.test(b.className) || b.getAttribute('aria-pressed') === 'true'")
         return None if active else f"'{r.value}' button did not stay selected"
     if f.type == "autocomplete":
-        # Location boxes only search on real keystrokes, then list suggestions. Pick the one
-        # that starts with what we typed ("Memphis, TN" → "Memphis, TN, USA"), never just the first.
-        loc.click()
-        loc.fill("")
-        loc.press_sequentially(r.value, delay=60)
-        options = page.locator('[role="option"], .dropdown-location')
-        try:
-            options.first.wait_for(timeout=8000)
-        except Exception:
-            return "no suggestion appeared for the typed location"
-        texts = options.all_inner_texts()
-        want = _norm_words(r.value)
-        picks = [i for i, t in enumerate(texts) if _norm_words(t).startswith(want)]
-        if not picks and len(texts) == 1:
-            picks = [0]
-        if not picks:
-            return f"no suggestion starts with '{r.value}': {texts[:4]}"
-        options.nth(picks[0]).click()
-        hidden = page.locator('input[name="selectedLocation"]')
-        if hidden.count() and not hidden.first.input_value():
-            return "suggestion clicked but the form did not record the location"
-        return None
+        return fill_location(page, loc, '[role="option"], .dropdown-location', r.value)
     return f"unsupported field type {f.type}"
+
+
+US_STATES = {
+    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+    "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "District of Columbia",
+    "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois",
+    "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana",
+    "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota",
+    "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada",
+    "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York",
+    "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon",
+    "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota",
+    "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia",
+    "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
+}
+
+
+def pick_location(texts: list[str], value: str) -> int | None:
+    """Index of the suggestion that is the place in `value` ("Memphis, TN"), or None.
+
+    Suggestions word states differently ("Memphis, TN, USA", "Memphis, Tennessee, United
+    States"), so match the city at the start and the state by code or full name. Never
+    "West Memphis" for "Memphis".
+    """
+    city, _, rest = (x.strip() for x in value.partition(","))
+    code = rest.split(",")[0].strip().upper()
+    states = {code, US_STATES.get(code, code).upper()} if code else set()
+    for i, t in enumerate(texts):
+        parts = [x.strip() for x in t.split(",")]
+        if _norm_words(parts[0]) != _norm_words(city):
+            continue
+        if not states or any(x.upper() in states for x in parts[1:]):
+            return i
+    return None
+
+
+def fill_location(page, box, option_selector: str, value: str) -> str | None:
+    """Type the city into a location look-up and click the matching suggestion."""
+    city = value.split(",")[0].strip()
+    box.click()
+    box.fill("")
+    box.press_sequentially(city, delay=60)  # look-ups only search on real keystrokes
+    options = page.locator(option_selector)
+    try:
+        options.first.wait_for(timeout=8000)
+    except Exception:
+        return "no suggestion appeared for the typed location"
+    page.wait_for_timeout(400)  # let the list settle after the last keystroke
+    texts = options.all_inner_texts()
+    i = pick_location(texts, value)
+    if i is None:
+        return f"no suggestion is '{value}': {texts[:4]}"
+    options.nth(i).click()
+    hidden = page.locator('input[name="selectedLocation"]')  # Lever records the pick here
+    if hidden.count() and not hidden.first.input_value():
+        return "suggestion clicked but the form did not record the location"
+    return None
 
 
 def _norm_words(s: str) -> str:

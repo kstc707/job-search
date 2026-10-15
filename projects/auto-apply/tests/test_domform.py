@@ -83,3 +83,23 @@ def test_years_questions_derive_no_or_ask():
 def test_unknown_required_question_blocks():
     r = plan()["Export control: list your citizenships"]
     assert r.status == "missing" and r.blocking
+
+
+def test_pick_location_matches_city_and_state_by_code_or_name():
+    from auto_apply.filler.domform import pick_location
+    gh = ["West Memphis, Arkansas, United States", "Memphis, Florida, United States",
+          "Memphis, Tennessee, United States"]
+    assert pick_location(gh, "Memphis, TN") == 2
+    assert pick_location(["Memphis, TN, USA", "Memphis, FL, USA"], "Memphis, TN") == 0
+    assert pick_location(["Memphis, FL, USA"], "Memphis, TN") is None  # never a different place
+
+
+def test_greenhouse_embed_url_and_hidden_location_fields():
+    from auto_apply.filler.schema import form_url, questions_from_api
+    assert form_url("https://job-boards.greenhouse.io/stripe/jobs/123") == \
+        "https://job-boards.greenhouse.io/embed/job_app?for=stripe&token=123"
+    assert form_url("https://job-boards.eu.greenhouse.io/acme/jobs/9").startswith("https://job-boards.eu.greenhouse.io/embed/")
+    data = {"questions": [], "location_questions": [
+        {"label": "Latitude", "required": True, "fields": [{"name": "latitude", "type": "input_hidden", "values": []}]},
+        {"label": "Location", "required": True, "fields": [{"name": "location", "type": "input_text", "values": []}]}]}
+    assert [q.label for q in questions_from_api(data)] == ["Location"]

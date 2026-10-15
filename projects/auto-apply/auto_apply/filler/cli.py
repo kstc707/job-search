@@ -88,8 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         code = _gate(plan, a.cmd, a.test_fill)
         if code is not None:
             return code
-        rep = fill_form(data["absolute_url"] if "greenhouse.io" in data.get("absolute_url", "") else a.url,
-                        plan, shot, submit=a.submit)
+        rep = fill_form(a.url, plan, shot, submit=a.submit)
     print(f"\nfilled {len(rep.filled)} fields; failed {len(rep.failed)}; not shown by the form {len(rep.hidden)}; "
           f"captcha on page: {rep.captcha}")
     for f in rep.failed:

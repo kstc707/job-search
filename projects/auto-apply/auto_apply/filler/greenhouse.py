@@ -16,6 +16,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .answers import Resolution
+from .domform import fill_location
+from .schema import form_url
 
 CHROMIUM = os.environ.get("REA_CHROMIUM", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")
 
@@ -53,6 +55,13 @@ def _fill_one(page, r: Resolution) -> str | None:
         name = Path(r.value).name
         page.wait_for_function("n => document.body.innerText.includes(n)", arg=name, timeout=15000)
         return None
+    if f.name == "location":  # location look-up; it also sets the hidden latitude/longitude
+        box = page.locator('[id="candidate-location"]')
+        reason = fill_location(page, box, '[id^="react-select-candidate-location-option"]', r.value)
+        if reason:
+            return reason
+        shown = box.locator("xpath=ancestor::div[contains(@class,'select__control')][1]").inner_text()
+        return None if r.value.split(",")[0] in shown else f"location not shown (saw '{shown[:40]}')"
     if f.type in ("input_text", "textarea"):
         loc = page.locator(_css_id(f.name))
         loc.fill(r.value)
@@ -93,7 +102,8 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path=CHROMIUM, headless=headless)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
-        page.goto(url, wait_until="networkidle", timeout=60000)
+        page.goto(form_url(url), wait_until="domcontentloaded", timeout=60000)
+        page.wait_for_selector('[id="first_name"]', timeout=30000)  # "network idle" never comes on some boards
         for r in plan:
             if r.status != "fill":
                 continue

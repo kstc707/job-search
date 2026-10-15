@@ -59,6 +59,14 @@ def parse_job_url(url: str) -> tuple[str, str]:
     return m.group(1), m.group(2)
 
 
+def form_url(url: str) -> str:
+    """The embeddable form for a job. Hosted job links redirect to the company's own career
+    site when it has one (Stripe, Airbnb, Coinbase); the embed form never does."""
+    board, job_id = parse_job_url(url)
+    host = "job-boards.eu.greenhouse.io" if ".eu." in urlsplit(url).netloc.lower() else "job-boards.greenhouse.io"
+    return f"https://{host}/embed/job_app?for={board}&token={job_id}"
+
+
 def _fields(raw_fields: list[dict]) -> list[Field]:
     return [
         Field(
@@ -76,6 +84,8 @@ def questions_from_api(data: dict) -> list[Question]:
 
     def add(items: list[dict] | None, section: str) -> None:
         for q in items or []:
+            if q["fields"] and all(f["type"] == "input_hidden" for f in q["fields"]):
+                continue  # set by the page itself (latitude/longitude come from the location pick)
             out.append(Question(q["label"].strip(), bool(q.get("required")), _fields(q["fields"]), section))
 
     add(data.get("questions"), "questions")
