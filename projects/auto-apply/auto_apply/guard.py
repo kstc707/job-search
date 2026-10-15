@@ -141,3 +141,29 @@ def check_resume(text: str, profile: dict[str, Any], rules: GuardRules) -> list[
             f"profile email {email} (used on the form) is not the email on the resume",
         ))
     return findings
+
+
+_AFFIRMATIVE = re.compile(r"^\s*(yes|y|true|i do|i have)\b", re.IGNORECASE)
+
+
+def check_answers(answers: dict[str, Any], rules: GuardRules) -> list[Finding]:
+    """Checks on drafted per-job form answers ({question label: answer}).
+
+    A "Yes" to a question about a never-claim skill ("Do you have Tableau experience?"),
+    or a free-text answer that names one, would claim it as surely as a resume bullet.
+    Negated mentions ("I have not used Tableau") are flagged too: a person decides.
+    """
+    findings: list[Finding] = []
+    for label, answer in answers.items():
+        if answer is None or label.startswith("_"):
+            continue
+        text = " ".join(map(str, answer)) if isinstance(answer, list) else str(answer)
+        for term in rules.never_claim:
+            pat = _term_pattern(term)
+            if pat.search(text) or (_AFFIRMATIVE.match(text) and pat.search(label)):
+                findings.append(Finding("error", "answer-claims-never-claim",
+                                        f"'{label[:70]}' → '{text[:60]}' claims '{term}'"))
+        for phrase in rules.banned_phrases:
+            if phrase.lower() in text.lower():
+                findings.append(Finding("error", "answer-banned-phrase", f"'{label[:70]}' uses '{phrase}'"))
+    return findings

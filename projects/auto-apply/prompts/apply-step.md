@@ -32,8 +32,11 @@ Then fill `runs/` (git-ignored; never commit it):
    - **Greenhouse** (hosted `*.greenhouse.io` URL) or **Ashby** (`jobs.ashbyhq.com`) → our filler;
      free, saves a Tsenta credit:
      `.venv/bin/python -m auto_apply.filler.cli fill <url> --pdf runs/<slug>/resume.pdf --submit`
-     - exit 3 (required question with no approved answer) → Notes "Needs answer: <questions>",
-       add them under Open Questions on the memory page, leave Submit? = Yes. Next run retries.
+     - exit 3 (required question with no approved answer) → read `runs/<slug>/questions.json`.
+       Draft job-specific answers from facts.md only into `runs/<slug>/answers.json` and put the
+       drafts in the row's Notes as "Drafted answers — approve?"; standing questions and consents
+       go under Open Questions on the memory page. Do not submit with unapproved drafts: set
+       Submit? = No until Sai approves, then the next run retries.
      - "NOT SUBMITTED" (captcha or validation) → apply through Tsenta below instead.
      - Ashby "NOT SUBMITTED" → Tsenta always fails on Ashby: Notes "Manual apply: Ashby", leave
        the resume on the row.

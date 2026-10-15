@@ -13,9 +13,12 @@ Exit codes: 0 ok, 2 failed fill/submit, 3 blocked on answers you must provide.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
+from ..cli import _load_rules
+from ..guard import check_answers
 from .answers import AnswerBank
 from .domform import detect_ats, open_and_plan
 from .greenhouse import fill_form
@@ -33,14 +36,34 @@ def _print_plan(plan) -> None:
               f"{'  ← ' + r.note if r.note and r.status != 'fill' else ''}")
 
 
-def _gate(plan, cmd: str, test_fill: bool = False) -> int | None:
+def write_questions(plan, path: Path) -> None:
+    """Questions still open, with their options, for drafting per-job answers.
+
+    The drafts go into answers.json next to it as {"exact label": answer}; nothing in
+    questions.json is ever sent to a form.
+    """
+    rows = [{"label": r.question.label, "required": r.question.required, "type": r.field.type,
+             "options": [o.label for o in r.field.options], "status": r.status, "note": r.note}
+            for r in plan if r.status in ("ask", "missing", "no-option") or r.blocking]
+    path.write_text(json.dumps({
+        "_how": "Draft answers from facts.md only, show Sai, then save them to answers.json in this "
+                "folder as {\"exact label\": answer}. Choice questions: use one of the options. "
+                "Leave out anything Sai must decide.",
+        "questions": rows}, indent=2))
+
+
+def _gate(plan, cmd: str, test_fill: bool = False, questions_file: Path | None = None) -> int | None:
     """Print the plan; return an exit code if the run stops here, None to go on and fill."""
     _print_plan(plan)
     blocking = [r for r in plan if r.blocking]
+    if questions_file is not None:
+        write_questions(plan, questions_file)
     if blocking:
         print(f"\nBLOCKED: {len(blocking)} required question(s) need an approved answer:")
         for r in blocking:
             print(f"  - {r.question.label}  [{r.status}] {r.note}")
+        if questions_file is not None:
+            print(f"open questions written to {questions_file}")
         if not (test_fill and cmd == "fill"):
             return 3
         print("--test-fill: filling the answered fields anyway; nothing will be submitted")
@@ -70,12 +93,22 @@ def main(argv: list[str] | None = None) -> int:
     bank = AnswerBank.load(runs / "profile.json", runs / "answers.json",
                            {"resume": str(pdf), "cover_letter": a.cover_letter}, job_answers)
     shot = str(pdf.parent / "form-filled.png")
+    questions_file = pdf.parent / "questions.json"
+
+    # Drafted per-job answers face the same never-claim rules as the resume.
+    if job_answers.exists():
+        bad = [f for f in check_answers(json.loads(job_answers.read_text()), _load_rules(runs)) if f.severity == "error"]
+        if bad:
+            print(f"BLOCKED: {len(bad)} drafted answer(s) in {job_answers} break the rules:")
+            for f in bad:
+                print(f"  - [{f.rule}] {f.detail}")
+            return 3
     ats = detect_ats(a.url)
     if ats in ("lever", "ashby"):
         session = open_and_plan(a.url, ats, bank)
         try:
             print(f"{session.title} ({len(session.questions)} questions, read from the {ats} page)")
-            code = _gate(session.plan, a.cmd, a.test_fill)
+            code = _gate(session.plan, a.cmd, a.test_fill, questions_file)
             if code is not None:
                 return code
             rep = session.fill(shot, submit=a.submit)
@@ -85,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
         data, questions = fetch_form(a.url)
         print(f"{data.get('company_name') or ''} — {data['title']} ({len(questions)} questions)")
         plan = bank.plan(questions)
-        code = _gate(plan, a.cmd, a.test_fill)
+        code = _gate(plan, a.cmd, a.test_fill, questions_file)
         if code is not None:
             return code
         rep = fill_form(a.url, plan, shot, submit=a.submit)

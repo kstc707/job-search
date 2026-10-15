@@ -72,3 +72,18 @@ def test_missing_employer_and_email_mismatch_are_warnings(profile):
 
 def test_normalize_rejoins_hyphenated_line_breaks():
     assert normalize_text("Data Ana-\nlyst   Intern") == "Data Analyst Intern"
+
+
+def test_drafted_answers_cannot_claim_never_claim_skills():
+    from auto_apply.guard import GuardRules, check_answers
+    rules = GuardRules(never_claim=["Tableau", "CI/CD"], banned_phrases=["results-driven"])
+    found = check_answers({
+        "Do you have experience with Tableau?": "Yes",          # claims it
+        "Do you have experience with SQL?": "Yes",              # fine
+        "Do you use Tableau daily?": "No",                      # fine: denies it
+        "Describe a project": "Built CI/CD for reports",        # names it
+        "Why us?": "I am a results-driven analyst",             # banned phrase
+        "_note": "ignored",
+    }, rules)
+    assert sorted(f.rule for f in found) == ["answer-banned-phrase", "answer-claims-never-claim",
+                                              "answer-claims-never-claim"]

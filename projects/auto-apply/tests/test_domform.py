@@ -116,3 +116,14 @@ def test_alternatives_pick_one_checkbox_and_zip_from_profile():
     plan = AnswerBank(profile, rules, {}).plan(questions_from_raw(raw))
     assert plan[0].value == ["I don't wish to answer"]
     assert plan[1].value == "62701"
+
+
+def test_open_questions_are_written_for_drafting(tmp_path):
+    import json
+    from auto_apply.filler.cli import write_questions
+    out = tmp_path / "questions.json"
+    write_questions(list(plan().values()), out)
+    rows = {r["label"]: r for r in json.loads(out.read_text())["questions"]}
+    assert "Export control: list your citizenships" in rows
+    assert rows["Do you have at least 2 years of experience with dbt?"]["options"] == ["Yes", "No"]
+    assert "Full name" not in rows  # answered questions are not listed

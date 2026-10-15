@@ -84,6 +84,9 @@ login-based ATSes and costs one credit per application.
     Name, email and phone are recognised by label; everything else uses the same answer rules.
   - `cli.py`: `python -m auto_apply.filler.cli plan|fill <job url> --pdf <resume> [--submit]`.
     `--test-fill` fills a blocked form for testing and can never be combined with `--submit`.
+    When a form is blocked, the open questions (with options) are written to
+    `<resume folder>/questions.json` for drafting; drafted answers in `answers.json` there are
+    checked against the never-claim list and banned phrases before any form is opened.
 
 The design follows how client-side autofill tools are built (per-ATS form locators, a
 field-category/answer layer, events that React forms register), learned by static analysis

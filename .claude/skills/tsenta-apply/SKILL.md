@@ -49,10 +49,17 @@ job title. Fix the resume (never the rules) and rerun. Read every WARNING; the
    (cycle step 5 command): it catches copies of the example resume and bullets repeated from
    earlier resumes, which `cli gate` does not check.
 2. `.venv/bin/python -m auto_apply.filler.cli plan <url> --pdf runs/<job>/resume.pdf`
-   Exit 3 lists required questions without an approved answer. Ask Sai; save one-off answers
-   in `runs/<job>/answers.json` (`{"exact label": "answer"}`), standing ones as rules in
-   `runs/answers.json`. Never invent answers. Free-text answers: draft from facts.md only,
-   show Sai, then save.
+   Exit 3 lists required questions without an approved answer and writes them, with their
+   options, to `runs/<job>/questions.json`. Then:
+   - Job-specific questions ("experience with SQL?", short essays): draft each answer from
+     facts.md only (a "Yes" needs a fact behind it; no fact → "No" or leave it for Sai), show
+     Sai the drafts, and save the approved ones to `runs/<job>/answers.json`
+     (`{"exact label": "answer"}`; choice questions use one of the listed options).
+   - Standing questions (LinkedIn, non-compete, office days…): ask Sai once, save as a rule in
+     `runs/answers.json`.
+   - Consents (interview recording, employer AI use, arbitration): always Sai's call, per job.
+   Re-run `plan`. Drafted answers go through the same never-claim / banned-phrase check as the
+   resume; a draft that breaks it blocks the run (exit 3). Never invent answers.
 3. `… filler.cli fill <url> --pdf …` → fills, reads back, writes `runs/<job>/form-filled.png`.
    Show Sai the screenshot and the plan table.
 4. Only after Sai approves that job: `… filler.cli fill <url> --pdf … --submit`.
