@@ -22,7 +22,7 @@ _NO_SPONSOR = re.compile(
     r"|no\s+(visa\s+)?sponsorship|without\s+(the\s+need\s+for\s+)?sponsorship", re.I)
 _NO_OPT = re.compile(
     r"\b(f-?1|opt|stem\s+opt|cpt)\b[^.\n]{0,60}?\b(not\s+eligi\w*|ineligi\w*|not\s+(be\s+)?(accepted|considered|supported)|does\s+not\s+qualify)"
-    r"|\b(not|unable\s+to|cannot|won't)\b[^.\n]{0,60}?\b(support|accept|sponsor|consider)\w*\b[^.\n]{0,40}?\b(f-?1|opt|stem\s+opt|cpt)\b", re.I)
+    r"|\b(not|unable\s+to|cannot|won't)\b[^.\n]{0,60}?\b(support|accept|sponsor|consider)\w*\b[^.\n]{0,120}?\b(f-?1|opt|stem\s+opt|cpt)\b", re.I)
 _STUDENT = re.compile(
     r"must\s+be\s+(currently\s+)?(enrolled|a\s+(current\s+)?student)"
     r"|currently\s+enrolled\s+(in|as)|returning\s+to\s+school", re.I)

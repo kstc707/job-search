@@ -119,3 +119,5 @@ def test_screen_drops_jobs_that_exclude_opt():
     # wording seen in real postings (Aperia, Public Storage)
     assert screen.screen({}, "candidates currently on F-1, OPT, STEM OPT status are not eligiable for this role.", cfg)
     assert screen.screen({}, "We do not provide training plans or support for F-1 OPT, STEM OPT extensions.", cfg)
+    # Arizona Cardinals: the program list comes long after "sponsor"
+    assert screen.screen({}, "We are unable to sponsor or take over sponsorship of a student or employment Visas (including, but not limited to F-1, M-1, J-1, H-1B, OPT and/or CPT programs, etc.)", cfg)
