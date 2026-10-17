@@ -10,3 +10,7 @@ venv/
 
 # job-search agent: personal working data never goes in this public repo
 agent/work/
+
+# benchmark: job descriptions and generated resumes hold personal data
+benchmark/test_inputs/
+benchmark/test_outputs/
