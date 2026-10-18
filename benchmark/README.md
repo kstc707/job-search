@@ -23,6 +23,10 @@ Local model instead of the API: `--provider ollama --ollama-model qwen3:4b --out
 (needs `ollama serve` running; `--num-ctx`, `--num-predict`, `--think` tune it). Token counts come from Ollama's
 `prompt_eval_count` / `eval_count`; there is no prompt caching.
 
+Gemini instead: `export GEMINI_API_KEY=...` (free key from Google AI Studio), then
+`--provider gemini --gemini-model <model> --out benchmark/test_outputs/gemini`. The free tier is rate-limited
+and Google may use free-tier prompts to improve its products, so it sees the resume facts you send.
+
 Options: `--effort` (default `high`), `--max-tokens` (default 64000), `--out`.
 
 Outputs per job in `test_outputs/workflow/<slug>/`: `requirements.json`, `jd_map.md`, the

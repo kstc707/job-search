@@ -121,6 +121,56 @@ def call_ollama(args, log, job, step, system, user, max_tokens, schema=None):
     return out["message"]["content"]
 
 
+def _gemini_schema(s):
+    """Gemini's responseSchema takes an OpenAPI subset: drop additionalProperties."""
+    if isinstance(s, dict):
+        return {k: _gemini_schema(v) for k, v in s.items() if k != "additionalProperties"}
+    if isinstance(s, list):
+        return [_gemini_schema(v) for v in s]
+    return s
+
+
+def call_gemini(args, log, job, step, system, user, max_tokens, schema=None):
+    """Same call through the Gemini API (free tier works); records the same fields."""
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    gen = {"maxOutputTokens": min(max_tokens, args.gemini_max_output)}
+    if schema:
+        gen.update(responseMimeType="application/json", responseSchema=_gemini_schema(schema))
+    body = {
+        "systemInstruction": {"parts": [{"text": "\n\n".join(b["text"] for b in system)}]},
+        "contents": [{"role": "user", "parts": [{"text": user}]}],
+        "generationConfig": gen,
+    }
+    url = (f"https://generativelanguage.googleapis.com/v1beta/models/{args.gemini_model}"
+           ":generateContent")
+    req = urllib.request.Request(url, data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json", "x-goog-api-key": key})
+    t0 = time.perf_counter()
+    with urllib.request.urlopen(req, timeout=1800) as r:
+        out = json.loads(r.read())
+    secs = time.perf_counter() - t0
+    um = out.get("usageMetadata", {})
+    cand = (out.get("candidates") or [{}])[0]
+    rec = {
+        "job": job, "step": step, "model": out.get("modelVersion", args.gemini_model),
+        "stop_reason": cand.get("finishReason"),
+        "input_tokens": um.get("promptTokenCount", 0),
+        # thinking tokens are billed as output, so count them with the visible output
+        "output_tokens": um.get("candidatesTokenCount", 0) + um.get("thoughtsTokenCount", 0),
+        "cache_read": um.get("cachedContentTokenCount", 0), "cache_write": 0,
+        "seconds": round(secs, 2),
+    }
+    log.append(rec)
+    print(f"  {step:<13} in={rec['input_tokens']:>7} out={rec['output_tokens']:>6} "
+          f"{secs:6.1f}s  stop={rec['stop_reason']}")
+    if rec["stop_reason"] == "MAX_TOKENS":
+        raise RuntimeError(f"{job} {step}: hit maxOutputTokens; raise --gemini-max-output")
+    if rec["stop_reason"] not in ("STOP", None):
+        raise RuntimeError(f"{job} {step}: finishReason {rec['stop_reason']}")
+    return "".join(p.get("text", "") for p in cand.get("content", {}).get("parts", [])
+                   if not p.get("thought"))
+
+
 def load_jd(path):
     text = Path(path).read_text()
     header, _, body = text.partition("\n}\n")
@@ -153,12 +203,15 @@ def main():
     ap.add_argument("--out", default=str(HERE / "test_outputs" / "workflow"))
     ap.add_argument("--effort", default="high", choices=["low", "medium", "high", "xhigh", "max"])
     ap.add_argument("--max-tokens", type=int, default=64000)
-    ap.add_argument("--provider", default="anthropic", choices=["anthropic", "ollama"])
+    ap.add_argument("--provider", default="anthropic", choices=["anthropic", "ollama", "gemini"])
     ap.add_argument("--ollama-model", default="qwen3:4b")
     ap.add_argument("--ollama-url", default="http://127.0.0.1:11434")
     ap.add_argument("--num-ctx", type=int, default=32768, help="Ollama context window")
     ap.add_argument("--num-predict", type=int, default=12000, help="Ollama max output tokens")
     ap.add_argument("--think", action="store_true", help="let qwen3 think before answering (slower)")
+    ap.add_argument("--gemini-model", default=os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
+                    help="any Gemini model your key can use; check AI Studio for the current free ones")
+    ap.add_argument("--gemini-max-output", type=int, default=32000)
     args = ap.parse_args()
 
     jobs = list(args.jobs)
@@ -201,6 +254,12 @@ def main():
         def step_call(job, step, user, max_tokens, schema=None):
             extra = {"format": {"type": "json_schema", "schema": schema}} if schema else None
             return call(client, log, job, step, shared_system, user, max_tokens, args.effort, extra)
+    elif args.provider == "gemini":
+        if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
+            sys.exit("Set GEMINI_API_KEY (free from Google AI Studio) and run again. Nothing was sent.")
+
+        def step_call(job, step, user, max_tokens, schema=None):
+            return call_gemini(args, log, job, step, shared_system, user, max_tokens, schema)
     else:
         def step_call(job, step, user, max_tokens, schema=None):
             return call_ollama(args, log, job, step, shared_system, user, max_tokens, schema)
