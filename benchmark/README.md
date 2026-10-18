@@ -19,6 +19,10 @@ python benchmark/workflow_test.py benchmark/test_inputs/*.md \
 ```
 
 Or pick random jobs: `--random 5 --jd-dir <folder of jds>` (add `--seed N` to repeat a pick).
+Local model instead of the API: `--provider ollama --ollama-model qwen3:4b --out benchmark/test_outputs/qwen3_4b`
+(needs `ollama serve` running; `--num-ctx`, `--num-predict`, `--think` tune it). Token counts come from Ollama's
+`prompt_eval_count` / `eval_count`; there is no prompt caching.
+
 Options: `--effort` (default `high`), `--max-tokens` (default 64000), `--out`.
 
 Outputs per job in `test_outputs/workflow/<slug>/`: `requirements.json`, `jd_map.md`, the

@@ -29,6 +29,8 @@ import sys
 import time
 from pathlib import Path
 
+import urllib.request
+
 import anthropic
 
 MODEL = "claude-opus-5-5"  # same model the agentic session and its builders run on
@@ -88,6 +90,37 @@ def call(client, log, job, step, system, user, max_tokens, effort, extra=None):
     return "".join(b.text for b in msg.content if b.type == "text")
 
 
+def call_ollama(args, log, job, step, system, user, max_tokens, schema=None):
+    """Same call through a local Ollama model (e.g. qwen3:4b); records the same fields."""
+    sys_text = "\n\n".join(b["text"] for b in system)
+    body = {
+        "model": args.ollama_model, "stream": False, "think": args.think,
+        "messages": [{"role": "system", "content": sys_text}, {"role": "user", "content": user}],
+        "options": {"num_ctx": args.num_ctx, "num_predict": min(max_tokens, args.num_predict)},
+    }
+    if schema:
+        body["format"] = schema
+    t0 = time.perf_counter()
+    req = urllib.request.Request(args.ollama_url.rstrip("/") + "/api/chat",
+                                 data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=7200) as r:
+        out = json.loads(r.read())
+    secs = time.perf_counter() - t0
+    rec = {
+        "job": job, "step": step, "model": out.get("model"), "stop_reason": out.get("done_reason"),
+        "input_tokens": out.get("prompt_eval_count", 0), "output_tokens": out.get("eval_count", 0),
+        "cache_read": 0, "cache_write": 0, "seconds": round(secs, 2),
+    }
+    log.append(rec)
+    print(f"  {step:<13} in={rec['input_tokens']:>7} out={rec['output_tokens']:>6} "
+          f"{secs:6.1f}s  stop={rec['stop_reason']}")
+    if rec["input_tokens"] >= args.num_ctx:
+        print(f"  WARNING: prompt filled the {args.num_ctx}-token context; raise --num-ctx")
+    if out.get("done_reason") == "length":
+        raise RuntimeError(f"{job} {step}: hit num_predict; raise --num-predict")
+    return out["message"]["content"]
+
+
 def load_jd(path):
     text = Path(path).read_text()
     header, _, body = text.partition("\n}\n")
@@ -120,6 +153,12 @@ def main():
     ap.add_argument("--out", default=str(HERE / "test_outputs" / "workflow"))
     ap.add_argument("--effort", default="high", choices=["low", "medium", "high", "xhigh", "max"])
     ap.add_argument("--max-tokens", type=int, default=64000)
+    ap.add_argument("--provider", default="anthropic", choices=["anthropic", "ollama"])
+    ap.add_argument("--ollama-model", default="qwen3:4b")
+    ap.add_argument("--ollama-url", default="http://127.0.0.1:11434")
+    ap.add_argument("--num-ctx", type=int, default=32768, help="Ollama context window")
+    ap.add_argument("--num-predict", type=int, default=12000, help="Ollama max output tokens")
+    ap.add_argument("--think", action="store_true", help="let qwen3 think before answering (slower)")
     args = ap.parse_args()
 
     jobs = list(args.jobs)
@@ -151,12 +190,20 @@ def main():
         "cache_control": {"type": "ephemeral"},
     }]
 
-    try:
-        client = anthropic.Anthropic()
-        client._validate_headers(client.default_headers, {})  # fail fast if no credential resolves
-    except TypeError:
-        sys.exit("No Anthropic credential found. Set ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) "
-                 "and run again. Nothing was sent.")
+    if args.provider == "anthropic":
+        try:
+            client = anthropic.Anthropic()
+            client._validate_headers(client.default_headers, {})  # fail fast if no credential resolves
+        except TypeError:
+            sys.exit("No Anthropic credential found. Set ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) "
+                     "and run again. Nothing was sent.")
+
+        def step_call(job, step, user, max_tokens, schema=None):
+            extra = {"format": {"type": "json_schema", "schema": schema}} if schema else None
+            return call(client, log, job, step, shared_system, user, max_tokens, args.effort, extra)
+    else:
+        def step_call(job, step, user, max_tokens, schema=None):
+            return call_ollama(args, log, job, step, shared_system, user, max_tokens, schema)
     out_root = Path(args.out)
     out_root.mkdir(parents=True, exist_ok=True)
     log, results = [], []
@@ -173,14 +220,13 @@ def main():
         res = {"job": slug, "title": meta.get("title", ""), "company": meta.get("companyName", "")}
         try:
             # Step 1: requirements
-            req_text = call(
-                client, log, slug, "requirements", shared_system,
+            req_text = step_call(
+                slug, "requirements",
                 "Step 1 of the skill workflow only: decode this job description. Return the "
                 "core problem, responsibilities, required vs preferred skills, exact ATS keywords, "
                 "eligibility conditions to flag, and the location/onsite terms.\n\n<job>\n"
                 + raw + "\n</job>",
-                max_tokens=16000, effort=args.effort,
-                extra={"format": {"type": "json_schema", "schema": REQUIREMENTS_SCHEMA}},
+                max_tokens=16000, schema=REQUIREMENTS_SCHEMA,
             )
             reqs = json.loads(req_text)
             (job_dir / "requirements.json").write_text(json.dumps(reqs, indent=2))
@@ -189,8 +235,8 @@ def main():
             company = re.sub(r"[^A-Za-z0-9]", "", meta.get("companyName", slug))[:24] or slug
             role = re.sub(r"[^A-Za-z0-9]", "", meta.get("title", "Role"))[:40] or "Role"
             name = f"SaiTejaKoppolu_{company}_{role}"
-            resume_text = call(
-                client, log, slug, "resume", shared_system,
+            resume_text = step_call(
+                slug, "resume",
                 "Steps 2-4 of the skill workflow, in one pass, from these extracted requirements "
                 "and the job description. Output exactly two fenced blocks and nothing else:\n"
                 "1. ```markdown``` holding jd_map.md (one row per responsibility -> fact or GAP)\n"
@@ -198,7 +244,7 @@ def main():
                 "\\input{preamble}, use only the preamble's macros, and follow every content, "
                 "layout and bullet-count rule in the skill.\n\n<requirements>\n"
                 + json.dumps(reqs, indent=2) + "\n</requirements>\n\n<job>\n" + raw + "\n</job>",
-                max_tokens=args.max_tokens, effort=args.effort,
+                max_tokens=args.max_tokens,
             )
             md = re.search(r"```markdown\n(.*?)```", resume_text, re.S)
             tex = re.search(r"```latex\n(.*?)```", resume_text, re.S)
@@ -243,7 +289,7 @@ def main():
                     except json.JSONDecodeError:
                         res["score_error"] = (s.stderr or s.stdout)[-400:]
         except (anthropic.APIStatusError, anthropic.APIConnectionError, RuntimeError,
-                json.JSONDecodeError) as e:
+                json.JSONDecodeError, OSError) as e:
             res["error"] = f"{type(e).__name__}: {e}"
             print(f"  ERROR {res['error']}")
         calls = [r for r in log if r["job"] == slug]
