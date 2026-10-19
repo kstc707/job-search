@@ -3,6 +3,8 @@
 A comparison of [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT) with this repo's own, and how to
 write skills the way his are written.
 
+Visual version with charts and annotated examples: [Skill-Writing-Guide.pdf](Skill-Writing-Guide.pdf) (12 pages).
+
 Read in order:
 
 1. [Why they look different](01-why-they-look-different.md): ten concrete differences, with numbers, and what
