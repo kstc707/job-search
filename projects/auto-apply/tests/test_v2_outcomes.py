@@ -56,3 +56,13 @@ def test_already_applied_emails_are_skipped_and_unknown_applications_become_new_
 def test_job_alerts_and_general_mail_are_ignored():
     plan = build_plan(ROWS, [msg("x", "JOB_ALERT", "Acme Health"), msg("y", "GENERAL", "Acme Health")])
     assert not plan.updates and not plan.new_rows and not plan.unmatched
+
+
+def test_company_guessed_from_sender_or_subject_only_matches_existing_rows():
+    m1 = {"id": "g1", "category": "REJECTION", "receivedAt": "2026-10-10", "from": "cobalt@myworkday.com",
+          "fromName": None, "subject": "Application update", "application": None}
+    m2 = {"id": "g2", "category": "ACKNOWLEDGMENT", "receivedAt": "2026-10-10", "from": "no-reply@smartrecruiters.com",
+          "fromName": None, "subject": "Thank you for applying to Zeta Corp!", "application": None}
+    plan = build_plan(ROWS, [m1, m2])
+    assert [(u.row_url, u.new_status, u.confidence) for u in plan.updates] == [("u4", "Rejected", "medium")]
+    assert not plan.new_rows and [e.message_id for e in plan.unmatched] == ["g2"]

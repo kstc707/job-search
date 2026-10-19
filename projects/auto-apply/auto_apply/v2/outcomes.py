@@ -110,6 +110,30 @@ def _company_title(msg: dict) -> tuple[str, str]:
     return company, tracked.get("positionTitle") or ""
 
 
+_ATS_DOMAINS = ("myworkday.com", "icims.com", "smartrecruiters.com", "recruitee-inbox", "greenhouse-mail.io",
+                "lever.co", "ashbyhq.com", "breezy-mail.com", "ultipro.com", "brassring.com", "jobvite.com")
+_SUBJECT_CO = re.compile(r"\b(?:to|at|with|from)\s+([A-Z][\w&.'’\- ]{1,40}?)(?:[!.,:|]|\s+-\s|$)")
+
+
+def _fallback_companies(msg: dict) -> list[str]:
+    """Company names guessed from an email with no linked application: the sender's ATS
+    mailbox ("pwc@myworkday.com" -> "pwc") and "...applying to Acme" in the subject.
+    Used only to find an EXISTING tracker row, never to create one."""
+    out = []
+    sender = (msg.get("from") or "").lower()
+    local, _, domain = sender.partition("@")
+    if any(d in domain for d in _ATS_DOMAINS):
+        local = re.split(r"[+._-]", local)[0]
+        if local and local not in ("no", "noreply", "notification", "notifications", "do", "careers", "jobs", "talent"):
+            out.append(local)
+    m = _SUBJECT_CO.search(msg.get("subject") or "")
+    if m:
+        out.append(m.group(1).strip())
+    if msg.get("fromName"):
+        out.append(msg["fromName"])
+    return out
+
+
 def _seen_ids(rows: list[dict]) -> set[str]:
     ids = set()
     for r in rows:
@@ -145,10 +169,22 @@ def build_plan(rows: list[dict], messages: list[dict]) -> Plan:
         ev = Evidence(msg.get("id", ""), cat, msg.get("receivedAt", ""), msg.get("from", ""),
                       (msg.get("subject") or "")[:140])
         company, title = _company_title(msg)
-        if not company:
+        linked = bool((msg.get("application") or {}).get("companyName"))
+        row, conf = (None, "")
+        if linked:
+            row, conf = _match(rows, company, title)
+        else:
+            for guess in _fallback_companies(msg):
+                row, conf = _match(rows, guess, title)
+                if row is not None or conf == "ambiguous":
+                    break
+            if row is None:
+                plan.unmatched.append(ev)  # never create rows from a guessed company
+                continue
+            conf = "medium"
+        if not company and row is None:
             plan.unmatched.append(ev)
             continue
-        row, conf = _match(rows, company, title)
         status = CATEGORY_STATUS[cat]
         if conf == "ambiguous":
             plan.unmatched.append(ev)  # Sai picks which of the company's rows it belongs to
