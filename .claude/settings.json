@@ -1,7 +1,23 @@
 {
   "permissions": {
     "allow": [
-      "mcp__Notion"
+      "mcp__Notion",
+      "mcp__Indeed__search_jobs",
+      "mcp__Indeed__get_job_details",
+      "mcp__Tsenta__get-job-recommendations",
+      "mcp__Tsenta__get-job-details",
+      "mcp__Tsenta__get-jobs-by-ids",
+      "mcp__Tsenta__list-inbox-messages",
+      "mcp__Tsenta__get-inbox-message",
+      "mcp__Tsenta__get-application-balance",
+      "mcp__Tsenta__get-application-status",
+      "mcp__Tsenta__list-applications",
+      "mcp__Tsenta__list-resume-profiles",
+      "mcp__Tsenta__get-resume-profile",
+      "mcp__Tsenta__get-profile-status",
+      "mcp__Tsenta__request-resume-upload",
+      "mcp__Tsenta__check-custom-resume",
+      "Bash(curl -sS -o /dev/null -w * -X PUT -H \"Content-Type: application/pdf\" --data-binary @* https://storage.googleapis.com/autojobs-prod/custom-resume-uploads/*)"
     ],
     "deny": [
       "mcp__Notion__notion-delete-pages",
