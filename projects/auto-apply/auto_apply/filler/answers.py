@@ -39,6 +39,9 @@ _PROFILE_LABELS = [
     (re.compile(r"^(e ?mail|email address)$"), ("personalInformation.email",)),
     (re.compile(r"^(phone|phone number|mobile|mobile phone)$"), ("personalInformation.phone",)),
     (re.compile(r"^(zip|postal)\b"), ("personalInformation.zipCode",)),
+    (re.compile(r"^(please enter your )?(home |street |mailing )?address\b"),
+     ("personalInformation.address", "personalInformation.city", "personalInformation.state",
+      "personalInformation.zipCode")),
 ]
 
 # Field types where the answer must name exactly one of the options.
@@ -110,7 +113,11 @@ class AnswerBank:
         for pattern, paths in _PROFILE_LABELS:
             if pattern.match(key):
                 parts = [self._profile_value(path) for path in paths]
-                return " ".join(str(x) for x in parts) if all(parts) else None
+                if not all(parts):
+                    return None
+                if len(parts) == 4:  # street, city, state zip
+                    return f"{parts[0]}, {parts[1]}, {parts[2]} {parts[3]}"
+                return " ".join(str(x) for x in parts)
         return None
 
     def _years_threshold(self, q: Question, f: Field) -> "Resolution | None":
@@ -154,7 +161,7 @@ class AnswerBank:
             v = self._profile_value(_PROFILE_FIELDS[f.name])
             if v:
                 return Resolution(q, f, "fill", str(v), "profile")
-        if f.type == "input_text":
+        if f.type in ("input_text", "textarea"):
             v = self._profile_by_label(q.label)
             if v:
                 return Resolution(q, f, "fill", v, "profile")

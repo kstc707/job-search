@@ -149,8 +149,14 @@ class _Session:
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch(executable_path=CHROMIUM, headless=headless)
         self.page = self._browser.new_page(viewport={"width": 1280, "height": 900})
-        self.page.goto(apply_url(url, ats), wait_until="networkidle", timeout=60000)
+        # Some pages never go "network idle" (trackers keep polling): load, wait for the
+        # form itself, then give its scripts a bounded moment to settle.
+        self.page.goto(apply_url(url, ats), wait_until="domcontentloaded", timeout=60000)
         self.page.wait_for_selector(PROFILES[ats]["container"], timeout=30000)
+        try:
+            self.page.wait_for_load_state("networkidle", timeout=15000)
+        except Exception:
+            pass
         self.page.set_default_timeout(10000)  # one stuck field must not hold the run for long
         self.title = self.page.title()
         self.questions = read_form(self.page, ats)

@@ -127,3 +127,11 @@ def test_open_questions_are_written_for_drafting(tmp_path):
     assert "Export control: list your citizenships" in rows
     assert rows["Do you have at least 2 years of experience with dbt?"]["options"] == ["Yes", "No"]
     assert "Full name" not in rows  # answered questions are not listed
+
+
+def test_address_comes_from_profile():
+    raw = [{"label": "Please enter your address (Street Address, City, State, Zip Code)", "required": True,
+            "fields": [{"name": "a", "type": "input_text", "options": []}]}]
+    info = {**PROFILE["personalInformation"], "address": "1 Main St", "zipCode": "62701"}
+    r, = AnswerBank({"personalInformation": info}, [], {}).plan(questions_from_raw(raw))
+    assert r.value == "1 Main St, Springfield, Illinois 62701"
