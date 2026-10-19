@@ -31,3 +31,8 @@ pip install -r requirements.txt
 ```
 
 Then follow that project's own README for setup and usage specifics.
+
+## Skills
+
+Claude Code skills live in `.claude/skills/`. [docs/skill-writing](docs/skill-writing/README.md) explains how they
+are written, and the `writing-skills` skill applies it.
