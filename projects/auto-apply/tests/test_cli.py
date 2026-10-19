@@ -9,7 +9,6 @@ from conftest import GOOD_RESUME, INSTRUCTIONS, PROFILE
 @pytest.fixture
 def runs(tmp_path, monkeypatch):
     (tmp_path / "instructions.txt").write_text(INSTRUCTIONS)
-    (tmp_path / "never_claim.txt").write_text("# from facts file\nSAS, Looker\n")
     raw = tmp_path / "profile_raw.json"
     raw.write_text(json.dumps({"tool": "get-resume-profile", "result": {"data": PROFILE}}))
     assert cli.main(["--runs", str(tmp_path), "profile", str(raw)]) == 0
@@ -32,9 +31,9 @@ def test_gate_passes_clean_resume(runs, monkeypatch, capsys):
     assert "PASS" in capsys.readouterr().out
 
 
-def test_gate_uses_extra_never_claim_file(runs, monkeypatch, capsys):
-    assert _gate(runs, GOOD_RESUME + " Modeled in SAS.", monkeypatch) == 2
-    assert "resume mentions 'SAS'" in capsys.readouterr().out
+def test_gate_lets_any_tool_through(runs, monkeypatch, capsys):
+    # The instructions' "Never claim: ... Tableau" list is not enforced.
+    assert _gate(runs, GOOD_RESUME + " Modeled in SAS and Tableau.", monkeypatch) == 0
 
 
 def test_gate_blocks_duplicates_and_cap(runs, monkeypatch, capsys):

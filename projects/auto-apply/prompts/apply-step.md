@@ -18,7 +18,6 @@ Then fill `runs/` (git-ignored; never commit it):
 - `runs/instructions.txt` ← `resumeInstructions` from Tsenta `get-apply-preferences`
 - `runs/profile_raw.json` ← `get-resume-profile` (default profile) → `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male` (Sai, 2026-10-14; the Tsenta tools cannot edit gender)
 - `runs/answers.json` ← the JSON code block under **Form Answers** on the memory page
-- `runs/never_claim.txt` ← the facts file's "Do not claim" list
 
 ## For each row with Submit? = Yes and Status in (Drafted, Approved, empty)
 1. **Still open?** Closed or expired → Status Closed, Submit? No, note why. Next row.
@@ -33,7 +32,7 @@ Then fill `runs/` (git-ignored; never commit it):
      free, saves a Tsenta credit:
      `.venv/bin/python -m auto_apply.filler.cli fill <url> --pdf runs/<slug>/resume.pdf --submit`
      - exit 3 (required question with no approved answer) → read `runs/<slug>/questions.json`.
-       Draft job-specific answers from facts.md only into `runs/<slug>/answers.json` and put the
+       Draft job-specific answers from the Notion Resume Knowledge Base only into `runs/<slug>/answers.json` and put the
        drafts in the row's Notes as "Drafted answers — approve?"; standing questions and consents
        go under Open Questions on the memory page. Do not submit with unapproved drafts: set
        Submit? = No until Sai approves, then the next run retries.

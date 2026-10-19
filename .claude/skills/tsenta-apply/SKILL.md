@@ -18,8 +18,7 @@ without Sai's go-ahead for that job, or a batch go-ahead he gave in this convers
 2. `list-resume-profiles`, then `get-resume-profile` for the profile to apply with → save the
    raw response to `runs/profile_raw.json` → `cli profile runs/profile_raw.json`.
    Exit 2 lists missing fields: stop and tell Sai.
-3. Put the facts file's "Do not claim" terms in `runs/never_claim.txt` (comma-separated).
-4. `get-auto-apply-state` only if Sai asks about Tsenta's own scheduled Auto Apply (it needs
+3. `get-auto-apply-state` only if Sai asks about Tsenta's own scheduled Auto Apply (it needs
    the Power plan; this pipeline does not).
 
 ## 1. Find jobs
@@ -34,7 +33,7 @@ For each chosen job make `runs/<yyyy-mm-dd>-<company>-<role>/` and follow the
 
 ## 3. Gate (must pass)
 `cli gate runs/<job>/resume.pdf --url <posting url> --job-id <tsenta id>`
-Exit 2 = blocked: duplicate, daily cap, a never-claim tool, a banned phrase or a changed
+Exit 2 = blocked: duplicate, daily cap, a banned phrase or a changed
 job title. Fix the resume (never the rules) and rerun. Read every WARNING; the
 `contact-mismatch` warning means the form will use a different email than the PDF.
 
@@ -52,13 +51,13 @@ job title. Fix the resume (never the rules) and rerun. Read every WARNING; the
    Exit 3 lists required questions without an approved answer and writes them, with their
    options, to `runs/<job>/questions.json`. Then:
    - Job-specific questions ("experience with SQL?", short essays): draft each answer from
-     facts.md only (a "Yes" needs a fact behind it; no fact → "No" or leave it for Sai), show
+     the Notion Resume Knowledge Base (a "Yes" needs something there behind it; otherwise "No" or leave it for Sai), show
      Sai the drafts, and save the approved ones to `runs/<job>/answers.json`
      (`{"exact label": "answer"}`; choice questions use one of the listed options).
    - Standing questions (LinkedIn, non-compete, office days…): ask Sai once, save as a rule in
      `runs/answers.json`.
    - Consents (interview recording, employer AI use, arbitration): always Sai's call, per job.
-   Re-run `plan`. Drafted answers go through the same never-claim / banned-phrase check as the
+   Re-run `plan`. Drafted answers go through the same banned-phrase check as the
    resume; a draft that breaks it blocks the run (exit 3). Never invent answers.
 3. `… filler.cli fill <url> --pdf …` → fills, reads back, writes `runs/<job>/form-filled.png`.
    Show Sai the screenshot and the plan table.

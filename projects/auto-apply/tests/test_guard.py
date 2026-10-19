@@ -2,11 +2,9 @@ from auto_apply.guard import check_resume, normalize_text, parse_instructions
 from conftest import GOOD_RESUME, INSTRUCTIONS
 
 
-def test_parse_never_claim_splits_slash_groups_but_keeps_short_pairs():
+def test_parse_ignores_never_claim_tool_lists():
     rules = parse_instructions(INSTRUCTIONS)
-    assert rules.never_claim == [
-        "Docker", "Kubernetes", "CI/CD", "PySpark", "Spark", "GCP", "BigQuery", "Vertex AI", "Tableau",
-    ]
+    assert not {"Docker", "Tableau", "CI/CD"} & set(rules.banned_phrases)
 
 
 def test_parse_bans_only_quotes_after_the_negation():
@@ -18,25 +16,21 @@ def test_parse_bans_only_quotes_after_the_negation():
 
 def test_parse_handles_empty_instructions():
     rules = parse_instructions(None)
-    assert rules.never_claim == [] and rules.banned_phrases == []
+    assert rules.banned_phrases == []
 
 
 def test_clean_resume_has_no_findings(profile):
     assert check_resume(GOOD_RESUME, profile, parse_instructions(INSTRUCTIONS)) == []
 
 
-def test_flags_never_claim_tools_case_insensitively(profile):
+def test_tools_from_a_never_claim_list_are_allowed(profile):
     text = GOOD_RESUME + "Built dashboards in tableau and pipelines on BigQuery with ci/cd."
-    rules = parse_instructions(INSTRUCTIONS)
-    terms = {f.detail for f in check_resume(text, profile, rules) if f.rule == "never-claim"}
-    assert terms == {
-        "resume mentions 'Tableau'", "resume mentions 'BigQuery'", "resume mentions 'CI/CD'",
-    }
+    assert check_resume(text, profile, parse_instructions(INSTRUCTIONS)) == []
 
 
 def test_word_boundaries_avoid_false_positives(profile):
-    # "students" is not "student"; "Sparkline" is not "Spark".
-    text = GOOD_RESUME + "Added a Sparkline chart for students."
+    # "students" is not "student".
+    text = GOOD_RESUME + "Added a chart for students."
     assert check_resume(text, profile, parse_instructions(INSTRUCTIONS)) == []
 
 
@@ -74,16 +68,13 @@ def test_normalize_rejoins_hyphenated_line_breaks():
     assert normalize_text("Data Ana-\nlyst   Intern") == "Data Analyst Intern"
 
 
-def test_drafted_answers_cannot_claim_never_claim_skills():
+def test_drafted_answers_only_flag_banned_phrases():
     from auto_apply.guard import GuardRules, check_answers
-    rules = GuardRules(never_claim=["Tableau", "CI/CD"], banned_phrases=["results-driven"])
+    rules = GuardRules(banned_phrases=["results-driven"])
     found = check_answers({
-        "Do you have experience with Tableau?": "Yes",          # claims it
-        "Do you have experience with SQL?": "Yes",              # fine
-        "Do you use Tableau daily?": "No",                      # fine: denies it
-        "Describe a project": "Built CI/CD for reports",        # names it
+        "Do you have experience with Tableau?": "Yes",
+        "Describe a project": "Built CI/CD for reports",
         "Why us?": "I am a results-driven analyst",             # banned phrase
         "_note": "ignored",
     }, rules)
-    assert sorted(f.rule for f in found) == ["answer-banned-phrase", "answer-claims-never-claim",
-                                              "answer-claims-never-claim"]
+    assert [f.rule for f in found] == ["answer-banned-phrase"]

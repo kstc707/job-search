@@ -1,12 +1,11 @@
 """Pre-submit checks on a tailored resume.
 
 Once Tsenta has the PDF it goes to the employer unchanged, so this is the last point
-where a fabricated tool, a changed job title, or a banned phrase can be caught.
+where a changed job title or a banned phrase can be caught.
 
-Rules come from two places the user already maintains:
-- Tsenta's `resumeInstructions` (get-apply-preferences): "Never claim: A, B, C." and
-  quoted phrases after "never" / "no" / "do not".
-- An optional extra never-claim list (e.g. the "Do not claim" section of a facts file).
+Banned phrases come from Tsenta's `resumeInstructions` (get-apply-preferences): quoted
+phrases after "never" / "no" / "do not". Tool lists ("Never claim: A, B, C.") are not
+checked: the posting's tools may appear on the resume.
 """
 
 from __future__ import annotations
@@ -24,7 +23,6 @@ _QUOTED = re.compile(r"'([^']{2,80})'")
 
 @dataclass
 class GuardRules:
-    never_claim: list[str] = field(default_factory=list)
     banned_phrases: list[str] = field(default_factory=list)
 
 
@@ -35,35 +33,14 @@ class Finding:
     detail: str
 
 
-def _split_terms(raw: str) -> list[str]:
-    """Split "Docker, GCP/BigQuery/Vertex AI, CI/CD" into individual terms.
-
-    Slash groups split into their parts unless a part is shorter than 3 characters,
-    so "CI/CD" stays whole (matching bare "CI" would flag far too much).
-    """
-    terms: list[str] = []
-    for chunk in raw.split(","):
-        chunk = chunk.strip().strip(".").strip()
-        if not chunk:
-            continue
-        parts = [p.strip() for p in chunk.split("/")]
-        if len(parts) > 1 and all(len(p) >= 3 for p in parts):
-            terms.extend(parts)
-        else:
-            terms.append(chunk)
-    return terms
-
-
 def parse_instructions(instructions: str | None) -> GuardRules:
     """Derive guard rules from Tsenta's free-text resume instructions."""
     rules = GuardRules()
     if not instructions:
         return rules
     for sentence in _SENTENCE_SPLIT.split(instructions):
-        m = re.match(r"\s*never claim\s*:\s*(.+)", sentence, re.IGNORECASE)
-        if m:
-            rules.never_claim.extend(_split_terms(m.group(1)))
-            continue
+        if re.match(r"\s*never claim\s*:", sentence, re.IGNORECASE):
+            continue  # tool lists are not checked
         neg = _NEGATION.search(sentence)
         if not neg:
             continue
@@ -114,10 +91,6 @@ def check_resume(text: str, profile: dict[str, Any], rules: GuardRules) -> list[
     norm = normalize_text(text)
     lower = norm.lower()
 
-    for term in rules.never_claim:
-        if _term_pattern(term).search(norm):
-            findings.append(Finding("error", "never-claim", f"resume mentions '{term}'"))
-
     for phrase in rules.banned_phrases:
         if _term_pattern(phrase).search(norm):
             findings.append(Finding("error", "banned-phrase", f"resume uses '{phrase}'"))
@@ -143,26 +116,13 @@ def check_resume(text: str, profile: dict[str, Any], rules: GuardRules) -> list[
     return findings
 
 
-_AFFIRMATIVE = re.compile(r"^\s*(yes|y|true|i do|i have)\b", re.IGNORECASE)
-
-
 def check_answers(answers: dict[str, Any], rules: GuardRules) -> list[Finding]:
-    """Checks on drafted per-job form answers ({question label: answer}).
-
-    A "Yes" to a question about a never-claim skill ("Do you have Tableau experience?"),
-    or a free-text answer that names one, would claim it as surely as a resume bullet.
-    Negated mentions ("I have not used Tableau") are flagged too: a person decides.
-    """
+    """Banned phrases in drafted per-job form answers ({question label: answer})."""
     findings: list[Finding] = []
     for label, answer in answers.items():
         if answer is None or label.startswith("_"):
             continue
         text = " ".join(map(str, answer)) if isinstance(answer, list) else str(answer)
-        for term in rules.never_claim:
-            pat = _term_pattern(term)
-            if pat.search(text) or (_AFFIRMATIVE.match(text) and pat.search(label)):
-                findings.append(Finding("error", "answer-claims-never-claim",
-                                        f"'{label[:70]}' → '{text[:60]}' claims '{term}'"))
         for phrase in rules.banned_phrases:
             if phrase.lower() in text.lower():
                 findings.append(Finding("error", "answer-banned-phrase", f"'{label[:70]}' uses '{phrase}'"))

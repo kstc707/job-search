@@ -23,8 +23,7 @@ most 3 resumes, and send nothing (skip step 6).
 3. Never invent a form answer: rules come from "Form Answers v2" on the memory page; `ASK`
    and unknown required questions block that job (write the question into Notes).
 4. Resume content follows the memory page's "Resume decisions" (latest date wins). Still fixed:
-   employers, titles, dates, degrees, every number; never claim clearance, citizenship,
-   licenses or extra years.
+   employers, titles, dates, degrees, every number; never claim clearance or citizenship.
 5. Tsenta: at most 15 applications a day, keep 30 credits in reserve, never change Tsenta
    settings or the Tsenta profile. Our filler (Greenhouse/Lever/Ashby) has no credit limit.
 6. No scraping of LinkedIn or Indeed pages. Indeed jobs come from the Indeed connector; their
@@ -46,7 +45,6 @@ Fill `runs/` (git-ignored, never commit it):
 - `runs/answers.json` ← the JSON block under **Form Answers v2** on the memory page
 - `runs/profile_raw.json` ← Tsenta `get-resume-profile` (default) →
   `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male --set personalInformation.email=saitejakoppolu24@gmail.com`
-- `runs/never_claim.txt` ← one line: `clearance, citizenship` (the tool list is lifted, see rule 4)
 - `runs/instructions.txt` ← empty file
 
 ## 1. Outcome sync (every run)
@@ -87,10 +85,11 @@ Fill `runs/` (git-ignored, never commit it):
 1. Build with the **sai-resume-tailor** skill from the posting.
 2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saitejakoppolu24@gmail.com --phone "+1 901-343-7273"`
    must PASS. A FAIL means fix the LaTeX (plain-hyphen dates, the email above) and rebuild.
-3. **Red-team review, batched** (ONE fresh-context subagent for all of this run's resumes; each
+3. **AI screen, batched** (ONE fresh-context subagent for all of this run's resumes; each
    subagent costs ~60k tokens of startup overhead, so never one per resume): give it ONLY the
-   posting texts and the PDFs' extracted texts, paired by file name. Its job: a recruiter with 200
-   applicants who wants to reject. For each resume it names the 3 strongest reasons to say no.
+   posting texts and the PDFs' extracted texts, paired by file name, and the screener prompt in
+   the resume skill's `references/ai-screen.md`. For each resume it returns a score, advance or
+   reject, and the 3 strongest reasons to reject.
    Fix each in the resume, or accept it and write it under "Gaps" in Notes. Never invent
    anything to fix a reason. Builders do not red-team their own resumes; after the batched
    review, apply all fixes in one pass (no separate fixer subagent per resume).

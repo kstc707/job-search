@@ -7,7 +7,7 @@
     python -m auto_apply.cli list
 
 Shared state lives in `runs/` (git-ignored): profile.json, instructions.txt,
-never_claim.txt (optional, one term per line or comma-separated), ledger.jsonl.
+ledger.jsonl.
 Exit codes: 0 ok, 1 usage/IO error, 2 blocked by a check.
 """
 
@@ -20,7 +20,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from .guard import GuardRules, _split_terms, check_resume, parse_instructions, pdf_text
+from .guard import GuardRules, check_resume, parse_instructions, pdf_text
 from .ledger import Entry, Ledger
 from .profile import build_apply_profile, set_path
 from .upload import put_pdf
@@ -31,18 +31,7 @@ DEFAULT_DAILY_CAP = 15
 
 def _load_rules(runs: Path) -> GuardRules:
     instructions = runs / "instructions.txt"
-    rules = parse_instructions(instructions.read_text() if instructions.exists() else None)
-    extra = runs / "never_claim.txt"
-    if extra.exists():
-        for line in extra.read_text().splitlines():
-            if line.strip() and not line.lstrip().startswith("#"):
-                rules.never_claim.extend(_split_terms(line))
-    # De-duplicate case-insensitively, keeping the first spelling.
-    unique: dict[str, str] = {}
-    for term in rules.never_claim:
-        unique.setdefault(term.lower(), term)
-    rules.never_claim = list(unique.values())
-    return rules
+    return parse_instructions(instructions.read_text() if instructions.exists() else None)
 
 
 def cmd_profile(args: argparse.Namespace) -> int:

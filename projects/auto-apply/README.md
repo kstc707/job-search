@@ -34,7 +34,7 @@ Two consequences drive the design:
  TAILOR          Claude + sai-resume-tailor → runs/<job>/resume.pdf
    │             (evidence map → LaTeX → build → visual check → originality)
    ▼
- GATE            cli gate: dedupe · daily cap · never-claim · banned phrases · fixed titles
+ GATE            cli gate: dedupe · daily cap · banned phrases · fixed titles
    │             blocked → fix the resume, never the rules
    ▼
  ROUTE by ATS ───────────────────────────────┬──────────────────────────────────────
@@ -60,10 +60,10 @@ login-based ATSes and costs one credit per application.
 
 ## Modules
 
-- `auto_apply/guard.py`: parses Tsenta's `resumeInstructions` ("Never claim: A, B/C." and
-  quoted phrases after "never"/"no"/"do not") into rules, then checks resume text:
-  never-claim tools and banned phrases are errors; each profile job title must appear
-  verbatim (error); employers and the contact email are checked as warnings.
+- `auto_apply/guard.py`: parses the banned phrases in Tsenta's `resumeInstructions` (quoted
+  phrases after "never"/"no"/"do not"; tool lists are not checked), then checks resume text:
+  banned phrases are errors; each profile job title must appear verbatim (error); employers
+  and the contact email are checked as warnings.
 - `auto_apply/profile.py`: extracts the profile from a `get-resume-profile` response and
   lists empty required fields.
 - `auto_apply/upload.py`: validates the PDF (header, trailer, 5 MB limit) and PUTs it to
@@ -86,7 +86,7 @@ login-based ATSes and costs one credit per application.
     `--test-fill` fills a blocked form for testing and can never be combined with `--submit`.
     When a form is blocked, the open questions (with options) are written to
     `<resume folder>/questions.json` for drafting; drafted answers in `answers.json` there are
-    checked against the never-claim list and banned phrases before any form is opened.
+    checked against the banned phrases before any form is opened.
 
 The design follows how client-side autofill tools are built (per-ATS form locators, a
 field-category/answer layer, events that React forms register), learned by static analysis

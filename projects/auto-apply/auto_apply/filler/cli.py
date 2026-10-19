@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
     shot = str(pdf.parent / "form-filled.png")
     questions_file = pdf.parent / "questions.json"
 
-    # Drafted per-job answers face the same never-claim rules as the resume.
+    # Drafted per-job answers face the same banned-phrase rules as the resume.
     if job_answers.exists():
         bad = [f for f in check_answers(json.loads(job_answers.read_text()), _load_rules(runs)) if f.severity == "error"]
         if bad:
