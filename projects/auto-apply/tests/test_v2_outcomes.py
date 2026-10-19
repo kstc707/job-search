@@ -79,3 +79,9 @@ def test_a_different_title_at_the_same_company_is_another_application():
     rows = [{"url": "x1", "Job": "Assoc Business Intelligence Analyst", "Company": "Umbra", "Status": "Applied", "Notes": ""}]
     plan = build_plan(rows, [msg("t1", "REJECTION", "Umbra", "Data Scientist I - CX Analytics")])
     assert not plan.updates and plan.new_rows[0].job == "Data Scientist I - CX Analytics"
+
+
+def test_seen_ids_survive_notion_escaped_brackets():
+    rows = [dict(ROWS[3], Notes=r"Rejected. Evidence: 2026-10-19 rejection\] \[outcome:m9\]")]
+    plan = build_plan(rows, [msg("m9", "REJECTION", "Cobalt", "Reporting Analyst")])
+    assert plan.skipped_seen == 1 and not plan.updates

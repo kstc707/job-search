@@ -137,7 +137,8 @@ def _fallback_companies(msg: dict) -> list[str]:
 def _seen_ids(rows: list[dict]) -> set[str]:
     ids = set()
     for r in rows:
-        ids.update(re.findall(r"\[outcome:([A-Za-z0-9_-]+)\]", r.get("Notes") or ""))
+        # Notion returns Notes as escaped markdown, so the stamp can read \[outcome:id\]
+        ids.update(re.findall(r"\\?\[outcome:([A-Za-z0-9_-]+)\\?\]", r.get("Notes") or ""))
     return ids
 
 
