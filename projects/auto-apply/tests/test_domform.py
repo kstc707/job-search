@@ -135,3 +135,13 @@ def test_address_comes_from_profile():
     info = {**PROFILE["personalInformation"], "address": "1 Main St", "zipCode": "62701"}
     r, = AnswerBank({"personalInformation": info}, [], {}).plan(questions_from_raw(raw))
     assert r.value == "1 Main St, Springfield, Illinois 62701"
+
+
+def test_years_rule_as_a_list_still_drives_minimum_questions():
+    rules = [{"match": "years of experience", "answer": ["4", "4+", "3-5"]}]
+    raw = [{"label": "Do you have at least 5 years of experience with SQL?", "required": True,
+            "fields": [{"name": "y", "type": "yesno", "options": YN}]},
+           {"label": "Years of experience", "required": True, "fields": [{"name": "s", "type": "native_select",
+            "options": [{"label": "0-2", "value": "0-2"}, {"label": "3-5", "value": "3-5"}, {"label": "6+", "value": "6+"}]}]}]
+    p = AnswerBank(PROFILE, rules, {}).plan(questions_from_raw(raw))
+    assert p[0].value == "No" and p[1].value == "3-5"

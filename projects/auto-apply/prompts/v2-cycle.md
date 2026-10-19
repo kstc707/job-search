@@ -79,7 +79,7 @@ Fill `runs/` (git-ignored, never commit it):
    keeps entry-level analyst titles posted within 72 hours and orders them
    Memphis > Remote > Atlanta > Alabama > rest of US, then score.
 3. Read each kept job's full description (Tsenta `get-job-details` / Indeed `get_job_details`).
-   Skip and note: citizens only, clearance, more than 3 years required, degree we don't have,
+   Skip and note: citizens only, clearance, more than 4 years required, degree we don't have,
    language not spoken, the hiring area excludes Tennessee (e.g. "TX, FL, GA residents only").
 4. Take the top 8 (DRY_RUN: top 3).
 

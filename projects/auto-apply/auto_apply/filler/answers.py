@@ -128,9 +128,10 @@ class AnswerBank:
         """
         m = re.search(r"(?:minimum of|at least|\bover)\s+(\d+)\+?\s+years", q.label, re.IGNORECASE)
         found = self._lookup("years of experience")
-        if not m or not found or not str(found[0]).isdigit():
+        first = found[0][0] if found and isinstance(found[0], list) and found[0] else (found[0] if found else None)
+        if not m or first is None or not re.match(r"\d+", str(first)):
             return None
-        asked, have = int(m.group(1)), int(found[0])
+        asked, have = int(m.group(1)), int(re.match(r"\d+", str(first)).group())
         if asked > have:
             hit = match_option("No", f.options)
             if hit:
