@@ -363,6 +363,9 @@ def main():
         print(f"  job total: {res['calls']} calls, in={res['input_tokens']} out={res['output_tokens']} "
               f"cache_r={res['cache_read']} cache_w={res['cache_write']}, {res['total_seconds']}s")
         results.append(res)
+        # write after every job so a stopped run keeps what finished
+        (out_root / "calls.json").write_text(json.dumps(log, indent=2))
+        (out_root / "results.json").write_text(json.dumps(results, indent=2))
 
     (out_root / "calls.json").write_text(json.dumps(log, indent=2))
     (out_root / "results.json").write_text(json.dumps(results, indent=2))
