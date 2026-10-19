@@ -141,14 +141,18 @@ def _seen_ids(rows: list[dict]) -> set[str]:
     return ids
 
 
-def _match(rows: list[dict], company: str, title: str) -> tuple[dict | None, str]:
-    same = [r for r in rows if company_match(r.get("Company") or "", company)]
+def _match(rows: list[dict], company: str, title: str, received: str = "") -> tuple[dict | None, str]:
+    # An email cannot be about a row the tracker created after the email arrived.
+    day = (received or "")[:10]
+    same = [r for r in rows if company_match(r.get("Company") or "", company)
+            and not (day and (r.get("date:Date:start") or "") > day)]
     if not same:
         return None, ""
     if title:
         best = max(same, key=lambda r: title_score(r.get("Job") or "", title))
         if title_score(best.get("Job") or "", title) >= 0.75:
             return best, "high"
+        return None, ""  # the email names a different job at this company: another application
     if len(same) == 1:
         return same[0], "medium"
     return None, "ambiguous"  # several rows at this company and no title to choose: ask, don't guess
@@ -172,10 +176,10 @@ def build_plan(rows: list[dict], messages: list[dict]) -> Plan:
         linked = bool((msg.get("application") or {}).get("companyName"))
         row, conf = (None, "")
         if linked:
-            row, conf = _match(rows, company, title)
+            row, conf = _match(rows, company, title, msg.get("receivedAt") or "")
         else:
             for guess in _fallback_companies(msg):
-                row, conf = _match(rows, guess, title)
+                row, conf = _match(rows, guess, title, msg.get("receivedAt") or "")
                 if row is not None or conf == "ambiguous":
                     break
             if row is None:

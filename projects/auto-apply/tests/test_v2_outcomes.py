@@ -66,3 +66,16 @@ def test_company_guessed_from_sender_or_subject_only_matches_existing_rows():
     plan = build_plan(ROWS, [m1, m2])
     assert [(u.row_url, u.new_status, u.confidence) for u in plan.updates] == [("u4", "Rejected", "medium")]
     assert not plan.new_rows and [e.message_id for e in plan.unmatched] == ["g2"]
+
+
+def test_email_older_than_the_row_belongs_to_another_application():
+    rows = [{"url": "n1", "Job": "Data Analyst", "Company": "Orbit", "Status": "Drafted", "Notes": "",
+             "date:Date:start": "2026-10-19"}]
+    plan = build_plan(rows, [msg("o1", "ACKNOWLEDGMENT", "Orbit", "", "2026-10-01T00:00:00Z")])
+    assert not plan.updates and plan.new_rows[0].company == "Orbit"
+
+
+def test_a_different_title_at_the_same_company_is_another_application():
+    rows = [{"url": "x1", "Job": "Assoc Business Intelligence Analyst", "Company": "Umbra", "Status": "Applied", "Notes": ""}]
+    plan = build_plan(rows, [msg("t1", "REJECTION", "Umbra", "Data Scientist I - CX Analytics")])
+    assert not plan.updates and plan.new_rows[0].job == "Data Scientist I - CX Analytics"
