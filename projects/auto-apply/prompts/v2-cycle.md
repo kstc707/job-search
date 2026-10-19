@@ -87,10 +87,13 @@ Fill `runs/` (git-ignored, never commit it):
 1. Build with the **sai-resume-tailor** skill from the posting.
 2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saitejakoppolu24@gmail.com --phone "+1 901-343-7273"`
    must PASS. A FAIL means fix the LaTeX (plain-hyphen dates, the email above) and rebuild.
-3. **Red-team review** (one subagent per resume, fresh context): give it ONLY the posting text
-   and the PDF's extracted text. Its job: a recruiter with 200 applicants who wants to reject.
-   It must name the 3 strongest reasons to say no. Fix each in the resume, or accept it and
-   write it under "Gaps" in Notes. Never invent anything to fix a reason.
+3. **Red-team review, batched** (ONE fresh-context subagent for all of this run's resumes; each
+   subagent costs ~60k tokens of startup overhead, so never one per resume): give it ONLY the
+   posting texts and the PDFs' extracted texts, paired by file name. Its job: a recruiter with 200
+   applicants who wants to reject. For each resume it names the 3 strongest reasons to say no.
+   Fix each in the resume, or accept it and write it under "Gaps" in Notes. Never invent
+   anything to fix a reason. Builders do not red-team their own resumes; after the batched
+   review, apply all fixes in one pass (no separate fixer subagent per resume).
 4. If the job's form is on Greenhouse, Lever or Ashby: `.venv/bin/python -m auto_apply.filler.cli plan <url> --pdf <pdf>`;
    open questions land in `questions.json` next to the PDF. Draft job-specific answers from the
    facts only into `answers.json` there; put the drafts in Notes as "Drafted answers — approve?".
@@ -117,3 +120,10 @@ Rows from the review-queue view with Submit? = Yes AND Approved at set:
 ## 7. Report (5–8 lines, also appended to the memory page Run Log)
 NEEDS SAI items first, then: outcomes synced (updates / new rows / unmatched), jobs found →
 kept → built, applications sent by route, Tsenta credits left, anything that failed twice.
+
+**Token log (every run, last line of the Run Log entry).** Each subagent's completion notice
+reports its `subagent_tokens`; keep a running tally by stage while the run goes, and write:
+`Tokens (subagents): sync <n> · find <n> · screen <n> · build <n> · review <n> · fix <n> · total <n> · per resume <total/resumes built> · agents <count>`
+Use 0 for a stage that ran in the main thread, and say "main thread not counted". This is the
+baseline for comparing runs (the v2 real run on 2026-10-19 used 1,394,323 subagent tokens for
+6 resumes, ~162k per resume build+review+fix, before review batching).
