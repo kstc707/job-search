@@ -81,6 +81,8 @@ def cmd_gate(args: argparse.Namespace) -> int:
     profile = json.loads((runs / "profile.json").read_text())
     findings = check_resume(pdf_text(args.pdf), profile, _load_rules(runs))
     for f in findings:
+        if args.arm == "B" and f.rule == "fixed-title":
+            f.severity = "warning"  # resume experiment arm B writes titles from the posting
         print(f"{f.severity.upper():7} {f.rule}: {f.detail}")
         blocked |= f.severity == "error"
 
@@ -129,6 +131,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--url")
     s.add_argument("--job-id")
     s.add_argument("--cap", type=int, default=DEFAULT_DAILY_CAP)
+    s.add_argument("--arm", choices=["A", "B"], default="A",
+                   help="resume experiment arm; B allows titles written from the posting")
     s.set_defaults(func=cmd_gate)
 
     s = sub.add_parser("upload", help="PUT the PDF to a presigned upload URL")

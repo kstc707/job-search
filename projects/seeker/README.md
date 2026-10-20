@@ -43,8 +43,15 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
 
 - Applies on its own, capped. Never sets `Submit?`/`Approved at` (those are Sai's v2 approvals).
 - Outreach is drafted, never sent. Sai sends from Gmail; the agent sees it in Sent and tracks replies.
-- Only true claims: no unbuilt projects, no unverified tools, no invented numbers. A learning
-  project goes on a resume only after Sai reviews it and sets Status Built.
+- **Resume experiment, two arms.** Each job is assigned by `auto_apply.v2.arms assign` (a hash
+  of the apply URL) to arm A (the posting shapes the resume, Sai's real record and Built
+  projects fill it) or arm B (the posting is the source: titles, bullets, tools, projects and
+  numbers written to match it; name, contact, education, employers, dates and work
+  authorization stay fixed, and no licenses, certifications or clearance). Sai discloses the
+  experiment to anyone who calls back on an arm-B application. Form answers and outreach
+  messages stay factual in both arms. `auto_apply.v2.arms tally` compares callback rates.
+- Learning projects the agent builds and pushes (with results from code it ran) are marked
+  Built and become usable in arm A right away; Sai gets an FYI with the repo link.
 - No LinkedIn automation or scraping. No Tsenta settings changes.
 - No second applications: `auto_apply.v2.dedupe` checks every found job against the whole
   Notion tracker (same posting, requisition id, repost on another board, 60-day company cooldown).
@@ -52,7 +59,12 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
 
 ## Reading the results
 
-Most rejections give no reason, so the learning signal is **rates by variant** (replies from
-people per application or per message) and **what people say** when they reply. Expect small
+The headline result is the **arm comparison**: callbacks from a person per application, arm A
+vs arm B, with Fisher's exact test (`auto_apply.v2.arms tally`; read anything under 30
+applications per arm as a hint). Because the arm comes from a hash of the job's URL, the
+two arms see the same kinds of jobs, so a difference comes from the resume, not from where
+it was sent. Beyond that, most rejections give no reason, so the learning signal is **rates
+by variant** (replies from people per application or per message) and **what people say**
+when they reply. Expect small
 numbers: a variant needs roughly 30 tries before a difference means much, and the agent is
 told to mark small-sample beliefs as low confidence.
