@@ -71,6 +71,9 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/ledger.py`: JSONL log; dedupes on normalized URLs (tracking parameters
   stripped) and job ids; counts today's applications for the cap.
 - `auto_apply/cli.py`: `profile`, `gate`, `upload`, `record`, `list`.
+- `auto_apply/v2/dedupe.py`: checks found jobs against the whole Notion tracker (which survives
+  between cloud sessions, unlike `runs/ledger.jsonl`): same posting, same requisition id,
+  repost of a similar title at the same company, and a 60-day per-company cooldown.
 - `auto_apply/filler/`: our own form filler (Greenhouse, Lever, Ashby).
   - `schema.py` reads the form from `boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}?questions=true`
     (field names there are the DOM ids on the form, so nothing is guessed from HTML).
