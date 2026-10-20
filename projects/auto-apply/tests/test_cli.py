@@ -46,15 +46,6 @@ def test_gate_blocks_duplicates_and_cap(runs, monkeypatch, capsys):
     assert "daily cap" in capsys.readouterr().out
 
 
-def test_gate_arm_b_allows_posting_titles_only(runs, monkeypatch, capsys):
-    text = GOOD_RESUME.replace("Data Analyst Intern", "Business Intelligence Analyst")
-    assert _gate(runs, text, monkeypatch) == 2
-    assert _gate(runs, text, monkeypatch, "--arm", "B") == 0
-    assert "WARNING fixed-title" in capsys.readouterr().out
-    # Arm B relaxes titles only; every other check still blocks.
-    assert _gate(runs, text + " Modeled in SAS.", monkeypatch, "--arm", "B") == 2
-
-
 def test_record_stores_resume_hash(runs):
     cli.main(["--runs", str(runs), "record", "--company", "A", "--title", "T",
               "--pdf", str(runs / "resume.pdf"), "--application-id", "app1"])

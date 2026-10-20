@@ -43,13 +43,12 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
 
 - Applies on its own, capped. Never sets `Submit?`/`Approved at` (those are Sai's v2 approvals).
 - Outreach is drafted, never sent. Sai sends from Gmail; the agent sees it in Sent and tracks replies.
-- **Resume experiment, two arms.** Each job is assigned by `auto_apply.v2.arms assign` (a hash
-  of the apply URL) to arm A (the posting shapes the resume, Sai's real record and Built
-  projects fill it) or arm B (the posting is the source: titles, bullets, tools, projects and
-  numbers written to match it; name, contact, education, employers, dates and work
-  authorization stay fixed, and no licenses, certifications or clearance). Sai discloses the
-  experiment to anyone who calls back on an arm-B application. Form answers and outreach
-  messages stay factual in both arms. `auto_apply.v2.arms tally` compares callback rates.
+- **Every submitted resume is arm A:** the posting shapes it, Sai's real record and Built
+  projects fill it. For about half the jobs (`auto_apply.v2.arms assign`, a hash of the apply
+  URL) the agent also builds an **arm-B target profile**: the resume the posting describes,
+  stamped "not for submission", scored next to arm A, with a `gap_plan.md` of how Sai could
+  make each missing claim true. Target profiles are never sent; their gaps feed the Gap
+  Ledger and the learning projects. Form answers and outreach messages stay factual.
 - Learning projects the agent builds and pushes (with results from code it ran) are marked
   Built and become usable in arm A right away; Sai gets an FYI with the repo link.
 - No LinkedIn automation or scraping. No Tsenta settings changes.
@@ -59,11 +58,9 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
 
 ## Reading the results
 
-The headline result is the **arm comparison**: callbacks from a person per application, arm A
-vs arm B, with Fisher's exact test (`auto_apply.v2.arms tally`; read anything under 30
-applications per arm as a hint). Because the arm comes from a hash of the job's URL, the
-two arms see the same kinds of jobs, so a difference comes from the resume, not from where
-it was sent. Beyond that, most rejections give no reason, so the learning signal is **rates
+Two kinds of insight. The **target profiles** show, job by job, what postings want that Sai's
+record does not show yet (ATS score A vs B, and the gaps that repeat across jobs), which is
+what the agent learns or builds next. For callbacks, most rejections give no reason, so the learning signal is **rates
 by variant** (replies from people per application or per message) and **what people say**
 when they reply. Expect small
 numbers: a variant needs roughly 30 tries before a difference means much, and the agent is

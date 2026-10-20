@@ -74,10 +74,9 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/v2/dedupe.py`: checks found jobs against the whole Notion tracker (which survives
   between cloud sessions, unlike `runs/ledger.jsonl`): same posting, same requisition id,
   repost of a similar title at the same company, and a 60-day per-company cooldown.
-- `auto_apply/v2/arms.py`: the seeker's resume experiment. `assign` puts a job in arm A
-  (real record) or B (JD-sourced) from a hash of its URL; `tally` counts callbacks,
-  assessments, rejections and silence per arm from the tracker and runs Fisher's exact test.
-  `cli gate --arm B` lets arm-B titles differ from the profile; every other check still blocks.
+- `auto_apply/v2/arms.py`: `assign` picks (from a hash of the apply URL) which jobs also get
+  a not-for-submission target profile; `tally` counts callbacks, assessments, rejections and
+  silence for tagged tracker rows and runs Fisher's exact test.
 - `auto_apply/v2/titles.py`: picks each resume entry's title from the posting's role family
   (BI, product, data science, AI…) out of Sai's approved list in `runs/titles.json`. A variant
   must keep the base title verbatim (forms and background checks use it), fixed roles never

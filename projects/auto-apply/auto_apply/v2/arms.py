@@ -1,13 +1,13 @@
-"""Resume experiment: assign each job to an arm and compare callback rates.
+"""Pick which jobs get a target profile, and tally callbacks for tagged tracker rows.
 
-    A  record      the posting shapes the resume; content is Sai's real record and Built projects
-    B  jd-sourced  the posting is the source; titles, bullets, tools, projects and numbers are
-                   written to match it (name, contact, education, employers, dates stay fixed)
+Every submitted resume is built from Sai's real record (arm A). For about half the jobs,
+chosen by `assign` from a hash of the normalized apply URL (random with respect to the job,
+and stable across reruns), the seeker also builds a target profile (arm B): the resume the
+posting describes, stamped "not for submission", with a plan for closing each gap. It is
+never sent; it exists so Sai can see what postings want that his record does not show yet.
 
-Assignment is a hash of the normalized apply URL, so it is random with respect to the job and
-the same job always gets the same arm (a rerun cannot shop for a better arm). The tally reads
-the tracker rows the seeker wrote (Notes start "[seeker <date> arm=<A|B> v=<tag>]") and the
-outcome stamps the v2 sync adds ("Evidence: <date> <CATEGORY>: <subject>").
+`tally` counts outcomes for tracker rows whose Notes carry `[seeker ... arm=<A|B>]`, using
+the stamps the v2 sync adds ("Evidence: <date> <CATEGORY>: <subject>").
 """
 
 from __future__ import annotations
