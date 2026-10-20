@@ -48,6 +48,8 @@ Fill `runs/` (git-ignored, never commit it):
   `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male --set personalInformation.email=saitejakoppolu24@gmail.com`
 - `runs/never_claim.txt` ← one line: `clearance, citizenship` (the tool list is lifted, see rule 4)
 - `runs/instructions.txt` ← empty file
+- `runs/titles.json` ← the JSON block under **Title variants by posting** on the Resume Knowledge
+  Base's Profile page (`3fe55fb9-8924-817d-a3c1-f84558b1d4c2`)
 
 ## 1. Outcome sync (every run)
 1. Tsenta `list-inbox-messages` for each category ACKNOWLEDGMENT, ASSESSMENT, RECRUITER_MESSAGE,
@@ -84,7 +86,11 @@ Fill `runs/` (git-ignored, never commit it):
 4. Take the top 8 (DRY_RUN: top 3).
 
 ## 4. Build and check each resume
-1. Build with the **sai-resume-tailor** skill from the posting.
+1. `.venv/bin/python -m auto_apply.v2.titles choose "<posting title>"` gives the title for each
+   job (Data Analyst Intern is fixed; other roles may add a focus, e.g. "Data Analyst (Business
+   Intelligence)"). Build with the **sai-resume-tailor** skill from the posting, using exactly
+   those titles, then `.venv/bin/python -m auto_apply.v2.titles check <pdf> --posting-title "<posting title>"`
+   must PASS.
 2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saitejakoppolu24@gmail.com --phone "+1 901-343-7273"`
    must PASS. A FAIL means fix the LaTeX (plain-hyphen dates, the email above) and rebuild.
 3. **Red-team review, batched** (ONE fresh-context subagent for all of this run's resumes; each

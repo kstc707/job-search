@@ -43,7 +43,8 @@ cd projects/auto-apply && ([ -d .venv ] || python3 -m venv .venv) && .venv/bin/p
 mkdir -p runs/v2 runs/seeker
 ```
 Fill `runs/` exactly as `prompts/v2-cycle.md` step 0 says, except the email: use the one in
-the memory page's "One email everywhere" section (newest decision wins).
+the memory page's "One email everywhere" section (newest decision wins). That includes
+`runs/titles.json` (title variants, from the Profile page).
 
 Then read, in this order: the experiment page; the last 14 Journal entries; every Contacts
 row; the memory page sections Form Answers v2, Location preference and One email
@@ -90,8 +91,12 @@ Moves:
    Only KEEP jobs go on. `auto_apply.v2.target` is a tool you may use for ranking, not a rule.
 3. Read each candidate's full description. Skip what Sai cannot honestly do or is not
    eligible for (clearance, citizenship-only, student-only, far more years than he has).
-4. Build the resume with the **sai-resume-tailor** skill plus the Truth rule above; then
-   `ats_check` must PASS; then one batched red-team subagent for all of today's resumes
+4. Pick the titles: `.venv/bin/python -m auto_apply.v2.titles choose "<posting title>"`.
+   Build the resume with the **sai-resume-tailor** skill plus the Truth rule above, using
+   exactly those titles (Data Analyst Intern never changes; a variant only adds a focus in
+   parentheses). Then `titles check <pdf> --posting-title "<posting title>"` and
+   `ats_check` must both PASS. Which titles a resume used is part of the variant you are
+   testing: write the family in the tag (e.g. `v=bi-titles`) when you want to compare; then one batched red-team subagent for all of today's resumes
    (`prompts/v2-cycle.md` step 4.3); fix or accept every reason, never by inventing.
 5. Submit: `prompts/v2-cycle.md` step 6.2-6.4 (gate, then filler or Tsenta). A form that
    needs an `ASK` answer or Sai's consent → do not submit; put it in Needs Sai.
