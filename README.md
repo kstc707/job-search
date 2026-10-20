@@ -22,6 +22,18 @@ boundaries.
 | [gemma4-paper-track](projects/gemma4-paper-track) | AI Engineering research (Kaggle paper track) | Plan + tooling |
 | [auto-apply](projects/auto-apply) | AI Engineering (agent pipeline + guardrails) | Working, tested |
 
+## Agent team
+
+Claude Code subagents in [`.claude/agents/`](.claude/agents) (adapted from the MIT-licensed
+VoltAgent and wshobson subagent collections, rewritten for this pipeline):
+
+| Agent | Job | Can't |
+|---|---|---|
+| [workflow-engineer](.claude/agents/workflow-engineer.md) | Changes `projects/auto-apply` code and tests as the process changes | Submit applications, write to Tsenta/Notion, weaken a safety check |
+| [data-analyst](.claude/agents/data-analyst.md) | Reads the ledger and tracker snapshot, reports what gets responses | Modify any data; writes reports only under `runs/analysis/` |
+
+Ask for one by name, e.g. "use the data-analyst agent to compare filler vs Tsenta response rates".
+
 ## Working on a project
 
 ```
