@@ -31,7 +31,7 @@ most 3 resumes, and send nothing (skip step 6).
    apply links can't be followed automatically, so find the same job on the employer's
    board or route it to Sai.
 7. Two failures on the same thing → stop, note "LEFT after 2 failures: <reason>", move on.
-8. One email everywhere: saitejakoppolu24@gmail.com.
+8. One email everywhere: saiteja.koppolu01@gmail.com (the inbox the Gmail connector reads; Sai, 2026-10-20).
 
 ## 0. Setup
 ```bash
@@ -45,7 +45,7 @@ mkdir -p runs/v2
 Fill `runs/` (git-ignored, never commit it):
 - `runs/answers.json` ← the JSON block under **Form Answers v2** on the memory page
 - `runs/profile_raw.json` ← Tsenta `get-resume-profile` (default) →
-  `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male --set personalInformation.email=saitejakoppolu24@gmail.com`
+  `.venv/bin/python -m auto_apply.cli profile runs/profile_raw.json --set diversityEquityInclusion.gender=Male --set personalInformation.email=saiteja.koppolu01@gmail.com`
 - `runs/never_claim.txt` ← one line: `clearance, citizenship` (the tool list is lifted, see rule 4)
 - `runs/instructions.txt` ← empty file
 
@@ -85,7 +85,7 @@ Fill `runs/` (git-ignored, never commit it):
 
 ## 4. Build and check each resume
 1. Build with the **sai-resume-tailor** skill from the posting.
-2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saitejakoppolu24@gmail.com --phone "+1 901-343-7273"`
+2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saiteja.koppolu01@gmail.com --phone "+1 901-343-7273"`
    must PASS. A FAIL means fix the LaTeX (plain-hyphen dates, the email above) and rebuild.
 3. **Red-team review, batched** (ONE fresh-context subagent for all of this run's resumes; each
    subagent costs ~60k tokens of startup overhead, so never one per resume): give it ONLY the
