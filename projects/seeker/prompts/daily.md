@@ -108,8 +108,14 @@ Moves:
    4.3); fix reasons with real evidence or accept them.
    If `auto_apply.v2.arms assign "<apply url>"` says B, also build the arm-B target profile
    in `runs/seeker/<job>/armB/` (stamped, with `gap_plan.md`), score both with the skill's
-   `screen.py` on the same `jd_terms.json`, and add each gap_plan row to the Gap Ledger
-   (Jobs +1). The target profile is never uploaded, attached or sent.
+   `screen.py` on the same `jd_terms.json`, and log each gap_plan row in the Gap Ledger. The
+   target profile is never uploaded, attached or sent.
+   **Logging a gap:** name it as a skill or experience, not as the posting words it ("Healthcare
+   revenue cycle (billing, claims, denials)", not "RCM KPIs at Altera"). Look for an existing
+   row that means the same thing first and use it, so repeats add up in one row instead of
+   spreading over synonyms. Then: Jobs +1, This week +1, Updated today, Example postings =
+   "<Company> - <Title>" added at the front, How to close it = the gap plan's best route.
+   New row: Status Open, Jobs 1, This week 1. One job adds at most 1 to a row.
 5. Submit the arm-A resume: `prompts/v2-cycle.md` step 6.2-6.4 (gate, then filler or Tsenta). A form that needs an `ASK` answer or Sai's consent → do not
    submit; put it in Needs Sai.
 6. Record: create the tracker row (Job "<Company> - <Title>", Company, Location, Date today,
@@ -139,20 +145,26 @@ follow-up as a Gmail draft in the same thread (`create_draft` with the thread). 
 Follow-up drafted, Last touch today.
 
 ### 3d. Project work
-Use this when arm A keeps losing to the same gap (Gap Ledger rows with many Jobs, red-team
-reasons that repeat). Shape the project from the postings themselves: their domain, tools and
-kind of question. A finished project moves that gap from arm B territory into arm A.
-1. One project at a time. Pick or plan it in the Projects database (Status Building,
-   Created for "seeker: <gap>", Source posting, Stack, One-liner). Small enough to finish in
-   1-3 sessions; public data only; nothing from the District Attorney's office.
+**The project of the week** is the gap the last Friday report picked (Gap Ledger row with
+Status In progress). Work on it in every run of the week until it is Built; it is the one
+move that changes what arm A can say. Shape it from that row's Example postings: their
+domain, tools and kind of question. A finished project moves that gap from arm B territory
+into arm A. With no gap picked yet (the first week is the buffer), skip this move.
+1. One project at a time, sized to finish within the week (about 5 sessions). Its row in
+   the Projects database: Status Building, Created for "seeker: <gap>", Source posting (the
+   first Example posting), Stack, One-liner. Public data only; nothing from the District
+   Attorney's office.
 2. Work in `kstc707/data-portfolio`: `add_repo` with push access, clone, one folder per
    project with a README (question, data source, method, results, how to run, what Sai
    learned). Every result number must come from code you ran in this session. Commit and push.
    If the repo cannot be reached (Sai has not created it yet), write the plan in the project
    page instead and add "Create github.com/kstc707/data-portfolio" to Needs Sai once.
 3. When it is pushed with results from code you ran: set Status **Built** and the Repo link;
-   from then on arm A may use it. Add an FYI line to Needs Sai ("New project <name>: <repo
-   link>") so he can read it before any call.
+   from then on arm A may use it. Set the gap's Gap Ledger row to Status "Closed (in facts.md)"
+   and add the project's facts and numbers to the Projects page. Add an FYI line to Needs
+   Sai ("New project <name>: <repo link>") so he can read it before any call.
+4. Not finished by Friday: keep going next week instead of starting a new one, and say why
+   in the weekly report.
 
 ## 4. Reflect and record
 1. **Journal row** (one per run): Entry "<date> daily", Date, Type Daily, Strategy today
@@ -167,8 +179,14 @@ kind of question. A finished project moves that gap from arm B territory into ar
 3. **Needs Sai:** keep it short and current; remove items Sai has done.
 
 ## 5. Weekly report (Friday runs, after step 4)
-Add a Journal row with Type **Weekly report**: first the week's target profiles (ATS A vs
-B per job, and the gap_plan rows that came up most often, i.e. what to learn or build next),
+1. **Pick next week's project.** Read the Gap Ledger. Rank Open rows by This week, then by
+   Jobs. The top row is picked when This week is 3 or more (the gap showed up in at least 3
+   target profiles this week) and no project is still In progress: set it to Status
+   **In progress**; next week's runs build it (3d). If no row reaches 3, pick nothing and
+   leave the counts to keep adding up. After a pick, set This week to 0 on every row.
+2. Add a Journal row with Type **Weekly report**: first the week's target profiles (ATS A vs
+B per job), the top 5 repeating gaps with their This week and Jobs counts, which gap was
+picked for next week's project and why (or why none), and the state of this week's project;
 then per variant tag, applications, outreach,
 replies from people, rejections, silence; what you will keep, stop and try next week and
 why; skills you decided to learn and why; the single most useful thing you learned this

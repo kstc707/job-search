@@ -48,7 +48,12 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
   URL) the agent also builds an **arm-B target profile**: the resume the posting describes,
   stamped "not for submission", scored next to arm A, with a `gap_plan.md` of how Sai could
   make each missing claim true. Target profiles are never sent; their gaps feed the Gap
-  Ledger and the learning projects. Form answers and outreach messages stay factual.
+  Ledger and the learning projects.
+- **Weekly gap → project loop.** Each target profile logs its gaps in the Gap Ledger (merged
+  into one row per skill, `This week` +1). On Fridays the top gap that showed up in 3+ target
+  profiles that week becomes next week's project (Status In progress); the agent builds it
+  across the week, marks it Built, and from then on arm A can claim it. The first week is the
+  buffer: it only collects. Form answers and outreach messages stay factual.
 - Learning projects the agent builds and pushes (with results from code it ran) are marked
   Built and become usable in arm A right away; Sai gets an FYI with the repo link.
 - No LinkedIn automation or scraping. No Tsenta settings changes.
