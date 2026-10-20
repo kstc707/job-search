@@ -1,0 +1,21 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[left=0.5in,right=0.5in,top=0.4in,bottom=0.35in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{charter}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\vspace{1.5pt}\titlerule]
+\titlespacing*{\section}{0pt}{5.0pt}{9.2pt}
+\setlist[itemize]{leftmargin=11pt, labelsep=5.6pt, itemsep=0pt, parsep=0pt, topsep=3pt, partopsep=0pt, label={\small\textbullet}}
+\newcommand{\sep}{\hspace{4pt}|\hspace{4pt}}
+\newcommand{\dotsep}{\hspace{4pt}$\cdot$\hspace{4pt}}
+% role header: {Title}{Company}{Location}{Dates}; dates with a plain hyphen: Jun 2022 - Jul 2024
+\newcommand{\role}[4]{\vspace{1.5pt}\textbf{#1}\sep #2, \textit{#3}\hfill #4\par}
+% project header: {Name}{Tools}{link text, or empty {} for no link}
+\newcommand{\project}[3]{\vspace{1.5pt}\textbf{#1}\sep \textit{#2}\hfill \if\relax\detokenize{#3}\relax\else{\small\href{https://#3}{#3}}\fi\par}
+\newcommand{\skill}[2]{\textbf{#1:} #2\par\vspace{0.5pt}}
