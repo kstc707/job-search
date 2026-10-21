@@ -9,10 +9,15 @@ def test_titles():
     assert title_target("Data Analyst") == "in"
     assert title_target("Business Intelligence Analyst") == "in"
     assert title_target("Reporting Analyst - Remote") == "in"
-    for t in ["Senior Data Analyst", "Data Analyst II", "Data Scientist", "ML Engineer",
-              "Analytics Engineer", "Sr. Business Analyst", "Data Analyst Intern", "Analytics Manager"]:
+    for t in ["Data Scientist", "ML Engineer", "Analytics Engineer", "AI Engineer", "Applied AI Engineer",
+              "Software Engineer, Agents", "LLM Application Developer", "Data Engineer", "Data Analyst II",
+              "Machine Learning Scientist", "Software Engineer - Data Platform"]:
+        assert title_target(t) == "in", t
+    for t in ["Senior Data Analyst", "Sr. Business Analyst", "Data Analyst Intern", "Analytics Manager",
+              "Staff ML Engineer", "Lead AI Engineer", "Data Scientist III", "AI Sales Engineer"]:
         assert title_target(t) == "off", t
-    assert title_target("Customer Success Specialist") == "other"
+    for t in ["Customer Success Specialist", "Software Engineer", "Frontend Developer", "Research Scientist, Chemistry"]:
+        assert title_target(t) == "other", t
 
 
 def test_location_order_matches_sai():
@@ -28,7 +33,7 @@ def test_freshness_and_ranking():
         {"title": "Data Analyst", "location": "Remote", "posted": "2026-10-18T00:00:00Z", "score": 70},
         {"title": "Data Analyst", "location": "Memphis, TN", "posted": "October 17, 2026", "score": 60},
         {"title": "Data Analyst", "location": "Memphis, TN", "posted": "2026-10-01T00:00:00Z", "score": 95},
-        {"title": "Data Scientist", "location": "Memphis, TN", "posted": "2026-10-19T00:00:00Z", "score": 99},
+        {"title": "Senior Data Scientist", "location": "Memphis, TN", "posted": "2026-10-19T00:00:00Z", "score": 99},
     ]
     out = rank(jobs, now=NOW)
     assert [(j["location"], v.keep) for j, v in out] == [

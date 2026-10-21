@@ -1,7 +1,9 @@
 # Job agent v2: one run
 
 Goal: **a callback from a person.** No cap on applications, but model spend follows fit:
-entry-level analyst roles, Sai's locations first, fresh postings, a tailored and checked resume
+AI and data roles at any company (analytics, data science, ML/AI and agentic engineering,
+application development on AI or data products), fintech and healthcare first, early-career
+levels, US locations with Sai's first, fresh postings, a tailored and checked resume
 for every application, and nothing sent without Sai's approval.
 
 Read first, every run: the Notion memory page `3f755fb9-8924-81a1-b4c8-fe6cc3265094`
@@ -94,10 +96,13 @@ not read; say so in the report when a row has been Applied for 30+ days with no 
 
 ## 2. Find
 - Company career boards: `.venv/bin/python -m auto_apply.v2.boards prompts/watchlist.example.json --out runs/v2/boards.json`
-  (Greenhouse, Lever and Ashby public job APIs for the watchlist companies; full descriptions included).
-- Indeed `search_jobs` (country US, fulltime) for each of "data analyst", "business analyst",
-  "reporting analyst", "business intelligence analyst" × locations "Memphis, TN", "remote",
-  "Atlanta, GA", "Birmingham, AL". Use `get_job_details` only for jobs that survive step 3.
+  (Greenhouse, Lever and Ashby public job APIs for 59 companies tagged fintech, healthcare, ai
+  or tech; full descriptions and the industry tag included). No title filter here: step 3 does it.
+- Indeed `search_jobs` (country US, fulltime) for each of "data analyst", "data scientist",
+  "AI engineer", "machine learning engineer", "analytics engineer", "business intelligence
+  analyst" × locations "Memphis, TN", "remote", "Atlanta, GA", "Birmingham, AL", plus "data
+  scientist fintech", "AI engineer healthcare" and "health data analyst" with location "remote".
+  Use `get_job_details` only for jobs that survive step 3.
 - Write every job as {title, company, location, posted, url, source, ats, score?} to `runs/v2/jobs.json`.
 
 ## 3. Dedupe and target
@@ -105,8 +110,10 @@ not read; say so in the report when a row has been Applied for 30+ days with no 
    drops anything already in the tracker, whatever its Status (same posting, same requisition
    id, repost or another board, 60-day company cooldown). Only KEEP jobs go on.
 2. `.venv/bin/python -m auto_apply.v2.target runs/v2/deduped.json --out runs/v2/ranked.json`
-   keeps entry-level analyst titles posted within 72 hours and orders them
-   Memphis > Remote > Atlanta > Alabama > rest of US, then score.
+   keeps analyst titles and AI/data builder titles (data scientist, ML/AI/agentic engineer,
+   analytics or data engineer, AI application developer) that are not senior, lead, manager,
+   intern or level III+, posted within 72 hours, ordered Memphis > Remote > Atlanta > Alabama >
+   rest of US. Fit (step 3.4) then adds the fintech/healthcare priority and drops non-US jobs.
 3. Read each kept job's full description (board description, or Indeed `get_job_details`).
    Skip and note: citizens only, clearance, more than 4 years required, degree we don't have,
    language not spoken, the hiring area excludes Tennessee (e.g. "TX, FL, GA residents only").

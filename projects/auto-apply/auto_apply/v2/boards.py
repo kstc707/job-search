@@ -5,7 +5,8 @@ jobs. Given a watchlist of companies and their board ids, this module reads thos
 turns every posting into the jobs.json shape the rest of v2 uses, keeps the ones whose title
 and location match the keywords you pass, and writes them to runs/v2/boards.json.
 
-Watchlist (JSON list): [{"name": "Acme", "ats": "greenhouse" | "lever" | "ashby", "board": "acme"}]
+Watchlist (JSON list): [{"name": "Acme", "ats": "greenhouse" | "lever" | "ashby", "board": "acme",
+"industry": "fintech" | "healthcare" | "ai" | "tech" (optional; fit.py gives fintech and healthcare priority)}]
 The board id is the part of the company's job-board URL after the ATS host:
   boards.greenhouse.io/<board>, jobs.lever.co/<board>, jobs.ashbyhq.com/<board>.
 
@@ -82,7 +83,8 @@ def iso(value) -> str:
 def _job(company: dict, jid, title, location, posted, url, description) -> dict:
     return {"id": f"{company['ats']}:{company['board']}:{jid}", "title": " ".join((title or "").split()),
             "company": company["name"], "location": location or "", "posted": iso(posted), "url": url or "",
-            "source": "board", "ats": company["ats"], "description": description}
+            "source": "board", "ats": company["ats"], "industry": company.get("industry", ""),
+            "description": description}
 
 
 def from_greenhouse(company: dict, payload: dict) -> list[dict]:

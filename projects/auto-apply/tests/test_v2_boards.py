@@ -32,7 +32,7 @@ def test_api_urls():
 def test_greenhouse_normalised_to_jobs_json_shape():
     jobs = boards.from_greenhouse(WATCH[0], json.loads((FIX / "greenhouse.json").read_text()))
     j = jobs[0]
-    assert set(j) == {"id", "title", "company", "location", "posted", "url", "source", "ats", "description"}
+    assert set(j) == {"id", "title", "company", "location", "posted", "url", "source", "ats", "industry", "description"}
     assert (j["title"], j["company"], j["location"], j["posted"], j["source"], j["ats"]) == \
         ("Data Analyst, Growth", "Acme Example", "Remote - US", "2026-10-17T14:30:00Z", "board", "greenhouse")
     assert j["url"].endswith("/1001") and j["id"] == "greenhouse:acmeexample:1001"
@@ -97,4 +97,5 @@ def test_cli_writes_boards_json(tmp_path, monkeypatch, capsys):
 def test_watchlist_example_is_well_formed():
     wl = json.loads((Path(__file__).parent.parent / "prompts" / "watchlist.example.json").read_text())
     assert len(wl) >= 15 and {w["ats"] for w in wl} == {"greenhouse", "lever", "ashby"}
-    assert all(set(w) == {"name", "ats", "board"} and w["board"] for w in wl)
+    assert all(set(w) == {"name", "ats", "board", "industry"} and w["board"] for w in wl)
+    assert {"fintech", "healthcare"} <= {w["industry"] for w in wl}

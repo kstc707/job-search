@@ -6,7 +6,8 @@ Every job that passes gets a tailored resume; the tier decides what else it gets
     B  decent fit   tailored resume, built in large batches, no red-team, no outreach
     C  weak fit     not built; its missing skills go to the Gap Ledger
 
-Score (0-100) = skills 45 + title 20 + location 15 + freshness 10 + experience 10.
+Score (0-100) = skills 45 + title 20 + location 15 + freshness 10 + experience 10, plus an
+industry priority of +10 for fintech and healthcare (Sai, 2026-10-21), capped at 100.
     skills       covered skill terms / max(terms the posting names, 5), so a posting that names
                  only one or two tools gives little evidence of fit
                  (covered = in runs/kb_terms.json: verified tools + Built projects' stacks)
@@ -16,7 +17,10 @@ Score (0-100) = skills 45 + title 20 + location 15 + freshness 10 + experience 1
                  0 when the location is outside the US
     freshness    10 within 72 h, 6 within a week, 2 older or unknown
     experience   10 when the posting asks for at most 4 years (or says nothing), 0 above
-Knockouts (citizenship-only, clearance, student-only) force tier C whatever the score.
+    industry     the job's `industry` from the watchlist; without one, the description must
+                 mention the industry's words at least 3 times (one privacy notice is not enough)
+Knockouts (citizenship-only, clearance, student-only, location outside the US with no US option)
+force tier C whatever the score.
 """
 
 from __future__ import annotations
@@ -32,10 +36,23 @@ from auto_apply.v2.titles import family
 
 TIER_A, TIER_B = 70, 45
 DATA_TITLE = re.compile(r"\b(data|analytics|business intelligence|bi|reporting|insights?|machine learning|"
+                        r"llm|gen ?ai|generative|agent(s|ic)?|nlp|"
                         r"ml|ai|scientist|quantitative|statistic\w*)\b", re.I)
-NON_US = re.compile(r"\b(uk|united kingdom|london|canada|toronto|vancouver|luxembourg|ireland|dublin|germany|"
-                    r"berlin|france|paris|netherlands|amsterdam|spain|india|bangalore|bengaluru|hyderabad|"
-                    r"singapore|australia|sydney|mexico|brazil|poland|portugal|emea|apac|europe)\b", re.I)
+NON_US = re.compile(r"\b(uk|united kingdom|london|canada|toronto|vancouver|montreal|ottawa|luxembourg|ireland|"
+                    r"dublin|germany|berlin|munich|france|paris|netherlands|amsterdam|spain|madrid|india|"
+                    r"bangalore|bengaluru|hyderabad|singapore|japan|tokyo|korea|seoul|australia|sydney|"
+                    r"mexico|brazil|s[aã]o paulo|latam|poland|portugal|lisbon|emea|apac|europe|israel|tel aviv)\b", re.I)
+US_PLACE = re.compile(r"united states|\bu\.?s\.?a?\b|\bus-|new york|san francisco|seattle|austin|boston|chicago|"
+                      r"atlanta|memphis|denver|los angeles|dallas|washington, d|miami|nashville", re.I)
+US_STATE = re.compile(r",\s*(A[LKZR]|C[AOT]|D[EC]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|PA|RI|"
+                      r"S[CD]|T[NX]|UT|V[AT]|W[AIVY])\b")
+PRIORITY_INDUSTRIES = {"fintech": 10, "healthcare": 10}
+_INDUSTRY_WORDS = {
+    "fintech": re.compile(r"\b(fintech|payments?|banking|lending|loans?|credit card|brokerage|trading|"
+                          r"crypto\w*|wealth management|underwriting|fraud)\b", re.I),
+    "healthcare": re.compile(r"\b(health ?care|clinical|patients?|hospitals?|medical|pharma\w*|biotech|"
+                             r"payers?|ehr|emr|claims|providers?|physicians?|care delivery)\b", re.I),
+}
 CORE_FAMILIES = {"data_analyst", "bi", "reporting", "business_analyst", "product", "data_science", "ml_ai"}
 ADJACENT_FAMILIES = {"data_engineering"}
 LOCATION_POINTS = [15, 12, 9, 6, 3]
@@ -70,6 +87,22 @@ _KNOCKOUTS = [
 ]
 
 
+def outside_us(location: str) -> bool:
+    """True when every place named is outside the US ("Paris, France (Remote)", "Remote Canada")."""
+    return bool(location) and bool(NON_US.search(location)) and not (
+        US_PLACE.search(location) or US_STATE.search(location))
+
+
+def industry_of(job: dict) -> str:
+    tag = (job.get("industry") or "").lower()
+    if tag:
+        return tag
+    desc = job.get("description") or ""
+    hits = {k: len(rx.findall(desc)) for k, rx in _INDUSTRY_WORDS.items()}
+    best = max(hits, key=hits.get)
+    return best if hits[best] >= 3 else ""
+
+
 def posting_skills(text: str) -> set[str]:
     return {k for k, rx in _SKILL_RX.items() if rx.search(text or "")}
 
@@ -94,6 +127,8 @@ def score(job: dict, kb_terms: set[str], *, now: datetime) -> Fit:
     for name, rx in _KNOCKOUTS:
         if rx.search(text):
             return Fit(0, "C", knockout=name)
+    if outside_us(job.get("location", "")):
+        return Fit(0, "C", knockout="outside the US")
     wanted = posting_skills(text)
     covered = sorted(wanted & kb_terms)
     missing = sorted(wanted - kb_terms)
@@ -103,15 +138,18 @@ def score(job: dict, kb_terms: set[str], *, now: datetime) -> Fit:
     title = 20 if data_title and fam in CORE_FAMILIES | ADJACENT_FAMILIES else 10 if fam in CORE_FAMILIES else 0
     loc = job.get("location", "")
     tier_idx, _ = location_tier(loc)
-    location = 0 if NON_US.search(loc) else LOCATION_POINTS[min(tier_idx, len(LOCATION_POINTS) - 1)]
+    location = LOCATION_POINTS[min(tier_idx, len(LOCATION_POINTS) - 1)]
     age = age_hours(job.get("posted"), now)
     fresh = 10 if age is not None and age <= 72 else 6 if age is not None and age <= 168 else 2
     yrs = years_asked(job.get("description", ""))
     experience = 10 if yrs is None or yrs <= 4 else 0
-    total = skills + title + location + fresh + experience
+    industry = industry_of(job)
+    priority = PRIORITY_INDUSTRIES.get(industry, 0)
+    total = min(100, skills + title + location + fresh + experience + priority)
     tier = "A" if total >= TIER_A else "B" if total >= TIER_B else "C"
     parts = {"skills": skills, "title": title, "location": location, "freshness": fresh,
-             "experience": experience, "family": fam, "years_asked": yrs}
+             "experience": experience, "industry": industry, "priority": priority,
+             "family": fam, "years_asked": yrs}
     return Fit(total, tier, parts, covered, missing)
 
 

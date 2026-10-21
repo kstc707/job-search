@@ -1,10 +1,12 @@
 """Which jobs are worth an application, and in what order (v2 targeting).
 
-Sai's data (228 applications, Apr–Oct 2026): engineer, data scientist and senior roles got
-no human callback, and most applications went to other states. v2 keeps entry-level
-analyst roles, ranks them by his location preference, and prefers fresh postings.
+Targets (Sai, 2026-10-21): AI and data roles at any company: analysts, data scientists, ML/AI
+and agentic engineers, application developers building AI or data products, data and analytics
+engineers. Fintech and healthcare get priority in fit.py, not here. Seniority, internships and
+level III+ stay out (Sai's experience is early career).
 
-    keep    = analyst-type title, not senior/engineer/scientist, posted within max_age_hours
+    keep    = analyst title, or an AI/data word with an analyst/scientist/engineer/developer
+              title; not senior, lead, manager, intern or level III+; posted within max_age_hours
     rank by = location tier (Memphis > Remote > Atlanta > Alabama > rest of US), then score,
               then newest first
 """
@@ -18,10 +20,14 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 
 OFF_TARGET = re.compile(
-    r"\b(engineer|engineering|scientist|developer|architect|senior|sr|lead|manager|principal|staff|"
-    r"director|head|vp|intern|internship|co-?op|ii|iii|iv|phd|postdoc)\b", re.I)
+    r"\b(architect|senior|sr|lead|manager|principal|staff|director|head|vp|intern|internship|co-?op|"
+    r"iii|iv|v|phd|postdoc|sales|account executive|recruit\w*)\b", re.I)
 ON_TARGET = re.compile(
     r"\b(analyst|analytics|reporting|business intelligence|bi|insights?|data quality)\b", re.I)
+AI_DATA = re.compile(
+    r"\b(data|analytics|machine learning|ml|ai|artificial intelligence|llm|gen ?ai|generative|"
+    r"agent(s|ic)?|nlp|deep learning|decision scien\w*|applied scien\w*|data scien\w*)\b", re.I)
+BUILDER = re.compile(r"\b(engineer(ing)?|scientist|developer|swe|programmer)\b", re.I)
 
 LOCATION_TIERS = [  # Sai, 2026-10-19
     ("Memphis", re.compile(r"memphis|collierville|germantown|bartlett|cordova|lakeland|arlington,?\s*tn|"
@@ -36,10 +42,12 @@ REST_OF_US = "Rest of US"
 
 
 def title_target(title: str) -> str:
-    """'in' (entry-level analyst), 'off' (engineer/scientist/senior…), or 'other'."""
+    """'in' (analyst, or AI/data builder role), 'off' (senior, lead, intern, level III+…), or 'other'."""
     if OFF_TARGET.search(title or ""):
         return "off"
     if ON_TARGET.search(title or ""):
+        return "in"
+    if AI_DATA.search(title or "") and BUILDER.search(title or ""):
         return "in"
     return "other"
 
@@ -81,9 +89,9 @@ def judge(job: dict, *, now: datetime, max_age_hours: float = 72) -> Verdict:
     tier, tier_name = location_tier(job.get("location", ""))
     age = age_hours(job.get("posted"), now)
     if tc == "off":
-        return Verdict(False, "off-target title (engineer/scientist/senior/intern)", tc, tier, tier_name, age)
+        return Verdict(False, "off-target title (senior, lead, manager, intern, level III+)", tc, tier, tier_name, age)
     if tc == "other":
-        return Verdict(False, "not an analyst-type title", tc, tier, tier_name, age)
+        return Verdict(False, "not an analyst or AI/data role", tc, tier, tier_name, age)
     if age is not None and age > max_age_hours:
         return Verdict(False, f"posted {age / 24:.0f} days ago (limit {max_age_hours / 24:.0f})", tc, tier, tier_name, age)
     return Verdict(True, "in target", tc, tier, tier_name, age)

@@ -54,7 +54,7 @@ def test_non_us_remote_and_generic_titles_score_lower():
     us = score(job(title="Data Analyst", location="Remote", description=desc), KB, now=NOW)
     uk = score(job(title="Data Analyst", location="Remote - UK", description=desc), KB, now=NOW)
     generic = score(job(title="Credit Risk Analyst", location="Remote", description=desc), KB, now=NOW)
-    assert us.parts["location"] == 12 and uk.parts["location"] == 0
+    assert us.parts["location"] == 12 and (uk.tier, uk.knockout) == ("C", "outside the US")
     assert us.parts["title"] == 20 and generic.parts["title"] == 10
 
 
@@ -62,3 +62,28 @@ def test_postings_naming_few_skills_give_little_evidence():
     one = score(job(description="Strong Excel skills."), KB, now=NOW)
     five = score(job(description="Python, SQL, Excel, Power BI, pandas."), KB, now=NOW)
     assert one.parts["skills"] == 9 and five.parts["skills"] == 45
+
+
+def test_fintech_and_healthcare_get_priority():
+    desc = "Python, SQL, pandas, statistics, dashboards."
+    base = score(job(title="Data Scientist", location="Austin, TX", description=desc), KB, now=NOW)
+    fin = score({**job(title="Data Scientist", location="Austin, TX", description=desc), "industry": "fintech"}, KB, now=NOW)
+    health = score(job(title="Data Scientist", location="Austin, TX",
+                       description=desc + " Improve patient outcomes for hospitals and clinical teams."), KB, now=NOW)
+    once = score(job(title="Data Scientist", location="Austin, TX", description=desc + " See our patient privacy notice."), KB, now=NOW)
+    assert fin.score == base.score + 10 and fin.parts["industry"] == "fintech"
+    assert health.parts["industry"] == "healthcare" and health.parts["priority"] == 10
+    assert once.parts["priority"] == 0
+
+
+def test_ai_titles_count_as_data_roles():
+    f = score(job(title="Applied AI Engineer, Agents", description="Python, LLM, RAG, FastAPI, Docker."), KB | {"llm", "rag", "fastapi", "docker"}, now=NOW)
+    assert f.parts["title"] == 20 and f.parts["family"] == "ml_ai"
+
+
+def test_outside_us_only_when_no_us_option():
+    from auto_apply.v2.fit import outside_us
+    for loc in ["Paris, France (Remote)", "São Paulo (Remote)", "Remote Canada", "Singapore (Remote)", "Toronto; Ottawa"]:
+        assert outside_us(loc), loc
+    for loc in ["Remote - United States", "US-SF, US-NYC, US-Remote", "New York; London", "Austin, TX", "Remote", ""]:
+        assert not outside_us(loc), loc

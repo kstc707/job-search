@@ -1,102 +1,356 @@
 [
  {
-  "name": "Robinhood",
+  "name": "Stripe",
   "ats": "greenhouse",
-  "board": "robinhood"
- },
- {
-  "name": "Affirm",
-  "ats": "greenhouse",
-  "board": "affirm"
- },
- {
-  "name": "Lyft",
-  "ats": "greenhouse",
-  "board": "lyft"
- },
- {
-  "name": "Datadog",
-  "ats": "greenhouse",
-  "board": "datadog"
- },
- {
-  "name": "Gusto",
-  "ats": "greenhouse",
-  "board": "gusto"
- },
- {
-  "name": "Oscar Health",
-  "ats": "greenhouse",
-  "board": "oscar"
- },
- {
-  "name": "Samsara",
-  "ats": "greenhouse",
-  "board": "samsara"
- },
- {
-  "name": "Coinbase",
-  "ats": "greenhouse",
-  "board": "coinbase"
- },
- {
-  "name": "SoFi",
-  "ats": "greenhouse",
-  "board": "sofi"
- },
- {
-  "name": "HelloFresh",
-  "ats": "greenhouse",
-  "board": "hellofresh"
- },
- {
-  "name": "DoorDash",
-  "ats": "greenhouse",
-  "board": "doordashusa"
- },
- {
-  "name": "Carvana",
-  "ats": "greenhouse",
-  "board": "carvana"
- },
- {
-  "name": "Komodo Health",
-  "ats": "greenhouse",
-  "board": "komodohealth"
- },
- {
-  "name": "Spotify",
-  "ats": "lever",
-  "board": "spotify"
- },
- {
-  "name": "Palantir",
-  "ats": "lever",
-  "board": "palantir"
- },
- {
-  "name": "Veeva Systems",
-  "ats": "lever",
-  "board": "veeva"
- },
- {
-  "name": "Wealthfront",
-  "ats": "lever",
-  "board": "wealthfront"
- },
- {
-  "name": "Ramp",
-  "ats": "ashby",
-  "board": "ramp"
+  "board": "stripe",
+  "industry": "fintech"
  },
  {
   "name": "Plaid",
   "ats": "ashby",
-  "board": "plaid"
+  "board": "plaid",
+  "industry": "fintech"
+ },
+ {
+  "name": "Affirm",
+  "ats": "greenhouse",
+  "board": "affirm",
+  "industry": "fintech"
+ },
+ {
+  "name": "Chime",
+  "ats": "greenhouse",
+  "board": "chime",
+  "industry": "fintech"
+ },
+ {
+  "name": "Brex",
+  "ats": "greenhouse",
+  "board": "brex",
+  "industry": "fintech"
+ },
+ {
+  "name": "Robinhood",
+  "ats": "greenhouse",
+  "board": "robinhood",
+  "industry": "fintech"
+ },
+ {
+  "name": "SoFi",
+  "ats": "greenhouse",
+  "board": "sofi",
+  "industry": "fintech"
+ },
+ {
+  "name": "Coinbase",
+  "ats": "greenhouse",
+  "board": "coinbase",
+  "industry": "fintech"
+ },
+ {
+  "name": "Nubank",
+  "ats": "greenhouse",
+  "board": "nubank",
+  "industry": "fintech"
+ },
+ {
+  "name": "Betterment",
+  "ats": "greenhouse",
+  "board": "betterment",
+  "industry": "fintech"
+ },
+ {
+  "name": "Toast",
+  "ats": "greenhouse",
+  "board": "toast",
+  "industry": "fintech"
+ },
+ {
+  "name": "Block",
+  "ats": "greenhouse",
+  "board": "block",
+  "industry": "fintech"
+ },
+ {
+  "name": "Carta",
+  "ats": "greenhouse",
+  "board": "carta",
+  "industry": "fintech"
+ },
+ {
+  "name": "Ramp",
+  "ats": "ashby",
+  "board": "ramp",
+  "industry": "fintech"
+ },
+ {
+  "name": "Mercury",
+  "ats": "ashby",
+  "board": "mercury",
+  "industry": "fintech"
+ },
+ {
+  "name": "Oscar Health",
+  "ats": "greenhouse",
+  "board": "oscar",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Flatiron Health",
+  "ats": "greenhouse",
+  "board": "flatironhealth",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Zocdoc",
+  "ats": "greenhouse",
+  "board": "zocdoc",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Komodo Health",
+  "ats": "greenhouse",
+  "board": "komodohealth",
+  "industry": "healthcare"
+ },
+ {
+  "name": "PathAI",
+  "ats": "greenhouse",
+  "board": "pathai",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Abridge",
+  "ats": "ashby",
+  "board": "abridge",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Ambience Healthcare",
+  "ats": "ashby",
+  "board": "ambiencehealthcare",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Hinge Health",
+  "ats": "ashby",
+  "board": "hinge-health",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Headway",
+  "ats": "ashby",
+  "board": "headway",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Cedar",
+  "ats": "ashby",
+  "board": "cedar",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Commure",
+  "ats": "ashby",
+  "board": "commure",
+  "industry": "healthcare"
+ },
+ {
+  "name": "Anthropic",
+  "ats": "greenhouse",
+  "board": "anthropic",
+  "industry": "ai"
+ },
+ {
+  "name": "Scale AI",
+  "ats": "greenhouse",
+  "board": "scaleai",
+  "industry": "ai"
+ },
+ {
+  "name": "Databricks",
+  "ats": "greenhouse",
+  "board": "databricks",
+  "industry": "ai"
+ },
+ {
+  "name": "Glean",
+  "ats": "greenhouse",
+  "board": "gleanwork",
+  "industry": "ai"
+ },
+ {
+  "name": "OpenAI",
+  "ats": "ashby",
+  "board": "openai",
+  "industry": "ai"
+ },
+ {
+  "name": "Cohere",
+  "ats": "ashby",
+  "board": "cohere",
+  "industry": "ai"
+ },
+ {
+  "name": "Perplexity",
+  "ats": "ashby",
+  "board": "perplexity",
+  "industry": "ai"
+ },
+ {
+  "name": "Modal",
+  "ats": "ashby",
+  "board": "modal",
+  "industry": "ai"
+ },
+ {
+  "name": "LangChain",
+  "ats": "ashby",
+  "board": "langchain",
+  "industry": "ai"
+ },
+ {
+  "name": "LlamaIndex",
+  "ats": "ashby",
+  "board": "llamaindex",
+  "industry": "ai"
+ },
+ {
+  "name": "Sierra",
+  "ats": "ashby",
+  "board": "sierra",
+  "industry": "ai"
+ },
+ {
+  "name": "Harvey",
+  "ats": "ashby",
+  "board": "harvey",
+  "industry": "ai"
+ },
+ {
+  "name": "Decagon",
+  "ats": "ashby",
+  "board": "decagon",
+  "industry": "ai"
+ },
+ {
+  "name": "Writer",
+  "ats": "ashby",
+  "board": "writer",
+  "industry": "ai"
+ },
+ {
+  "name": "Palantir",
+  "ats": "lever",
+  "board": "palantir",
+  "industry": "ai"
+ },
+ {
+  "name": "Datadog",
+  "ats": "greenhouse",
+  "board": "datadog",
+  "industry": "tech"
+ },
+ {
+  "name": "Airbnb",
+  "ats": "greenhouse",
+  "board": "airbnb",
+  "industry": "tech"
+ },
+ {
+  "name": "Fivetran",
+  "ats": "greenhouse",
+  "board": "fivetran",
+  "industry": "tech"
+ },
+ {
+  "name": "Instacart",
+  "ats": "greenhouse",
+  "board": "instacart",
+  "industry": "tech"
+ },
+ {
+  "name": "DoorDash",
+  "ats": "greenhouse",
+  "board": "doordashusa",
+  "industry": "tech"
+ },
+ {
+  "name": "Lyft",
+  "ats": "greenhouse",
+  "board": "lyft",
+  "industry": "tech"
+ },
+ {
+  "name": "Pinterest",
+  "ats": "greenhouse",
+  "board": "pinterest",
+  "industry": "tech"
+ },
+ {
+  "name": "Reddit",
+  "ats": "greenhouse",
+  "board": "reddit",
+  "industry": "tech"
+ },
+ {
+  "name": "Asana",
+  "ats": "greenhouse",
+  "board": "asana",
+  "industry": "tech"
+ },
+ {
+  "name": "Figma",
+  "ats": "greenhouse",
+  "board": "figma",
+  "industry": "tech"
+ },
+ {
+  "name": "Samsara",
+  "ats": "greenhouse",
+  "board": "samsara",
+  "industry": "tech"
+ },
+ {
+  "name": "MongoDB",
+  "ats": "greenhouse",
+  "board": "mongodb",
+  "industry": "tech"
+ },
+ {
+  "name": "Spotify",
+  "ats": "lever",
+  "board": "spotify",
+  "industry": "tech"
+ },
+ {
+  "name": "Gusto",
+  "ats": "greenhouse",
+  "board": "gusto",
+  "industry": "tech"
+ },
+ {
+  "name": "HelloFresh",
+  "ats": "greenhouse",
+  "board": "hellofresh",
+  "industry": "tech"
+ },
+ {
+  "name": "Carvana",
+  "ats": "greenhouse",
+  "board": "carvana",
+  "industry": "tech"
+ },
+ {
+  "name": "Veeva Systems",
+  "ats": "lever",
+  "board": "veeva",
+  "industry": "healthcare"
  },
  {
   "name": "Vanta",
   "ats": "ashby",
-  "board": "vanta"
+  "board": "vanta",
+  "industry": "tech"
  }
 ]
