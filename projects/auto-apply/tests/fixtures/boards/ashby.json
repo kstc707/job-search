@@ -1,0 +1,13 @@
+{"apiVersion": "1", "jobs": [
+  {"id": "bbbb-1111", "title": " Reporting Analyst ", "location": "Atlanta, GA",
+   "secondaryLocations": [{"location": "Birmingham, AL"}], "isListed": true, "isRemote": false,
+   "publishedAt": "2026-10-19T12:00:00.000+00:00", "jobUrl": "https://jobs.ashbyhq.com/cobaltexample/bbbb-1111",
+   "applyUrl": "https://jobs.ashbyhq.com/cobaltexample/bbbb-1111/application",
+   "descriptionPlain": "Monthly KPI reports.", "descriptionHtml": "<p>Monthly KPI reports.</p>",
+   "compensation": {"compensationTierSummary": "$60K - $75K"}},
+  {"id": "bbbb-2222", "title": "Analytics Engineer", "location": "San Francisco, CA", "isListed": true,
+   "isRemote": true, "publishedAt": "2026-10-10T12:00:00Z", "jobUrl": "https://jobs.ashbyhq.com/cobaltexample/bbbb-2222",
+   "descriptionPlain": "dbt."},
+  {"id": "bbbb-3333", "title": "Data Analyst (unlisted)", "location": "Remote", "isListed": false,
+   "publishedAt": "2026-10-10T12:00:00Z", "jobUrl": "https://jobs.ashbyhq.com/cobaltexample/bbbb-3333"}
+]}

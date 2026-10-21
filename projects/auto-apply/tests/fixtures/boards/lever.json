@@ -1,0 +1,14 @@
+[
+  {"id": "aaaa-1111", "text": "Business Intelligence Analyst", "createdAt": 1792000000000,
+   "categories": {"commitment": "Full-time", "location": "Memphis, TN", "team": "Analytics",
+                  "allLocations": ["Memphis, TN", "Atlanta, GA"]},
+   "workplaceType": "hybrid", "country": "US",
+   "hostedUrl": "https://jobs.lever.co/blueriverexample/aaaa-1111",
+   "applyUrl": "https://jobs.lever.co/blueriverexample/aaaa-1111/apply",
+   "descriptionPlain": "Own weekly reporting.", "description": "<div>Own weekly reporting.</div>",
+   "lists": [{"text": "What you'll need", "content": "<li>SQL</li><li>Tableau or Power BI</li>"}],
+   "additionalPlain": "Equal opportunity employer."},
+  {"id": "aaaa-2222", "text": "Account Executive", "createdAt": 1791900000000,
+   "categories": {"location": "Chicago, IL"}, "workplaceType": "remote",
+   "hostedUrl": "https://jobs.lever.co/blueriverexample/aaaa-2222", "descriptionPlain": "Sell."}
+]

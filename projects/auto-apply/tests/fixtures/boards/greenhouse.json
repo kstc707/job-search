@@ -1,0 +1,12 @@
+{"jobs": [
+  {"id": 1001, "title": "Data Analyst, Growth", "updated_at": "2026-10-18T09:00:00-04:00",
+   "first_published": "2026-10-17T10:30:00-04:00", "company_name": "Acme Example",
+   "location": {"name": "Remote - US"}, "absolute_url": "https://boards.greenhouse.io/acmeexample/jobs/1001",
+   "content": "&lt;p&gt;Build &lt;strong&gt;SQL&lt;/strong&gt; dashboards.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Python&lt;/li&gt;&lt;li&gt;A/B tests &amp;amp; reporting&lt;/li&gt;&lt;/ul&gt;"},
+  {"id": 1002, "title": "Senior Data Analyst", "updated_at": "2026-10-16T09:00:00Z",
+   "location": {"name": "New York, NY"}, "absolute_url": "https://boards.greenhouse.io/acmeexample/jobs/1002",
+   "content": "&lt;p&gt;Lead analytics.&lt;/p&gt;"},
+  {"id": 1003, "title": "Software Engineer", "updated_at": "2026-10-15T09:00:00Z",
+   "location": {"name": "Memphis, TN"}, "absolute_url": "https://boards.greenhouse.io/acmeexample/jobs/1003",
+   "content": ""}
+], "meta": {"total": 3}}

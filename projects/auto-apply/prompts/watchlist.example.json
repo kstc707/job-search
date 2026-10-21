@@ -1,0 +1,102 @@
+[
+ {
+  "name": "Robinhood",
+  "ats": "greenhouse",
+  "board": "robinhood"
+ },
+ {
+  "name": "Affirm",
+  "ats": "greenhouse",
+  "board": "affirm"
+ },
+ {
+  "name": "Lyft",
+  "ats": "greenhouse",
+  "board": "lyft"
+ },
+ {
+  "name": "Datadog",
+  "ats": "greenhouse",
+  "board": "datadog"
+ },
+ {
+  "name": "Gusto",
+  "ats": "greenhouse",
+  "board": "gusto"
+ },
+ {
+  "name": "Oscar Health",
+  "ats": "greenhouse",
+  "board": "oscar"
+ },
+ {
+  "name": "Samsara",
+  "ats": "greenhouse",
+  "board": "samsara"
+ },
+ {
+  "name": "Coinbase",
+  "ats": "greenhouse",
+  "board": "coinbase"
+ },
+ {
+  "name": "SoFi",
+  "ats": "greenhouse",
+  "board": "sofi"
+ },
+ {
+  "name": "HelloFresh",
+  "ats": "greenhouse",
+  "board": "hellofresh"
+ },
+ {
+  "name": "DoorDash",
+  "ats": "greenhouse",
+  "board": "doordashusa"
+ },
+ {
+  "name": "Carvana",
+  "ats": "greenhouse",
+  "board": "carvana"
+ },
+ {
+  "name": "Komodo Health",
+  "ats": "greenhouse",
+  "board": "komodohealth"
+ },
+ {
+  "name": "Spotify",
+  "ats": "lever",
+  "board": "spotify"
+ },
+ {
+  "name": "Palantir",
+  "ats": "lever",
+  "board": "palantir"
+ },
+ {
+  "name": "Veeva Systems",
+  "ats": "lever",
+  "board": "veeva"
+ },
+ {
+  "name": "Wealthfront",
+  "ats": "lever",
+  "board": "wealthfront"
+ },
+ {
+  "name": "Ramp",
+  "ats": "ashby",
+  "board": "ramp"
+ },
+ {
+  "name": "Plaid",
+  "ats": "ashby",
+  "board": "plaid"
+ },
+ {
+  "name": "Vanta",
+  "ats": "ashby",
+  "board": "vanta"
+ }
+]

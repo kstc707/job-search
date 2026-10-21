@@ -77,6 +77,17 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/v2/arms.py`: `assign` picks (from a hash of the apply URL) which jobs also get
   a not-for-submission target profile; `tally` counts callbacks, assessments, rejections and
   silence for tagged tracker rows and runs Fisher's exact test.
+- `auto_apply/v2/gmail_inbox.py`: replaces the Tsenta inbox. Reads Gmail connector output
+  (`search_threads` / `get_thread` JSON), classifies each message with readable rules (ATS sender
+  domains, phrases for acknowledgment, rejection, assessment, interview and offer, a person-written
+  mail = recruiter message; conditional sentences like "if selected, we will schedule an interview"
+  are ignored), pulls company and title from the text, and writes the inbox rows `outcomes.py`
+  already reads: `python -m auto_apply.v2.gmail_inbox runs/v2/gmail.json --out runs/v2/inbox.json`.
+  A company guessed only from an ATS mailbox (`acme@myworkday.com`) never creates a tracker row.
+- `auto_apply/v2/boards.py`: replaces Tsenta recommendations. Reads the public Greenhouse, Lever
+  and Ashby job feeds for a watchlist (`prompts/watchlist.example.json`), normalises them to the
+  jobs.json shape, filters by `--title` / `--exclude-title` / `--location` keywords and writes
+  `runs/v2/boards.json`; a failing board is reported and skipped.
 - `auto_apply/v2/titles.py`: picks each resume entry's title from the posting's role family
   (BI, product, data science, AI…) out of Sai's approved list in `runs/titles.json`. A variant
   must keep the base title verbatim (forms and background checks use it), fixed roles never
