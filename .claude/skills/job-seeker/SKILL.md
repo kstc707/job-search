@@ -10,5 +10,5 @@ results: `projects/seeker/README.md`. The Charter on the Notion page "Job-Seeker
 (`3ff55fb9-8924-81db-9550-f6331158aac6`) is Sai's and overrides both files.
 
 If the message that started the run says `DRY_RUN`: do steps 0, 1 and 2, build at most one
-resume and one outreach draft without saving the draft to Gmail or Tsenta, submit nothing,
+resume and one outreach draft without saving the draft to Gmail, submit nothing,
 and write the Journal row with Entry "<date> dry run".

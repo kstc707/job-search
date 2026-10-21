@@ -13,7 +13,7 @@ postings and real people, as Sai, so it has to stay honest and within limits Sai
 A scheduled cloud session wakes once a weekday and follows [`prompts/daily.md`](prompts/daily.md):
 
 ```
- OBSERVE   outcome sync (Tsenta inbox → tracker), Gmail: did Sai send a draft? did anyone reply?
+ OBSERVE   outcome sync (Gmail → tracker), Gmail: did Sai send a draft? did anyone reply?
     ▼
  DECIDE    read Beliefs + signals + remaining weekly budget → pick today's moves,
     │      each with a hypothesis and a variant tag (v=...)
@@ -26,7 +26,7 @@ A scheduled cloud session wakes once a weekday and follows [`prompts/daily.md`](
 ```
 
 It reuses the auto-apply pipeline (`projects/auto-apply`): the v2 outcome sync, search,
-resume tailoring, ATS check, red-team review, gate, form filler and Tsenta submit. What is
+resume tailoring, ATS check, red-team review, gate, cloud form filler and the Chrome autofill extension. What is
 new is the loop around it: the agent chooses its own strategy and keeps a record of why.
 
 ## Where to watch it (Notion, under the job-search memory page)
@@ -56,7 +56,7 @@ new is the loop around it: the agent chooses its own strategy and keeps a record
   buffer: it only collects. Form answers and outreach messages stay factual.
 - Learning projects the agent builds and pushes (with results from code it ran) are marked
   Built and become usable in arm A right away; Sai gets an FYI with the repo link.
-- No LinkedIn automation or scraping. No Tsenta settings changes.
+- No LinkedIn automation or scraping. No Tsenta (removed 2026-10-21).
 - No second applications: `auto_apply.v2.dedupe` checks every found job against the whole
   Notion tracker (same posting, requisition id, repost on another board, 60-day company cooldown).
   The local ledger can't do this alone because `runs/` is empty in every fresh cloud session.

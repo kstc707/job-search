@@ -46,7 +46,7 @@ and the memory page, and you never edit it. In short:
   - Which applied jobs also get an arm-B target profile is not your choice:
     `auto_apply.v2.arms assign <apply url>` returns B for about half of them.
   - Form answers always come from Form Answers v2, and outreach messages hold only real facts.
-- **Never:** automate or scrape LinkedIn/Indeed pages, change Tsenta settings or profile,
+- **Never:** automate or scrape LinkedIn/Indeed pages, use Tsenta (removed 2026-10-21),
   answer an `ASK` or unknown form question, touch rows the v2 cycle drafted.
 
 ## 0. Setup
@@ -62,8 +62,8 @@ the memory page's "One email everywhere" section (newest decision wins). That in
 
 Then read, in this order: the experiment page; the last 14 Journal entries; every Contacts
 row; the memory page sections Form Answers v2, Location preference and One email
-everywhere. Note this week's counts: applications, new people drafted, Tsenta credits
-(`get-application-balance`; keep 30 in reserve).
+everywhere. Note this week's counts: applications sent, applications waiting on Sai's
+extension, new people drafted.
 
 ## 1. Observe (every run)
 1. **Application outcomes:** run `prompts/v2-cycle.md` step 1 (outcome sync) as written.
@@ -122,28 +122,36 @@ Moves:
    spreading over synonyms. Then: Jobs +1, This week +1, Updated today, Example postings =
    "<Company> - <Title>" added at the front, How to close it = the gap plan's best route.
    New row: Status Open, Jobs 1, This week 1. One job adds at most 1 to a row.
-5. Submit the arm-A resume: `prompts/v2-cycle.md` step 6.2-6.4 (gate, then filler or Tsenta). A form that needs an `ASK` answer or Sai's consent → do not
-   submit; put it in Needs Sai.
+5. Submit the arm-A resume: `prompts/v2-cycle.md` step 6.2-6.4 (gate, then route).
+   Greenhouse, Lever and Ashby go through the cloud filler, which you may submit on your own.
+   Every other ATS goes to the **extension** route: build the job pack (v2 step 4.5), attach
+   resume and job pack to the row (v2 step 5), Status Drafted, and put "Apply with the
+   extension: <company>, <apply url>" in Needs Sai; these count toward the weekly cap only
+   once Sai submits. A form that needs an `ASK` answer or Sai's consent → do not submit; put
+   it in Needs Sai.
 6. Record: create the tracker row (Job "<Company> - <Title>", Company, Location, Date today,
    Apply URL, Source URL, Status Applied or Waiting, resume attached as v2 step 5 does,
    **Submit? left empty**) with Notes starting
-   `[seeker <date> v=<tag>] hypothesis: <...>. Route: <filler|tsenta>. Why this job: <...>`,
+   `[seeker <date> v=<tag>] hypothesis: <...>. Route: <filler|extension>. Why this job: <...>`,
    plus `ATS A <score> / B <score>` when a target profile was built.
 
 ### 3b. Reach a person
-1. Tsenta `find-networking-contacts` with the `applicationId` (completed applications) or
-   the `company`. Prefer whoever the hypothesis says (hiring manager, a team member doing
-   the work, a recruiter, a warm intro from the University of Memphis or TCS).
-2. `find-contact-email` for that person. No verified email → a LinkedIn note instead.
+1. Find the person with web search (WebSearch, WebFetch): the company's team and careers
+   pages, its engineering or data blog, press releases, conference talks, the job posting
+   itself (some name the hiring manager). Prefer whoever the hypothesis says (hiring manager,
+   a team member doing the work, a recruiter, a warm intro from the University of Memphis or
+   TCS). Never scrape LinkedIn; a public LinkedIn URL found through search may be recorded.
+2. Email only when the person's work address is published on a public page you can cite in
+   the Contacts row; never guess an address from a name pattern. Otherwise a LinkedIn note.
 3. Write the message in Sai's voice: 3-5 sentences, one concrete reason this person and this
    team, one specific thing Sai has done that matches their work, one small ask (a 15-minute
    call or a pointer to the right person). No invented connections, no flattery, no
    em dashes, signed "Sai".
-4. Email → Gmail `create_draft` (to the verified email, from Sai's account). LinkedIn →
-   Tsenta `save-outreach-draft` channel linkedin (120-150 characters).
+4. Email → Gmail `create_draft` (to the published address, from Sai's account). LinkedIn →
+   the note (120-150 characters) goes in the Contacts row's Draft for Sai to send by hand.
 5. Add a Contacts row: Name, Company, Role, Kind, Why this person, Channel, Email or
-   LinkedIn, Tracker row link, Draft (full text), Status Drafted, Drafted on today, Tsenta
-   contact id. Add one line to Needs Sai: "Send draft to <name> (<company>)".
+   LinkedIn, Tracker row link, Draft (full text), Status Drafted, Drafted on today, and the
+   source URL where you found the person in Why this person. Add one line to Needs Sai: "Send draft to <name> (<company>)".
 
 ### 3c. Follow up
 Only Sent rows with no reply after 7+ days and no follow-up yet: one short, new-information
