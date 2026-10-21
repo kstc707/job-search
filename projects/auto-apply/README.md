@@ -91,6 +91,10 @@ login-based ATSes and costs one credit per application.
   are ignored), pulls company and title from the text, and writes the inbox rows `outcomes.py`
   already reads: `python -m auto_apply.v2.gmail_inbox runs/v2/gmail.json --out runs/v2/inbox.json`.
   A company guessed only from an ATS mailbox (`acme@myworkday.com`) never creates a tracker row.
+- `auto_apply/v2/fit.py`: model-free fit score (skills covered by the Knowledge Base, data-role
+  title, location, freshness, years asked) that sorts jobs into tiers: A gets a tailored resume +
+  red-team + outreach, B a tailored resume only, C is skipped and its gaps logged. Knockouts
+  (citizenship-only, clearance, student-only) force C.
 - `auto_apply/v2/boards.py`: replaces Tsenta recommendations. Reads the public Greenhouse, Lever
   and Ashby job feeds for a watchlist (`prompts/watchlist.example.json`), normalises them to the
   jobs.json shape, filters by `--title` / `--exclude-title` / `--location` keywords and writes

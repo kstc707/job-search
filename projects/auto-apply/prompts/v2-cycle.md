@@ -1,13 +1,25 @@
 # Job agent v2: one run
 
-Goal: **a callback from a person.** Fewer, better-aimed applications: entry-level analyst roles,
-Sai's locations first, fresh postings, a checked resume, and nothing sent without Sai's approval.
+Goal: **a callback from a person.** No cap on applications, but model spend follows fit:
+entry-level analyst roles, Sai's locations first, fresh postings, a tailored and checked resume
+for every application, and nothing sent without Sai's approval.
 
 Read first, every run: the Notion memory page `3f755fb9-8924-81a1-b4c8-fe6cc3265094`
 (decisions there are Sai's and override this file), then this file.
 
 **Mode:** if the message that started this run says `DRY_RUN`, do steps 0–5 and 7, build at
 most 3 resumes, and send nothing (skip step 6).
+
+**Spend plan (Sai, 2026-10-21): tiers + batching.**
+- Every job that passes step 3 gets a **tailored resume**. `auto_apply.v2.fit` scores fit without
+  a model and the tier decides what else it gets:
+  **A** (score ≥ 70): tailored resume + red-team review + one outreach draft (seeker), built first;
+  **B** (45-69): tailored resume, no red-team, no outreach;
+  **C** (< 45 or a knockout): not built; its missing skills go to the Gap Ledger.
+- **Batching:** one resume-builder subagent handles 4-6 jobs (startup costs ~60k tokens per
+  subagent); one red-team subagent per run for all tier-A resumes.
+- **Cadence:** steps 2-5 (find, rank, build, queue) run on **Monday, Wednesday and Friday**; on
+  other days a run does steps 0, 1, 6 and 7 only (sync, apply approved rows, report).
 
 **No Tsenta (Sai, 2026-10-21).** Tsenta is out of the workflow: outcomes come from Gmail, jobs
 from the Indeed connector and company career boards, resume files go straight to Notion, and
@@ -54,6 +66,9 @@ Fill `runs/` (git-ignored, never commit it):
 - `runs/never_claim.txt` ← one line: `clearance, citizenship` (the tool list is lifted, see rule 4)
 - `runs/instructions.txt` ← empty file
 - `runs/titles.json` ← the JSON block under **Title variants by posting** on the Profile page
+- `runs/kb_terms.json` ← `{"terms": [...]}`: the Profile page's "Verified so far" tools plus the
+  Stack of every Built project, written in `auto_apply/v2/fit.py`'s skill vocabulary (keys of
+  `SKILLS`); terms outside it are ignored and listed when fit runs
 - `runs/profile-pack.json` ← `.venv/bin/python -m auto_apply.fillpack profile --profile runs/profile.json --answers runs/answers.json --out runs/profile-pack.json`
   (Sai loads this once into the Chrome extension; rebuild and re-attach it to the memory page
   when the profile or answers change)
@@ -95,7 +110,10 @@ not read; say so in the report when a row has been Applied for 30+ days with no 
 3. Read each kept job's full description (board description, or Indeed `get_job_details`).
    Skip and note: citizens only, clearance, more than 4 years required, degree we don't have,
    language not spoken, the hiring area excludes Tennessee (e.g. "TX, FL, GA residents only").
-4. Take the top 8 (DRY_RUN: top 3).
+4. `.venv/bin/python -m auto_apply.v2.fit runs/v2/ranked.json --kb-terms runs/kb_terms.json --out runs/v2/tiered.json`
+   (jobs need their description; fetch it first for Indeed jobs). Build every A and B job, A
+   first (DRY_RUN: at most 3). Log each C job's `missing` skills in the Gap Ledger (Jobs +1,
+   This week +1, Example postings) and skip it.
 
 ## 4. Build and check each resume
 1. `.venv/bin/python -m auto_apply.v2.titles choose "<posting title>"` gives the title for each
@@ -105,7 +123,9 @@ not read; say so in the report when a row has been Applied for 30+ days with no 
    must PASS.
 2. `.venv/bin/python -m auto_apply.v2.ats_check <pdf> --email saiteja.koppolu01@gmail.com --phone "+1 901-343-7273"`
    must PASS. A FAIL means fix the LaTeX (plain-hyphen dates, the email above) and rebuild.
-3. **Red-team review, batched** (ONE fresh-context subagent for all of this run's resumes; each
+   **Batching:** split the jobs into groups of 4-6 (tier A groups first) and give each group to
+   one builder subagent, all launched at once.
+3. **Red-team review, tier A only, batched** (ONE fresh-context subagent for all of this run's tier-A resumes; each
    subagent costs ~60k tokens of startup overhead, so never one per resume): give it ONLY the
    posting texts and the PDFs' extracted texts, paired by file name. Its job: a recruiter with 200
    applicants who wants to reject. For each resume it names the 3 strongest reasons to say no.
@@ -124,7 +144,8 @@ not read; say so in the report when a row has been Applied for 30+ days with no 
 ## 5. Add rows for Sai
 For each built job create a tracker row: Job, Company, Location, Date (today), Apply URL,
 Source URL, Score, Status **Drafted**, Submit? **No**, and Notes: location tier, why it fits,
-gaps (including red-team reasons accepted), route (**filler** for Greenhouse/Lever/Ashby,
+fit (`Tier A 78: skills 36 · title 20 · location 12 · freshness 10`), gaps (missing skills from
+fit, and red-team reasons accepted for tier A), route (**filler** for Greenhouse/Lever/Ashby,
 **extension** for everything else), drafted answers.
 Attach files straight from disk (no Tsenta, no retyping file contents):
 1. Notion `create-file-upload` with the filename (e.g. `SaiTejaKoppolu_<Company>_<Role>.pdf`).
@@ -158,12 +179,13 @@ Rows from the review-queue view with Submit? = Yes AND Approved at set:
 
 ## 7. Report (5–8 lines, also appended to the memory page Run Log)
 NEEDS SAI items first (including every row waiting for the extension), then: outcomes synced
-(updates / new rows / unmatched), jobs found → kept → built, applications by route (filler sent,
+(updates / new rows / unmatched), jobs found → kept → tier A / B / C → built, applications by
+route (filler sent,
 extension waiting, Chrome filled), anything that failed twice.
 
 **Token log (every run, last line of the Run Log entry).** Each subagent's completion notice
 reports its `subagent_tokens`; keep a running tally by stage while the run goes, and write:
-`Tokens (subagents): sync <n> · find <n> · screen <n> · build <n> · review <n> · fix <n> · total <n> · per resume <total/resumes built> · agents <count>`
+`Tokens (subagents): sync <n> · find <n> · screen <n> · build A <n> · build B <n> · review <n> · fix <n> · total <n> · per resume A <n> · per resume B <n> · agents <count>`
 Use 0 for a stage that ran in the main thread, and say "main thread not counted". This is the
 baseline for comparing runs (the v2 real run on 2026-10-19 used 1,394,323 subagent tokens for
 6 resumes, ~162k per resume build+review+fix, before review batching).

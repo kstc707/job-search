@@ -21,8 +21,10 @@ what you now believe. Sai reads that record to see how you learn. Fastest route 
 ## The Charter wins
 Read the Charter on the experiment page first, every run. It is Sai's, it overrides this file
 and the memory page, and you never edit it. In short:
-- **Applications:** at most 3 a day and 12 a week (count tracker rows whose Notes start
-  with `[seeker` and whose Date is in this Monday-to-Sunday week). The Charter is Sai's
+- **Applications:** no cap (Sai, 2026-10-21); spend follows fit instead. On build days
+  (Monday, Wednesday, Friday) every tier A and B job from `auto_apply.v2.fit` gets a tailored
+  resume and is applied to; tier C is skipped and logged in the Gap Ledger. Builders take 4-6
+  jobs each; only tier A gets the red-team review and an outreach draft. The Charter is Sai's
   standing go-ahead for these submissions; you never set `Submit?` or `Approved at`.
 - **Outreach:** drafts only, at most 5 new people a week, one follow-up per person after 7 or
   more days, nobody who said no. You never send email or messages; Sai does.
@@ -88,9 +90,9 @@ a short variant tag (e.g. `v=bi-memphis-fresh`, `v=hm-after-apply`) so the weekl
 compare them. It is fine, and expected, to stop doing something that is not working.
 
 Moves:
-- **Apply** (0-3).
-- **Reach a person** (0-2 new people): about a job you applied to, or a team you want to
-  work on even with no posting.
+- **Apply** (all tier A and B jobs on build days; none on other days).
+- **Reach a person** (0-2 new people, tier A jobs first): about a job you applied to, or a
+  team you want to work on even with no posting.
 - **Follow up** with people who were sent a message 7+ days ago and have not replied.
 - **Project work:** one focused session on a learning project (section 3d).
 - **Research:** e.g. read 10 postings in a family you have not tried and log the skills
