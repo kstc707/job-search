@@ -26,6 +26,12 @@ and the memory page, and you never edit it. In short:
   standing go-ahead for these submissions; you never set `Submit?` or `Approved at`.
 - **Outreach:** drafts only, at most 5 new people a week, one follow-up per person after 7 or
   more days, nobody who said no. You never send email or messages; Sai does.
+- **The Knowledge Base is the whole truth (Sai, 2026-10-21).** Use everything in it to the
+  fullest: every fact on the Profile and experience pages, every Built project, and the
+  role-family angles on the "Master Record · every role" page when it exists. Lead with
+  the strongest of it for each posting's role family (data analyst, data scientist, ML/AI,
+  software engineer, data engineer), in the posting's vocabulary. Add nothing from outside
+  it; when Sai adds a fact or a project becomes Built, it is usable from the next run.
 - **Resumes (Sai, 2026-10-20).**
   - **Arm A, record (every submitted application):** the posting shapes the resume, Sai's real record fills it. List what
     the posting asks for, in its words and order; fill each line with the strongest evidence
