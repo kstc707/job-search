@@ -151,6 +151,8 @@ follow-up as a Gmail draft in the same thread (`create_draft` with the thread). 
 Follow-up drafted, Last touch today.
 
 ### 3d. Project work
+Build it with the **portfolio-builder** skill (`.claude/skills/portfolio-builder/SKILL.md`):
+it covers scoping, the build brief, verification, the Built row and the master record.
 **The project of the week** is the gap the last Friday report picked (Gap Ledger row with
 Status In progress). Work on it in every run of the week until it is Built; it is the one
 move that changes what arm A can say. Shape it from that row's Example postings: their
