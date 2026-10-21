@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apply - My Experience (Workday-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 720px; margin: 24px auto; }
+  [data-automation-id^="formField-"] { margin: 10px 0; }
+  [data-automation-id^="workExperience-"], [data-automation-id^="education-"] { border: 1px solid #ddd; padding: 8px; margin: 8px 0; }
+  label, legend { display: block; font-weight: 600; }
+  input[type=text] { width: 100%; padding: 6px; }
+  input.date { width: 60px; }
+  [data-automation-id="selectListPopup"], [data-automation-id="activeListContainer"] { border: 1px solid #aaa; background: #fff; }
+  [role=option], [data-automation-id="promptOption"] { padding: 4px 8px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div data-automation-id="applyFlowPage">
+  <div data-automation-id="progressBarActiveStep">current step 2 of 6 My Experience</div>
+  <div data-automation-id="applyFlowMyExpPage">
+    <h2>My Experience</h2>
+
+    <div role="group" aria-labelledby="Work-Experience-section">
+      <h3 id="Work-Experience-section">Work Experience</h3>
+      <div data-automation-id="workExperienceSection" id="work-entries"></div>
+      <button type="button" data-automation-id="add-button" id="work-add">Add</button>
+    </div>
+
+    <div role="group" aria-labelledby="Education-section">
+      <h3 id="Education-section">Education</h3>
+      <div data-automation-id="educationSection" id="edu-entries"></div>
+      <button type="button" data-automation-id="add-button" id="edu-add">Add Another</button>
+    </div>
+
+    <div role="group" aria-labelledby="Websites-section">
+      <h3 id="Websites-section">Websites</h3>
+      <button type="button" data-automation-id="add-button" id="web-add">Add</button>
+    </div>
+
+    <div data-automation-id="formField-linkedinQuestion">
+      <label for="linkedin">LinkedIn</label>
+      <input type="text" id="linkedin" data-automation-id="linkedinQuestion">
+    </div>
+
+    <div data-automation-id="resumeSection" role="group" aria-labelledby="Resume-section">
+      <h3 id="Resume-section">Resume/CV<abbr title="required">*</abbr></h3>
+      <div data-automation-id="file-upload-drop-zone">
+        <p>Drop file here</p>
+        <button type="button" data-automation-id="select-files">Select files</button>
+        <input type="file" data-automation-id="file-upload-input-ref" style="display:none">
+      </div>
+      <div data-automation-id="file-upload-item-name" id="uploaded"></div>
+    </div>
+  </div>
+  <div data-automation-id="pageFooter">
+    <button type="button" data-automation-id="pageFooterBackButton" data-forbidden>Back</button>
+    <button type="button" data-automation-id="bottom-navigation-next-button" data-forbidden>Save and Continue</button>
+  </div>
+</div>
+<template id="work-template">
+  <div role="group">
+    <h4>Work Experience N</h4>
+    <div data-automation-id="formField-jobTitle"><label>Job Title<abbr title="required">*</abbr></label><input type="text" data-automation-id="jobTitle"></div>
+    <div data-automation-id="formField-company"><label>Company<abbr title="required">*</abbr></label><input type="text" data-automation-id="company"></div>
+    <div data-automation-id="formField-location"><label>Location</label><input type="text" data-automation-id="location"></div>
+    <div data-automation-id="formField-currentlyWorkHere"><input type="checkbox" data-automation-id="currentlyWorkHere"><label>I currently work here</label></div>
+    <div data-automation-id="formField-startDate"><label>From<abbr title="required">*</abbr></label>
+      <input class="date" type="text" data-automation-id="dateSectionMonth-input" placeholder="MM" maxlength="2">
+      <input class="date" type="text" data-automation-id="dateSectionYear-input" placeholder="YYYY" maxlength="4"></div>
+    <div data-automation-id="formField-endDate"><label>To<abbr title="required">*</abbr></label>
+      <input class="date" type="text" data-automation-id="dateSectionMonth-input" placeholder="MM" maxlength="2">
+      <input class="date" type="text" data-automation-id="dateSectionYear-input" placeholder="YYYY" maxlength="4"></div>
+    <div data-automation-id="formField-roleDescription"><label>Role Description</label><textarea data-automation-id="description"></textarea></div>
+    <button type="button" data-automation-id="panel-set-delete-button">Delete</button>
+  </div>
+</template>
+<template id="edu-template">
+  <div role="group">
+    <h4>Education N</h4>
+    <div data-automation-id="formField-school"><label>School or University<abbr title="required">*</abbr></label><input type="text" data-automation-id="school"></div>
+    <div data-automation-id="formField-degree"><label>Degree<abbr title="required">*</abbr></label><button type="button" aria-haspopup="listbox" data-automation-id="degree">Select One</button></div>
+    <div data-automation-id="formField-field-of-study"><label>Field of Study</label>
+      <div data-automation-id="multiselectInputContainer"><input type="text" data-uxi-widget-type="selectinput" placeholder="Search"></div></div>
+    <div data-automation-id="formField-gradeAverage"><label>Overall Result (GPA)</label><input type="text" data-automation-id="gpa"></div>
+    <div data-automation-id="formField-firstYearAttended"><label>From</label>
+      <input class="date" type="text" data-automation-id="dateSectionYear-input" placeholder="YYYY" maxlength="4"></div>
+    <div data-automation-id="formField-lastYearAttended"><label>To (Actual or Expected)</label>
+      <input class="date" type="text" data-automation-id="dateSectionYear-input" placeholder="YYYY" maxlength="4"></div>
+  </div>
+</template>
+<script src="widgets.js"></script>
+<script>
+  let uid = 0;
+  function addEntry(kind) {
+    const host = document.getElementById(kind === 'work' ? 'work-entries' : 'edu-entries');
+    const n = host.children.length + 1;
+    const node = document.getElementById(kind + '-template').content.firstElementChild.cloneNode(true);
+    const prefix = kind === 'work' ? 'workExperience' : 'education';
+    node.setAttribute('data-automation-id', `${prefix}-${n}`);
+    const h = node.querySelector('h4');
+    h.id = `${prefix}-${n}-panel`;
+    h.textContent = (kind === 'work' ? 'Work Experience ' : 'Education ') + n;
+    node.setAttribute('aria-labelledby', h.id);
+    for (const box of node.querySelectorAll('[data-automation-id^="formField-"]')) {
+      const input = box.querySelector('input, textarea, button');
+      const label = box.querySelector('label');
+      input.id = `${prefix}-${n}--${box.getAttribute('data-automation-id').slice(10)}-${++uid}`;
+      label.htmlFor = input.id;
+      if (input.tagName === 'INPUT' && input.type === 'text') reactTrack(input, `${prefix}-${n}.${box.getAttribute('data-automation-id').slice(10)}.${input.getAttribute('data-automation-id')}`);
+    }
+    host.append(node);
+    if (kind === 'work') {
+      const cb = node.querySelector('[data-automation-id="currentlyWorkHere"]');
+      cb.addEventListener('change', () => { node.querySelector('[data-automation-id="formField-endDate"]').style.display = cb.checked ? 'none' : ''; });
+      document.getElementById('work-add').textContent = 'Add Another';
+    } else {
+      wdDropdown(node.querySelector('[data-automation-id="degree"]'), ["Associate's Degree", "Bachelor's Degree", "Master's Degree", 'Doctorate'], `${prefix}-${n}.degree`);
+      const fos = ['Statistics', 'Statistics and Data Science', 'Biostatistics', 'Computer Science'];
+      wdPrompt(node.querySelector('[data-uxi-widget-type="selectinput"]'), [],
+        (q) => fos.filter((o) => o.toLowerCase().includes(q.toLowerCase())), `${prefix}-${n}.fieldOfStudy`);
+    }
+  }
+  // Workday shows no work entry until you press Add, and one empty education entry.
+  addEntry('edu');
+  document.getElementById('work-add').addEventListener('click', () => setTimeout(() => addEntry('work'), 150));
+  document.getElementById('edu-add').addEventListener('click', () => setTimeout(() => addEntry('edu'), 150));
+  document.getElementById('web-add').addEventListener('click', () => { window.__websitesAdded = true; });
+  reactTrack(document.getElementById('linkedin'), 'linkedin');
+  const file = document.querySelector('[data-automation-id="file-upload-input-ref"]');
+  file.addEventListener('change', () => { document.getElementById('uploaded').textContent = file.files[0] ? file.files[0].name : ''; });
+  guardButtons();
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Apply - Junior Analyst (generic fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 680px; margin: 16px auto; }
+  .row { margin: 10px 0; } input[type=text], select, textarea { width: 100%; padding: 5px; }
+  .hp { position: absolute; left: -9999px; }
+</style>
+</head>
+<body>
+<header><input type="search" placeholder="Search this site"></header>
+<main>
+  <h1>Junior Analyst</h1>
+  <form id="apply" action="/apply" method="post">
+    <div class="row"><label for="fn">First name *</label><input type="text" id="fn" name="fn" required></div>
+    <div class="row"><label>Last name *<input type="text" name="ln" required></label></div>
+    <div class="row"><span id="email-lbl">Email</span><input type="text" aria-labelledby="email-lbl" name="contact_email" required></div>
+    <div class="row"><input type="text" aria-label="Mobile phone" name="m"></div>
+    <div class="row"><input type="text" placeholder="City" name="town"></div>
+    <div class="row"><div class="q">LinkedIn URL</div><div><input type="text" name="li"></div></div>
+    <div class="row"><label for="ctry">Country</label>
+      <select id="ctry" name="ctry"><option value="">Choose…</option><option>Canada</option><option>United States</option></select></div>
+    <fieldset class="row"><legend>Are you willing to relocate? *</legend>
+      <label><input type="radio" name="reloc" value="y" required> Yes</label>
+      <label><input type="radio" name="reloc" value="n"> No</label></fieldset>
+    <div class="row"><label for="spons">Do you require sponsorship? *</label>
+      <select id="spons" name="spons" required><option value="">Choose…</option><option>Yes</option><option>No</option></select></div>
+    <div class="row"><label for="cl">Cover letter</label><textarea id="cl" name="cl"></textarea></div>
+    <div class="row"><label for="cv">Resume (PDF) *</label><input type="file" id="cv" name="cv" accept="application/pdf" required></div>
+    <div class="row"><label><input type="checkbox" name="agree" required> I agree to the privacy policy</label></div>
+    <input class="hp" type="text" name="honeypot_field" tabindex="-1" autocomplete="off">
+    <div class="row"><button type="submit" data-forbidden>Apply</button> <button type="button" data-forbidden>Next</button></div>
+  </form>
+</main>
+<script src="widgets.js"></script>
+<script>guardButtons();</script>
+</body>
+</html>

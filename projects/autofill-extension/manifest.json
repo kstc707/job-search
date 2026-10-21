@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Apply Autofill",
+  "version": "0.1.0",
+  "description": "Fills job applications (Workday, Greenhouse, Lever, Ashby, iCIMS, SmartRecruiters, Oracle and more) from your own profile pack and answer rules. Never submits.",
+  "permissions": ["storage", "unlimitedStorage", "scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_title": "Apply Autofill",
+    "default_popup": "popup/popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}

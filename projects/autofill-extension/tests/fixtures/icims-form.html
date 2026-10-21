@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Candidate Profile (iCIMS-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 680px; margin: 16px auto; }
+  .iCIMS_TableRow { margin: 10px 0; } label { display: block; font-weight: 600; }
+  input[type=text], select { width: 100%; padding: 5px; }
+  .field-required { color: #c00; }
+</style>
+</head>
+<body>
+<div id="iCIMS_MainWrapper" class="iCIMS_MainWrapper">
+  <form id="cp_form" name="cp_form" action="#" method="post">
+    <h2 class="iCIMS_InfoMsg">Candidate Profile</h2>
+    <div class="iCIMS_TableRow"><label for="PersonProfileFields.FirstName">First Name <span class="field-required">*</span></label>
+      <input type="text" id="PersonProfileFields.FirstName" name="PersonProfileFields.FirstName"></div>
+    <div class="iCIMS_TableRow"><label for="PersonProfileFields.LastName">Last Name <span class="field-required">*</span></label>
+      <input type="text" id="PersonProfileFields.LastName" name="PersonProfileFields.LastName"></div>
+    <div class="iCIMS_TableRow"><label for="PersonProfileFields.Email">Email <span class="field-required">*</span></label>
+      <input type="text" id="PersonProfileFields.Email" name="PersonProfileFields.Email"></div>
+    <div class="iCIMS_TableRow"><label for="PersonProfileFields.PhoneNumber">Phone Number</label>
+      <input type="text" id="PersonProfileFields.PhoneNumber" name="PersonProfileFields.PhoneNumber"></div>
+    <div class="iCIMS_TableRow"><label for="AddressStreet1">Address Line 1</label><input type="text" id="AddressStreet1" name="AddressStreet1"></div>
+    <div class="iCIMS_TableRow"><label for="AddressCity">City</label><input type="text" id="AddressCity" name="AddressCity"></div>
+    <div class="iCIMS_TableRow"><label for="AddressState">State</label>
+      <select id="AddressState" name="AddressState"><option value="">— Make a Selection —</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="MO">Missouri</option></select></div>
+    <div class="iCIMS_TableRow"><label for="AddressZip">Zip Code</label><input type="text" id="AddressZip" name="AddressZip"></div>
+    <div class="iCIMS_TableRow"><label for="rcf3048">Are you legally authorized to work in the United States? <span class="field-required">*</span></label>
+      <select id="rcf3048" name="rcf3048"><option value="">— Make a Selection —</option><option value="1">Yes</option><option value="0">No</option></select></div>
+    <div class="iCIMS_TableRow"><label for="rcf3049">Will you now or in the future require sponsorship? <span class="field-required">*</span></label>
+      <select id="rcf3049" name="rcf3049"><option value="">— Make a Selection —</option><option value="1">Yes</option><option value="0">No</option></select></div>
+    <div class="iCIMS_TableRow"><label for="rcf3050">Desired Salary</label><input type="text" id="rcf3050" name="rcf3050"></div>
+    <div class="iCIMS_TableRow"><label for="ResumeUpload">Resume <span class="field-required">*</span></label>
+      <input type="file" id="ResumeUpload" name="ResumeUpload"></div>
+    <input type="submit" value="Submit" data-forbidden>
+  </form>
+</div>
+<script src="widgets.js"></script>
+<script>guardButtons();</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Data Analyst @ Acme (Ashby-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 680px; margin: 16px auto; }
+  .ashby-application-form-field-entry { margin: 12px 0; } label { display: block; font-weight: 600; }
+  input[type=text], input[type=email] { width: 100%; padding: 5px; } ._active_x1 { background: #2457d6; color: #fff; }
+</style>
+</head>
+<body>
+<div class="ashby-application-form-container">
+  <div class="ashby-application-form-field-entry">
+    <label class="ashby-application-form-question-title _required_q1" for="_systemfield_name">Name</label>
+    <input type="text" id="_systemfield_name" name="_systemfield_name"></div>
+  <div class="ashby-application-form-field-entry">
+    <label class="ashby-application-form-question-title _required_q1" for="_systemfield_email">Email</label>
+    <input type="email" id="_systemfield_email" name="_systemfield_email"></div>
+  <div class="ashby-application-form-field-entry">
+    <label class="ashby-application-form-question-title _required_q1" for="_systemfield_resume">Resume</label>
+    <input type="file" id="_systemfield_resume" name="_systemfield_resume"></div>
+  <div class="ashby-application-form-field-entry" data-field-path="q_auth">
+    <label class="ashby-application-form-question-title _required_q1">Are you legally authorized to work in the United States?</label>
+    <div class="yesno"><button type="button">Yes</button><button type="button">No</button><input type="checkbox" name="q_auth" hidden></div></div>
+  <div class="ashby-application-form-field-entry" data-field-path="q_years">
+    <label class="ashby-application-form-question-title _required_q1">Do you have at least 5 years of experience with SQL?</label>
+    <div class="yesno"><button type="button">Yes</button><button type="button">No</button><input type="checkbox" name="q_years" hidden></div></div>
+  <div class="ashby-application-form-field-entry" data-field-path="q_spons">
+    <label class="ashby-application-form-question-title _required_q1">Will you require visa sponsorship?</label>
+    <div class="yesno"><button type="button">Yes</button><button type="button">No</button><input type="checkbox" name="q_spons" hidden></div></div>
+  <button class="ashby-application-form-submit-button" type="button" data-forbidden>Submit Application</button>
+</div>
+<script src="widgets.js"></script>
+<script>
+  for (const box of document.querySelectorAll('.yesno')) {
+    for (const b of box.querySelectorAll('button')) {
+      b.addEventListener('click', () => {
+        box.querySelectorAll('button').forEach((x) => x.classList.remove('_active_x1'));
+        b.classList.add('_active_x1');
+        window.__state[box.parentElement.dataset.fieldPath] = b.textContent;
+      });
+    }
+  }
+  guardButtons();
+</script>
+</body>
+</html>

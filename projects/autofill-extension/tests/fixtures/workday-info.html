@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apply - My Information (Workday-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 720px; margin: 24px auto; }
+  [data-automation-id^="formField-"] { margin: 12px 0; }
+  label, legend { display: block; font-weight: 600; }
+  input[type=text], input[type=email], input[type=tel] { width: 100%; padding: 6px; }
+  button[aria-haspopup] { min-width: 240px; text-align: left; padding: 6px; }
+  [data-automation-id="selectListPopup"], [data-automation-id="activeListContainer"] { border: 1px solid #aaa; background: #fff; }
+  [role=option], [data-automation-id="promptOption"] { padding: 4px 8px; cursor: pointer; }
+  abbr { color: #c00; text-decoration: none; }
+</style>
+</head>
+<body>
+<div data-automation-id="applyFlowPage">
+  <div data-automation-id="progressBar"><div data-automation-id="progressBarActiveStep">current step 1 of 6 My Information</div></div>
+  <div data-automation-id="applyFlowMyInfoPage">
+    <h2>My Information</h2>
+
+    <div data-automation-id="formField-sourceSection">
+      <label for="source--source">How Did You Hear About Us?<abbr title="required">*</abbr></label>
+      <div data-automation-id="multiselectInputContainer">
+        <input id="source--source" type="text" data-uxi-widget-type="selectinput" placeholder="Search" aria-required="true">
+      </div>
+    </div>
+
+    <div data-automation-id="formField-candidateIsPreviousWorker">
+      <fieldset>
+        <legend>Have you previously worked for Acme?<abbr title="required">*</abbr></legend>
+        <input type="radio" id="prev-yes" name="candidateIsPreviousWorker" value="true"><label for="prev-yes">Yes</label>
+        <input type="radio" id="prev-no" name="candidateIsPreviousWorker" value="false"><label for="prev-no">No</label>
+      </fieldset>
+    </div>
+
+    <div data-automation-id="formField-countryDropdown">
+      <label for="country--country">Country<abbr title="required">*</abbr></label>
+      <button type="button" id="country--country" aria-haspopup="listbox" data-automation-id="countryDropdown">Select One</button>
+    </div>
+
+    <div data-automation-id="formField-legalNameSection_firstName">
+      <label for="name--legalName--firstName">First Name<abbr title="required">*</abbr></label>
+      <input type="text" id="name--legalName--firstName" data-automation-id="legalNameSection_firstName" aria-required="true">
+    </div>
+    <div data-automation-id="formField-legalNameSection_lastName">
+      <label for="name--legalName--lastName">Last Name<abbr title="required">*</abbr></label>
+      <input type="text" id="name--legalName--lastName" data-automation-id="legalNameSection_lastName" aria-required="true">
+    </div>
+    <div data-automation-id="formField-preferredCheck">
+      <input type="checkbox" id="name--preferredCheck"><label for="name--preferredCheck">I have a preferred name</label>
+    </div>
+
+    <div data-automation-id="formField-addressSection_addressLine1">
+      <label for="address--addressLine1">Address Line 1<abbr title="required">*</abbr></label>
+      <input type="text" id="address--addressLine1" data-automation-id="addressSection_addressLine1" aria-required="true">
+    </div>
+    <div data-automation-id="formField-addressSection_city">
+      <label for="address--city">City<abbr title="required">*</abbr></label>
+      <input type="text" id="address--city" data-automation-id="addressSection_city" aria-required="true">
+    </div>
+    <div data-automation-id="formField-addressSection_countryRegion" id="state-field" style="display:none">
+      <label for="address--countryRegion">State<abbr title="required">*</abbr></label>
+      <button type="button" id="address--countryRegion" aria-haspopup="listbox" data-automation-id="addressSection_countryRegion">Select One</button>
+    </div>
+    <div data-automation-id="formField-addressSection_postalCode">
+      <label for="address--postalCode">Postal Code<abbr title="required">*</abbr></label>
+      <input type="text" id="address--postalCode" data-automation-id="addressSection_postalCode" aria-required="true">
+    </div>
+
+    <div data-automation-id="formField-email">
+      <label for="emailAddress--emailAddress">Email Address<abbr title="required">*</abbr></label>
+      <input type="email" id="emailAddress--emailAddress" data-automation-id="email" aria-required="true">
+    </div>
+
+    <div data-automation-id="formField-phoneType">
+      <label for="phoneNumber--phoneType">Phone Device Type<abbr title="required">*</abbr></label>
+      <button type="button" id="phoneNumber--phoneType" aria-haspopup="listbox" data-automation-id="phone-device-type">Select One</button>
+    </div>
+    <div data-automation-id="formField-countryPhoneCode">
+      <label for="phoneNumber--countryPhoneCode">Country Phone Code<abbr title="required">*</abbr></label>
+      <div class="pills"><div data-automation-id="selectedItem">United States of America (+1)</div></div>
+      <div data-automation-id="multiselectInputContainer">
+        <input id="phoneNumber--countryPhoneCode" type="text" data-uxi-widget-type="selectinput" placeholder="Search">
+      </div>
+    </div>
+    <div data-automation-id="formField-phoneNumber">
+      <label for="phoneNumber--phoneNumber">Phone Number<abbr title="required">*</abbr></label>
+      <input type="tel" id="phoneNumber--phoneNumber" data-automation-id="phone-number" aria-required="true">
+    </div>
+  </div>
+  <div data-automation-id="pageFooter">
+    <button type="button" data-automation-id="bottom-navigation-next-button" data-forbidden>Save and Continue</button>
+  </div>
+</div>
+<script src="widgets.js"></script>
+<script>
+  for (const id of ['name--legalName--firstName', 'name--legalName--lastName', 'address--addressLine1', 'address--city',
+                    'address--postalCode', 'emailAddress--emailAddress', 'phoneNumber--phoneNumber']) {
+    reactTrack(document.getElementById(id), id);
+  }
+  wdPrompt(document.getElementById('source--source'), ['Company Website', 'Job Board', 'LinkedIn', 'Referral'],
+    (q) => ['Company Website', 'Job Board', 'LinkedIn', 'Referral'].filter((o) => o.toLowerCase().includes(q.toLowerCase())), 'source');
+  wdPrompt(document.getElementById('phoneNumber--countryPhoneCode'), [], () => [], 'phoneCode');
+  wdDropdown(document.getElementById('country--country'), ['Canada', 'India', 'United Kingdom', 'United States of America'], 'country',
+    (o) => { document.getElementById('state-field').style.display = o === 'United States of America' ? '' : 'none'; });
+  wdDropdown(document.getElementById('address--countryRegion'), ['Idaho', 'Illinois', 'Indiana', 'Iowa'], 'state');
+  wdDropdown(document.getElementById('phoneNumber--phoneType'), ['Home', 'Landline', 'Mobile'], 'phoneType');
+  for (const r of document.querySelectorAll('input[type=radio]')) r.addEventListener('change', () => { window.__state.previousWorker = r.value; });
+  guardButtons();
+</script>
+</body>
+</html>

@@ -135,3 +135,19 @@ def test_checkbox_ids_and_demographic_ids():
     from auto_apply.filler.greenhouse import _css_id, _group
     assert _group("question_1[]") == "question_1" and _group("question_1") == "question_1"
     assert _css_id("demographic_605") == '[id="605"]'
+
+
+def test_split_address_lines_and_list_answer_in_text_box():
+    import copy
+    from auto_apply.filler.schema import Field, Question
+    profile = copy.deepcopy(PROFILE)
+    profile["personalInformation"].update({"address": "12 Elm Street", "zipCode": "62701"})
+    bank = AnswerBank(profile, [{"match": "years of experience", "answer": ["4", "4+", "3-5"]}], {})
+    text = [Field("f", "input_text")]
+    plan = bank.plan([Question("Address Line 1", True, text), Question("Address Line 2", False, text),
+                      Question("Home Address", True, text), Question("Years of experience", True, text)])
+    values = [(r.status, r.value) for r in plan]
+    assert values[0] == ("fill", "12 Elm Street")
+    assert values[1][0] == "skip"
+    assert values[2] == ("fill", "12 Elm Street, Springfield, Illinois 62701")
+    assert values[3] == ("fill", "4")

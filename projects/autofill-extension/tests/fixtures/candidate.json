@@ -1,0 +1,54 @@
+{
+  "_about": "A made-up candidate for tests. Real profile data stays in projects/auto-apply/runs/ (git-ignored).",
+  "profile": {
+    "personalInformation": {
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "email": "alex.rivera@example.com",
+      "phone": "+12175550100",
+      "address": "100 Main St",
+      "city": "Springfield",
+      "state": "Illinois",
+      "zipCode": "62701",
+      "county": "Sangamon",
+      "country": "United States",
+      "githubUrl": "https://github.com/alex-rivera-example",
+      "linkedinUrl": "https://www.linkedin.com/in/alex-rivera-example",
+      "website": "https://alex-rivera.example.com",
+      "isOver18": true
+    },
+    "workExperience": [
+      {"role": "Product Analyst", "company": "Acme Analytics", "location": "Springfield, IL",
+       "startDate": "Jun 2024", "endDate": "", "isCurrentRole": true},
+      {"role": "Data Analyst Intern", "company": "Springfield County Clerk", "location": "Springfield, IL",
+       "startDate": "Jan 2023", "endDate": "May 2024", "isCurrentRole": false}
+    ],
+    "education": [
+      {"university": "University of Springfield", "degree": "MS", "major": "Statistics", "gpa": "3.8",
+       "startDate": "Aug 2022", "endDate": "May 2024", "isCurrentlyEnrolled": false}
+    ],
+    "workAuthorization": {"isAuthorizedToWork": true, "needsSponsorship": false, "visaType": ""},
+    "workPreferences": {"canRelocate": true, "canWorkInPerson": true, "canStartImmediately": true,
+                        "hasTransportation": true, "expectedAnnualSalary": "", "howDidYouHearAboutRole": "LinkedIn"},
+    "diversityEquityInclusion": {"gender": "", "ethnicity": "", "isVeteran": false, "hasDisability": false,
+                                 "isTransgender": false, "sexualOrientation": ""},
+    "backgroundCheck": {"hasGovernmentTies": false, "hasGovernmentClearance": false, "hasWorkedForCompanyBefore": false}
+  },
+  "rules": [
+    {"match": "sponsorship", "answer": "ASK", "note": "decide per job"},
+    {"match": "authori[sz]ed to work", "answer": "Yes"},
+    {"match": "(?<!trans)gender", "answer": ["Decline to self-identify", "I don't wish to answer", "Decline"]},
+    {"match": "transgender", "answer": "ASK"},
+    {"match": "veteran", "answer": ["I am not a protected veteran", "No"]},
+    {"match": "disability", "answer": ["I don't wish to answer", "Decline"]},
+    {"match": "race|ethnicity|hispanic", "answer": ["Decline to self-identify", "I don't wish to answer", "Decline"]},
+    {"match": "how did you hear", "answer": ["LinkedIn", "Job Board"]},
+    {"match": "previously (been )?(employed|worked)|worked for .* before", "answer": "No"},
+    {"match": "years of experience", "answer": "3"},
+    {"match": "phone device type|phone type", "answer": ["Mobile", "Cell"]},
+    {"match": "salary", "answer": "ASK", "note": "depends on the role"},
+    {"match": "relocat", "answer": "Yes"},
+    {"match": "privacy|terms and conditions|i (have read|agree)", "answer": "Yes"},
+    {"match": "current location|^location", "answer": "Springfield, IL"}
+  ]
+}

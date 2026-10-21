@@ -39,6 +39,9 @@ _PROFILE_LABELS = [
     (re.compile(r"^(e ?mail|email address)$"), ("personalInformation.email",)),
     (re.compile(r"^(phone|phone number|mobile|mobile phone)$"), ("personalInformation.phone",)),
     (re.compile(r"^(zip|postal)\b"), ("personalInformation.zipCode",)),
+    # Split address forms (Workday, iCIMS, Oracle): line 1 is the street only, line 2 stays blank.
+    (re.compile(r"^(street |home )?address( line)? ?1$"), ("personalInformation.address",)),
+    (re.compile(r"^(street |home )?address( line)? ?2$"), None),
     (re.compile(r"^(please enter your )?(home |street |mailing )?address\b"),
      ("personalInformation.address", "personalInformation.city", "personalInformation.state",
       "personalInformation.zipCode")),
@@ -112,6 +115,8 @@ class AnswerBank:
         key = _norm(label)
         for pattern, paths in _PROFILE_LABELS:
             if pattern.match(key):
+                if paths is None:
+                    return None
                 parts = [self._profile_value(path) for path in paths]
                 if not all(parts):
                     return None
@@ -201,6 +206,9 @@ class AnswerBank:
                     return Resolution(q, f, "fill", found, source, note)
                 return Resolution(q, f, "no-option", answer, source, f"options: {[o.label for o in f.options][:8]}")
             return Resolution(q, f, "fill", hits, source, note)
+        if isinstance(answer, list):
+            # Alternative wordings are for matching options; a text box gets the first one.
+            answer = answer[0]
         return Resolution(q, f, "fill", str(answer), source, note)
 
     def plan(self, questions: list[Question]) -> list[Resolution]:

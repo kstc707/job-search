@@ -1,5 +1,12 @@
 # Auto Apply: Tsenta search → Claude tailoring → Tsenta submit
 
+> **2026-10-21: Tsenta is no longer used.** Outcomes come from Gmail (`v2/gmail_inbox.py`), jobs
+> from the Indeed connector and company boards (`v2/boards.py`), resume PDFs upload straight to
+> Notion, and applications go through the cloud filler (Greenhouse, Lever, Ashby) or the Chrome
+> autofill extension in [`projects/autofill-extension`](../autofill-extension/) for every other
+> ATS. The current run instructions are [`prompts/v2-cycle.md`](prompts/v2-cycle.md); the Tsenta
+> sections below describe the earlier design and its modules (`upload.py`, the profile import).
+
 An agent pipeline for applying to jobs: [Tsenta](https://tsenta.com)'s MCP server finds
 postings and submits applications, Claude writes a resume tailored to each posting, and
 this package runs the deterministic checks in between, so nothing fabricated, duplicated

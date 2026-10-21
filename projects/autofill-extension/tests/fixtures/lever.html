@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Acme - Data Analyst (Lever-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 680px; margin: 16px auto; }
+  ul { list-style: none; padding: 0; } .application-question { margin: 10px 0; }
+  .application-label { font-weight: 600; } input[type=text], input[type=email] { width: 100%; padding: 5px; }
+  .dropdown-location { padding: 4px; cursor: pointer; } .required { color: #c00; }
+</style>
+</head>
+<body>
+<form id="application-form" class="application-form" action="#" method="post">
+  <ul>
+    <li class="application-question resume"><div class="application-label">Resume/CV<span class="required">✱</span></div>
+      <div class="application-field"><input type="file" id="resume-upload-input" name="resume"><span class="resume-upload-name"></span></div></li>
+    <li class="application-question"><div class="application-label">Full name<span class="required">✱</span></div>
+      <div class="application-field"><input type="text" name="name" required></div></li>
+    <li class="application-question"><div class="application-label">Email<span class="required">✱</span></div>
+      <div class="application-field"><input type="email" name="email" required></div></li>
+    <li class="application-question"><div class="application-label">Phone</div>
+      <div class="application-field"><input type="text" name="phone"></div></li>
+    <li class="application-question"><div class="application-label">Current location<span class="required">✱</span></div>
+      <div class="application-field"><input type="text" id="location-input" name="location" autocomplete="off">
+        <input type="hidden" name="selectedLocation"><div class="dropdown-results"></div></div></li>
+    <li class="application-question"><div class="application-label">LinkedIn URL</div>
+      <div class="application-field"><input type="text" name="urls[LinkedIn]"></div></li>
+    <li class="application-question custom-question"><div class="application-label">Will you now or in the future require sponsorship?<span class="required">✱</span></div>
+      <ul><li><label><input type="radio" name="cards[a1][field0]" value="Yes"> Yes</label></li>
+          <li><label><input type="radio" name="cards[a1][field0]" value="No"> No</label></li></ul></li>
+    <li class="application-question custom-question"><div class="application-label">Are you authorized to work in the US?<span class="required">✱</span></div>
+      <ul><li><label><input type="radio" name="cards[a1][field1]" value="Yes"> Yes</label></li>
+          <li><label><input type="radio" name="cards[a1][field1]" value="No"> No</label></li></ul></li>
+  </ul>
+  <button id="btn-submit" type="submit" data-forbidden>Submit application</button>
+</form>
+<script src="widgets.js"></script>
+<script>
+  const input = document.getElementById('location-input');
+  const results = document.querySelector('.dropdown-results');
+  const places = ['Springfield, IL, USA', 'Springfield, MO, USA', 'West Springfield, MA, USA'];
+  let t = null;
+  input.addEventListener('input', () => {
+    clearTimeout(t);
+    results.replaceChildren();
+    document.querySelector('[name=selectedLocation]').value = '';
+    const q = input.value.toLowerCase();
+    if (q.length < 3) return;
+    t = setTimeout(() => {
+      results.replaceChildren(...places.filter((p) => p.toLowerCase().includes(q)).map((p) => {
+        const d = document.createElement('div');
+        d.className = 'dropdown-location';
+        d.textContent = p;
+        d.addEventListener('click', () => {
+          input.value = p;
+          document.querySelector('[name=selectedLocation]').value = JSON.stringify({ name: p });
+          results.replaceChildren();
+        });
+        return d;
+      }));
+    }, 250);
+  });
+  guardButtons();
+</script>
+</body>
+</html>

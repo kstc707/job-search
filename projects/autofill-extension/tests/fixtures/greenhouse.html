@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Analyst - Acme (Greenhouse-style fixture)</title>
+<style>
+  body { font: 14px system-ui, sans-serif; max-width: 720px; margin: 24px auto; }
+  .field { margin: 14px 0; } label, .label { display: block; font-weight: 600; margin-bottom: 4px; }
+  input[type=text], input[type=email], input[type=tel], textarea, select { width: 100%; padding: 6px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .select__control { border: 1px solid #999; padding: 4px; display: flex; gap: 6px; }
+  .select__input { border: 0; flex: 1; }
+  .select__menu, [role=listbox] { border: 1px solid #ccc; list-style: none; margin: 0; padding: 0; }
+  .select__option, [role=option] { padding: 4px 8px; cursor: pointer; }
+</style>
+</head>
+<body>
+<header><form role="search"><input type="text" name="q" placeholder="Search jobs"></form></header>
+<h1>Data Analyst</h1>
+<form id="application-form" class="application--form">
+  <div class="field">
+    <label id="first_name-label" for="first_name" class="label">First Name<span aria-hidden="true">*</span></label>
+    <input id="first_name" type="text" aria-required="true" autocomplete="given-name">
+  </div>
+  <div class="field">
+    <label id="last_name-label" for="last_name" class="label">Last Name<span aria-hidden="true">*</span></label>
+    <input id="last_name" type="text" aria-required="true">
+  </div>
+  <div class="field">
+    <label for="preferred_name" class="label">Preferred First Name</label>
+    <input id="preferred_name" type="text">
+  </div>
+  <div class="field">
+    <label id="email-label" for="email" class="label">Email<span aria-hidden="true">*</span></label>
+    <input id="email" type="email" aria-required="true">
+  </div>
+  <div class="field">
+    <label for="phone" class="label">Phone</label>
+    <input id="phone" type="tel">
+  </div>
+  <div class="field">
+    <label for="candidate-location" class="label">Location (City)<span aria-hidden="true">*</span></label>
+    <input id="candidate-location" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-required="true">
+  </div>
+  <div class="field file-upload">
+    <div id="upload-label-resume" class="label upload-label">Resume/CV<span aria-hidden="true">*</span></div>
+    <div class="file-upload__wrapper">
+      <button type="button" class="btn">Attach</button>
+      <input id="resume" type="file" class="visually-hidden" accept=".pdf,.doc,.docx,.txt,.rtf" aria-labelledby="upload-label-resume" aria-required="true">
+      <span id="resume-name" class="file-name"></span>
+    </div>
+  </div>
+  <div class="field">
+    <label for="question_1001" class="label">LinkedIn Profile</label>
+    <input id="question_1001" type="text">
+  </div>
+  <div class="field">
+    <label id="question_1002-label" for="question_1002" class="label">Are you legally authorized to work in the United States?<span aria-hidden="true">*</span></label>
+    <div class="select__control"><div class="select__single-value"></div><input id="question_1002" class="select__input" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-required="true"></div>
+  </div>
+  <div class="field">
+    <label id="question_1003-label" for="question_1003" class="label">Will you now or in the future require sponsorship for employment visa status?<span aria-hidden="true">*</span></label>
+    <div class="select__control"><div class="select__single-value"></div><input id="question_1003" class="select__input" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-required="true"></div>
+  </div>
+  <div class="field">
+    <label for="question_1004" class="label">Why do you want to work here?</label>
+    <textarea id="question_1004" rows="3"></textarea>
+  </div>
+  <div class="field">
+    <label for="question_1005" class="label">What is your favourite dataset?<span aria-hidden="true">*</span></label>
+    <input id="question_1005" type="text" aria-required="true">
+  </div>
+  <fieldset class="field">
+    <legend class="label">Which tools have you used?</legend>
+    <label><input type="checkbox" name="question_1006[]" value="sql"> SQL</label>
+    <label><input type="checkbox" name="question_1006[]" value="py"> Python</label>
+  </fieldset>
+  <h2>Voluntary Self-Identification</h2>
+  <div class="field">
+    <label id="gender-label" for="gender" class="label">Gender</label>
+    <div class="select__control"><div class="select__single-value"></div><input id="gender" class="select__input" role="combobox" aria-autocomplete="list" aria-expanded="false"></div>
+  </div>
+  <div class="field">
+    <label for="veteran_status" class="label">Veteran Status</label>
+    <select id="veteran_status">
+      <option value="">Please select</option>
+      <option value="1">I am a protected veteran</option>
+      <option value="2">I am not a protected veteran</option>
+      <option value="3">I don't wish to answer</option>
+    </select>
+  </div>
+  <div class="field">
+    <input type="checkbox" id="gdpr_consent" aria-required="true">
+    <label for="gdpr_consent">I have read and agree to the privacy notice</label>
+  </div>
+  <button type="submit" data-forbidden>Submit application</button>
+</form>
+<script src="widgets.js"></script>
+<script>
+  for (const id of ['first_name', 'last_name', 'preferred_name', 'email', 'phone', 'question_1001', 'question_1005']) {
+    reactTrack(document.getElementById(id), id);
+  }
+  reactTrack(document.getElementById('question_1004'), 'question_1004');
+  reactSelect(document.getElementById('question_1002'), ['Yes', 'No'], 'question_1002');
+  reactSelect(document.getElementById('question_1003'), ['Yes', 'No'], 'question_1003');
+  reactSelect(document.getElementById('gender'), ['Male', 'Female', 'Decline To Self Identify'], 'gender');
+  typeahead(document.getElementById('candidate-location'),
+    ['West Springfield, Massachusetts, United States', 'Springfield, Missouri, United States',
+     'Springfield, Illinois, United States', 'Springfield, Oregon, United States'], 'location');
+  document.getElementById('resume').addEventListener('change', (e) => {
+    document.getElementById('resume-name').textContent = e.target.files[0] ? e.target.files[0].name : '';
+  });
+  guardButtons();
+</script>
+</body>
+</html>

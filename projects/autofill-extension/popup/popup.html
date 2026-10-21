@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Apply Autofill</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Apply Autofill</h1>
+    <span class="tag">never submits</span>
+  </header>
+
+  <section class="packs">
+    <div class="pack">
+      <div class="pack-text">
+        <div class="pack-title">Profile pack</div>
+        <div id="profile-status" class="muted">Not loaded</div>
+      </div>
+      <label class="btn small">Load<input id="profile-file" type="file" accept=".json,application/json" hidden></label>
+    </div>
+    <div class="pack">
+      <div class="pack-text">
+        <div class="pack-title">Job pack <span class="muted">(optional)</span></div>
+        <div id="job-status" class="muted">Not loaded</div>
+        <div id="resume-status" class="muted"></div>
+      </div>
+      <div class="pack-actions">
+        <label class="btn small">Load<input id="job-file" type="file" accept=".json,application/json" hidden></label>
+        <button id="job-clear" class="btn small ghost" hidden>Clear</button>
+      </div>
+    </div>
+    <div id="pack-warning" class="warning" hidden></div>
+  </section>
+
+  <button id="fill" class="btn primary" disabled>Fill this page</button>
+  <div id="error" class="error" hidden></div>
+
+  <section id="results" hidden>
+    <div id="summary" class="summary"></div>
+    <div id="frames" class="muted small-text"></div>
+    <div id="needs-block" class="group needs" hidden>
+      <h2>Needs you <span id="needs-count" class="count"></span></h2>
+      <ul id="needs-list"></ul>
+    </div>
+    <details id="filled-block" class="group filled">
+      <summary><h2>Filled <span id="filled-count" class="count"></span></h2></summary>
+      <ul id="filled-list"></ul>
+    </details>
+    <details id="skipped-block" class="group skipped">
+      <summary><h2>Skipped <span id="skipped-count" class="count"></span></h2></summary>
+      <ul id="skipped-list"></ul>
+    </details>
+  </section>
+
+  <footer class="muted small-text">Packs stay in this browser (chrome.storage.local). Nothing is sent anywhere.</footer>
+
+  <script src="../content/answers.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
