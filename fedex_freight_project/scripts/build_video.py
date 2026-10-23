@@ -1,8 +1,9 @@
 """Build the ~100-second overview video (reports/video/).
 
 Slides are 1920x1080 HTML pages rendered with headless Chromium; charts are the project's Python (matplotlib)
-figures. Each slide carries its narration as a caption bar, so the video works muted. ffmpeg (imageio-ffmpeg build)
-joins the slides with crossfades. Also writes the narration script (for recording your own voiceover) and an .srt.
+figures. Each slide carries its narration as a caption bar, so the video also works muted. The voiceover is synthesized
+locally with Piper TTS (voice files in data/tts_voices/, gitignored; see VOICE below); without them the video is silent.
+ffmpeg (imageio-ffmpeg build) joins the slides with crossfades. Also writes the narration script and an .srt.
 Every number is read from the results files. Run: .venv/bin/python -I scripts/build_video.py
 """
 import base64
@@ -13,12 +14,14 @@ import os
 import pathlib
 import subprocess
 import sys
+import wave
 
 import matplotlib
 
 matplotlib.use("Agg")
 import imageio_ffmpeg
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from PIL import Image
 
@@ -34,6 +37,9 @@ H = json.loads((REP / "site/headline.json").read_text())
 CHROME, FF = "/opt/pw-browsers/chromium", imageio_ffmpeg.get_ffmpeg_exe()
 FADE = 0.6
 WPS = 2.5  # comfortable narration pace, ~150 words a minute; each slide stays up at least this long
+VOICE = ROOT / "data/tts_voices/en_US-ryan-high.onnx"  # download: huggingface.co/rhasspy/piper-voices (en/en_US/ryan/high)
+LEAD, TAIL = 0.7, 1.0  # seconds of silence before and after each slide's narration
+SPOKEN = {"LTL": "L T L", "2022–23": "2022 to 2023", "mid-2026": "mid 2026"}  # caption text -> what the voice should say
 
 
 def pct(x):
@@ -70,7 +76,7 @@ peers_line = " · ".join(f"{t} {pct(pre.loc[(t, '2026Q3'), 'yoy_log_pct'])}" for
 slides = [
     (8, f"""<div class="title"><span class="eyebrow">A public-data data science project · October 2026</span>
         <h1>Market or share?</h1><p class="sub">What explains FedEx Freight's lost volume, and what it will report next</p>
-        <p class="who">Sai Teja Koppolu · MS Data Science, University of Memphis</p></div>""",
+        <p class="who">Sai Teja Koppolu · MS Data Science, University of Memphis</p>{'<p class="note">Narration: synthetic voice (Piper TTS) reading my script</p>' if VOICE.exists() else ''}</div>""",
      "Hi, I'm Sai. I built a short data science project on one question: how much of FedEx Freight's lost volume is the market, and how much is FedEx?"),
     (12, f"""<h2>FedEx Freight's share of public LTL shipments fell from {100 * first['share']:.0f}% to {100 * last['share']:.0f}%</h2>
         <img class="chart" src="{img(SL / 'chart_share.png')}">
@@ -147,7 +153,25 @@ ul.wide { font-size: 38px; max-width: 1500px; gap: 26px; }
 </style>"""
 
 # stretch any slide whose narration needs longer than its planned time at the narration pace
+planned = [d for d, _, _ in slides]
 slides = [(max(d, math.ceil(len(n.split()) / WPS) + 2), b, n) for d, b, n in slides]
+
+# ---------------------------------------------------------------- voiceover: one clip per slide, slide lasts as long as its clip
+clips, rate = [], 22050
+if VOICE.exists():
+    from piper import PiperVoice
+    voice = PiperVoice.load(str(VOICE))
+    for k, (d, b, n) in enumerate(slides):
+        said = n
+        for a, z in SPOKEN.items():
+            said = said.replace(a, z)
+        wav = SL / f"voice_{k + 1:02d}.wav"
+        with wave.open(str(wav), "wb") as w:
+            voice.synthesize_wav(said, w)
+        with wave.open(str(wav)) as w:
+            rate = w.getframerate()
+            clips.append(np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16))
+        slides[k] = (max(planned[k], math.ceil(LEAD + len(clips[-1]) / rate + TAIL)), b, n)  # voiced: time to the clip
 total = sum(d for d, _, _ in slides)
 pngs, t = [], 0.0
 for i, (dur, body, narr) in enumerate(slides):
@@ -182,6 +206,22 @@ for i in range(1, len(slides)):
 chain.append(f"{prev}fade=t=in:st=0:d=0.5,fade=t=out:st={total - 0.6:.2f}:d=0.6,format=yuv420p[vout]")
 cmd += ["-filter_complex", ";".join(chain), "-map", "[vout]", "-t", f"{total}", "-c:v", "libx264", "-preset", "medium",
         "-crf", "20", "-movflags", "+faststart", str(mp4)]
+if clips:
+    # one narration track: each clip starts LEAD seconds into its slide
+    track = np.zeros(int(total * rate), dtype=np.int16)
+    start = 0.0
+    for (dur, _, _), c in zip(slides, clips):
+        i = int((start + LEAD) * rate)
+        track[i:i + len(c)] = c[:len(track) - i]
+        start += dur
+    peak = max(1, int(np.abs(track.astype(np.int32)).max()))
+    track = (track.astype(np.float64) * (0.89 * 32767 / peak)).astype(np.int16)  # peak at -1 dBFS, no clipping
+    narration = SL / "narration.wav"
+    with wave.open(str(narration), "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(rate); w.writeframes(track.tobytes())
+    at = cmd.index("-filter_complex")
+    cmd[at:at] = ["-i", str(narration)]
+    cmd[-1:-1] = ["-map", f"{len(slides)}:a", "-c:a", "aac", "-b:a", "128k", "-af", f"afade=t=out:st={total - 0.6:.2f}:d=0.6"]
 subprocess.run(cmd, check=True, capture_output=True, timeout=600)
 
 # ---------------------------------------------------------------- narration script + subtitles
@@ -190,7 +230,7 @@ def ts(x):
     return f"{h:02d}:{m:02d}:{int(s):02d},{int(round((s % 1) * 1000)):03d}"
 
 
-srt, script, t = [], [f"# Narration script ({total} s; timed for about {60 * WPS:.0f} words a minute)\n"], 0.0
+srt, script, t = [], [f"# Narration script ({total} s{'; voiced with Piper TTS' if clips else ''})\n"], 0.0
 for i, (dur, _, narr) in enumerate(slides):
     srt.append(f"{i + 1}\n{ts(t + 0.2)} --> {ts(t + dur - 0.2)}\n{narr}\n")
     script.append(f"**{ts(t)[3:8]}–{ts(t + dur)[3:8]} · slide {i + 1}**  \n{narr}\n")
@@ -199,4 +239,4 @@ for i, (dur, _, narr) in enumerate(slides):
 (OUT / "narration_script.md").write_text("\n".join(script))
 probe = subprocess.run([FF, "-i", str(mp4)], capture_output=True, text=True).stderr
 dur_line = [l for l in probe.splitlines() if "Duration" in l]
-print("written", mp4, f"{mp4.stat().st_size / 1e6:.1f} MB", dur_line[0].strip() if dur_line else "", f"slides={len(slides)} total={total}s")
+print("written", mp4, f"{mp4.stat().st_size / 1e6:.1f} MB", dur_line[0].strip() if dur_line else "", f"slides={len(slides)} total={total}s voice={'yes' if clips else 'no'}")

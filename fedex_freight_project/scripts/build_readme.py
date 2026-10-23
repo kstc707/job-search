@@ -13,7 +13,7 @@ EIA, and FedEx Freight's published fuel surcharge table. Every chart is generate
 | Deliverable | Where |
 |---|---|
 | **One-page overview (PDF)** | `reports/overview/Koppolu_FedEx_Freight_overview.pdf` |
-| **2-minute video** (captioned; narration script for a voiceover) | `reports/video/Koppolu_FedEx_Freight_overview.mp4`, `reports/video/narration_script.md` |
+| **2-minute video** (synthetic-voice narration plus on-screen captions) | `reports/video/Koppolu_FedEx_Freight_overview.mp4`, `reports/video/narration_script.md` |
 | Report page | `reports/site/index.html`, published at https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA (private until shared) |
 | Two-page brief (PDF) | `reports/brief/Koppolu_FedEx_Freight_Market_or_Share.pdf` |
 | **Data science project** | `ds/` (pre-registration, deviations log, model card, locked forecasts), `ltlds/` (package), `scripts/ds_*.py` |
