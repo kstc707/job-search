@@ -79,9 +79,9 @@ FedEx Freight reports October 29. For comparison, BofA's estimate is −3.0%.
 
 <h2>What I would build first with FedEx Freight's data</h2>
 <table>
-<tr><td>Retention</td><td>Account-level share early warning: expected weekly shipments per account, drift flagged before churn, ranked by volume at risk. One point of shipments ≈ ${e('oi_vol')}M operating income a year.</td></tr>
-<tr><td>Pricing</td><td>Price response by lane, shipment size and commodity; the {e('ratio')}:1 price-to-volume exchange rate as a guardrail.</td></tr>
+<tr><td>Pricing</td><td>Account- and lane-level price response: which customers are price-sensitive and which are leaving for non-price reasons, with the {e('ratio')}:1 price-to-volume exchange rate as a guardrail.</td></tr>
 <tr><td>Fuel</td><td>FedEx realizes {e('rho')}× its published fuel surcharge; at EIA's 2027 diesel forecast, fuel alone takes {e('fuel27_abs')}% off revenue per shipment.</td></tr>
+<tr><td>Retention</td><td>Account-level share early warning: expected weekly shipments per account, drift flagged before churn, ranked by volume at risk. One point of shipments ≈ ${e('oi_vol')}M operating income a year.</td></tr>
 </table>
 
 <h2>More detail</h2>

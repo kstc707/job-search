@@ -7,29 +7,29 @@ h2 { font: 700 10.8pt/1.2 "DejaVu Sans Condensed", "DejaVu Sans", sans-serif; ma
 .meta { font: 7.4pt/1.4 "DejaVu Sans Mono", monospace; color: #4c5864; border-bottom: 1pt solid #14202b; padding-bottom: 5pt; margin-bottom: 10pt; }
 p { margin: 0 0 5pt; } ul { margin: 0 0 5pt; padding-left: 14pt; } li { margin: 0 0 2pt; }
 .sig { font-weight: 700; margin-top: 6pt; }
+span.small { font-weight: 400; }
 .small { font: 7.2pt/1.45 "DejaVu Sans Mono", monospace; color: #4c5864; margin-top: 6pt; }
 </style></head><body>
 <div class="meta">Sai Teja Koppolu · Memphis, TN · skppolu1@memphis.edu · +1 901-343-7273 · github.com/kstc707</div>
 <h1>FedEx Freight project: what I did, and why</h1>
 
 <h2>What I did</h2>
-<p>After applying for the Data Science Internship, I wanted to show how I would work on a real question instead of only describing
-my skills. I chose one I expect matters to FedEx Freight right now: from mid-2021 to mid-2026, its share of daily shipments among the
+<p>After applying for the Intern–Data Scientist role with Pricing Science &amp; Analysis, I wanted to show how I would work on a real question. I chose one I expect matters to FedEx Freight right now: from mid-2021 to mid-2026, its share of daily shipments among the
 five largest public LTL carriers fell 16.7 log-points, about a sixth. How much of that is price, and how much is something else?</p>
 <p>Using only public data (SEC filings for FedEx Freight and four public competitors, FRED, the FAF5 freight database and EIA), I:</p>
 <ul>
 <li>built a quarterly carrier panel in which each number is used only after it was filed, so no model sees the future;</li>
 <li>estimated how shipment share responds to relative price using the four competitors only, then applied it to FedEx out of sample;</li>
-<li>backtested forecasting models, from a naive baseline to gradient boosting, over 2022 to 2026 and tested whether the differences were real;</li>
+<li>backtested models from a naive baseline to gradient boosting over 2022–2026, testing whether differences were real;</li>
 <li>locked a forecast of FedEx Freight's June–September shipments per day (<b>−6.0%</b>) before the October 29 report, with its fingerprint committed to GitHub.</li>
 </ul>
 <p><b>What I found:</b> price explains the 2022–23 share loss, but not the losses in the year after Yellow's shutdown or the year
-to mid-2026, which points to account retention rather than pricing. A carrier's own in-quarter data cut forecast error 43%;
-machine learning's gain over the baseline was not statistically significant, and I reported that alongside what worked.</p>
+to mid-2026, when FedEx's relative price was falling. That suggests price alone won't win the share back. A carrier's own in-quarter data cut forecast error 43%;
+machine learning added no significant gain, and I reported that too.</p>
 
 <h2>Why I did it this way</h2>
-<p>Pricing, capacity and account decisions in freight rest on numbers that have to hold up. I wanted to show that I check data
-before trusting it, write my methods down before modeling, compare every model against a simple baseline, and say plainly when a more complex method does not help.
+<p>Pricing decisions in freight rest on numbers that have to hold up. I wanted to show that I check data
+before trusting it, write my methods down first, test every model against a simple baseline, and say plainly when complexity does not help.
 Locking the forecast in advance keeps me honest: on October 29 it will be right or wrong in public.</p>
 
 <h2>Why I'm a good fit</h2>
@@ -37,20 +37,19 @@ Locking the forecast in advance keeps me honest: on October 29 it will be right 
 <li><b>Analyst experience:</b> as a Data Analyst Intern with the Shelby County District Attorney General's office, I produce weekly
 KPI reporting for leadership and automated hand counts with Python and SQL. As a Product
 Analyst at TCS, I turned business questions into KPIs with product managers and engineers.</li>
-<li><b>Logistics modeling:</b> in a late-delivery prediction project on 65,752 orders, a two-predictor logistic regression matched
-gradient boosting, the same simple-first discipline I used here.</li>
+<li><b>Pricing and logistics projects:</b> a discount and margin analysis of 10,194 retail order lines (discounts above 20% turned
+margin negative), and late-delivery prediction on 65,752 orders, where a two-predictor logistic regression matched gradient boosting.</li>
 <li><b>Foundation:</b> MS in Data Science, University of Memphis (GPA 3.9), Weil Graduate Fellowship, Teaching Assistant for
-Machine Learning. Tools: SQL, Python, Power BI, Excel.</li>
+Machine Learning. Tools: SQL, Python, Power BI, Excel, PowerPoint.</li>
 </ul>
 
 <h2>Why this role matters to me</h2>
-<p>I want to build my career where models meet operations, where a forecast or a flag changes what happens on a dock or in a sales
-conversation. This project reached the limit of public data: quarterly numbers for five carriers. An internship at FedEx Freight would
-let me bring the same discipline to account-level and lane-level data, learn from a team that makes these decisions every day,
+<p>I want to build my career where analysis drives decisions, and pricing is where that is most direct: an estimate changes what a
+customer is quoted and whether they stay. This project reached the limit of public data: quarterly numbers for five carriers. An internship
+with Pricing Science &amp; Analysis would let me bring the same discipline to account-level and lane-level pricing data, learn from a team that makes these decisions every day,
 and grow that career here in Memphis, where I live.</p>
 <p>I would welcome 15 minutes to walk through the project, or to hear which questions matter most to your team.
 Thank you for considering my application.</p>
-<p class="sig">Sai Teja Koppolu</p>
-<p class="small">Code: github.com/kstc707/job-search. Public data only; not affiliated with FedEx.</p>
+<p class="sig">Sai Teja Koppolu <span class="small">· Code: github.com/kstc707/job-search · Public data only; not affiliated with FedEx.</span></p>
 
 </body></html>
