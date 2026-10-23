@@ -22,6 +22,8 @@ $PY scripts/ds_share_model.py > reports/ds/share_model_output.txt
 # ds_prospective.py is NOT rerun: ds/prospective_forecasts.csv was locked on 2026-10-23 (see its .sha256)
 $PY scripts/build_report.py
 $PY scripts/build_brief.py
+$PY scripts/build_overview.py
+$PY scripts/build_video.py
 $PY scripts/build_email.py > /dev/null
 $PY scripts/build_readme.py
 .venv/bin/python -m pytest -q tests

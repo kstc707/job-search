@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset='utf-8'>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f5f6f3; color: #14202b; }
+body { font: 30px/1.4 "Source Serif 4", Georgia, serif; display: flex; flex-direction: column; }
+main { flex: 1; padding: 60px 110px 40px; display: flex; flex-direction: column; justify-content: center; gap: 30px; min-height: 0; }
+h1 { font: 800 150px/1 "Archivo", sans-serif; font-stretch: 78%; text-transform: uppercase; }
+h2 { font: 750 60px/1.1 "Archivo", sans-serif; font-stretch: 85%; max-width: 1600px; }
+.eyebrow { font: 500 24px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; color: #4c5864; }
+.title { margin: auto 0; display: flex; flex-direction: column; gap: 28px; }
+.sub { font-size: 44px; color: #4c5864; max-width: 1400px; }
+.who { font: 500 28px/1 "IBM Plex Mono", monospace; }
+.chart { max-height: 660px; max-width: 100%; object-fit: contain; align-self: flex-start; background: #fcfcfb; border: 1px solid #d6dbd9; }
+.note { font: 22px/1.5 "IBM Plex Mono", monospace; color: #4c5864; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 60px; margin-top: 10px; }
+.kpi { border-top: 4px solid #14202b; padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.kpi b { font: 800 84px/1 "Archivo", sans-serif; font-stretch: 80%; color: #2a78d6; }
+.kpi span { font-size: 30px; color: #4c5864; }
+.big { display: flex; gap: 60px; align-items: center; border-top: 4px solid #14202b; border-bottom: 1px solid #d6dbd9; padding: 40px 0; }
+.big b { font: 800 220px/1 "Archivo", sans-serif; font-stretch: 78%; color: #c4501f; }
+.big span { font-size: 36px; color: #14202b; }
+.split { display: grid; grid-template-columns: 1.25fr 1fr; gap: 50px; align-items: center; }
+.split .chart { width: 100%; max-height: 640px; }
+ul { padding-left: 1.1em; display: flex; flex-direction: column; gap: 18px; font-size: 34px; }
+ul.wide { font-size: 38px; max-width: 1500px; gap: 26px; }
+.build { border-collapse: collapse; font-size: 32px; max-width: 1650px; }
+.build td { border-top: 1px solid #d6dbd9; padding: 16px 30px 16px 0; vertical-align: top; }
+.build td:first-child { font: 750 34px/1.3 "Archivo", sans-serif; font-stretch: 85%; white-space: nowrap; color: #2a78d6; }
+.contact { margin-top: auto; font: 500 28px/1 "IBM Plex Mono", monospace; border-top: 4px solid #14202b; padding-top: 22px; }
+.cap { background: #14202b; color: #f5f6f3; padding: 26px 110px 30px; font: 32px/1.4 "Source Serif 4", serif; min-height: 150px; display: flex; align-items: center; }
+.bar { position: absolute; top: 0; left: 0; height: 8px; background: #2a78d6; }
+</style></head><body><div class='bar' style='width:100.0%'></div><main><h2>What I'd build first with FedEx Freight's data</h2>
+        <table class="build">
+        <tr><td>Retention</td><td>Account-level share early warning: expected weekly shipments per account, drift flagged before churn, ranked by volume at risk</td></tr>
+        <tr><td>Pricing</td><td>Price response by lane, shipment size and commodity, with the 2.1:1 price-to-volume exchange rate as a guardrail</td></tr>
+        <tr><td>Revenue integrity</td><td>Predicted shipment density vs dimensioner reads under density-based NMFC classes</td></tr>
+        <tr><td>Method</td><td>Validated the same way: pre-registered, rolling-origin, against a naive baseline. One point of shipments ≈ $21M operating income a year</td></tr>
+        </table>
+        <p class="contact">Sai Teja Koppolu · skppolu1@memphis.edu · +1 901-343-7273 · github.com/kstc707</p></main><div class='cap'>The first thing I&#x27;d build with your data is an account-level early warning for share loss, tested the same way. I&#x27;d value 15 minutes to walk you through it.</div></body></html>
