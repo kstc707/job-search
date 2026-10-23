@@ -19,7 +19,6 @@ five largest public LTL carriers fell 16.7 log-points, about a sixth. How much o
 <p>Using only public data (SEC filings for FedEx Freight and four public competitors, FRED, the FAF5 freight database and EIA), I:</p>
 <ul>
 <li>built a quarterly carrier panel in which each number is used only after it was filed, so no model sees the future;</li>
-<li>wrote down my methods before fitting any model, and logged every change I made afterwards;</li>
 <li>estimated how shipment share responds to relative price using the four competitors only, then applied it to FedEx out of sample;</li>
 <li>backtested forecasting models, from a naive baseline to gradient boosting, over 2022 to 2026 and tested whether the differences were real;</li>
 <li>locked a forecast of FedEx Freight's June–September shipments per day (<b>−6.0%</b>) before the October 29 report, with its fingerprint committed to GitHub.</li>
@@ -30,16 +29,18 @@ machine learning's gain over the baseline was not statistically significant, and
 
 <h2>Why I did it this way</h2>
 <p>Pricing, capacity and account decisions in freight rest on numbers that have to hold up. I wanted to show that I check data
-before trusting it, compare every model against a simple baseline, and say plainly when a more complex method does not help.
+before trusting it, write my methods down before modeling, compare every model against a simple baseline, and say plainly when a more complex method does not help.
 Locking the forecast in advance keeps me honest: on October 29 it will be right or wrong in public.</p>
 
 <h2>Why I'm a good fit</h2>
 <ul>
-<li><b>Analyst experience:</b> as a Data Analyst at TCS and now as a Data Analyst Intern with the Shelby County District Attorney
-General's office, my work has centered on data auditing, anomaly investigation, automated data-quality checks and operational reporting.</li>
-<li><b>Tools:</b> SQL, Python, R, Excel, Power BI, Azure Databricks and ETL workflows.</li>
-<li><b>Modeling foundation:</b> MS in Data Science at the University of Memphis (GPA 3.9), Weil Graduate Fellowship, and Teaching
-Assistant for Machine Learning.</li>
+<li><b>Analyst experience:</b> as a Data Analyst Intern with the Shelby County District Attorney General's office, I produce weekly
+KPI reporting for leadership and automated hand counts with Python and SQL. As a Product
+Analyst at TCS, I turned business questions into KPIs with product managers and engineers.</li>
+<li><b>Logistics modeling:</b> in a late-delivery prediction project on 65,752 orders, a two-predictor logistic regression matched
+gradient boosting, the same simple-first discipline I used here.</li>
+<li><b>Foundation:</b> MS in Data Science, University of Memphis (GPA 3.9), Weil Graduate Fellowship, Teaching Assistant for
+Machine Learning. Tools: SQL, Python, Power BI, Excel.</li>
 </ul>
 
 <h2>Why this role matters to me</h2>
@@ -50,6 +51,6 @@ and grow that career here in Memphis, where I live.</p>
 <p>I would welcome 15 minutes to walk through the project, or to hear which questions matter most to your team.
 Thank you for considering my application.</p>
 <p class="sig">Sai Teja Koppolu</p>
-<p class="small">Also attached: one-page overview and 2-minute video. Code: github.com/kstc707/job-search. Public data only; not affiliated with FedEx.</p>
+<p class="small">Code: github.com/kstc707/job-search. Public data only; not affiliated with FedEx.</p>
 
 </body></html>

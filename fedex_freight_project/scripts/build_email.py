@@ -1,45 +1,38 @@
-"""Draft the follow-up email from the same headline numbers as the report (reports/site/headline.json)."""
+"""Draft the short follow-up email (reports/email_draft.md) and gather the attachments under clean names in
+reports/email_attachments/ (gitignored; the resume is added by hand as SaiTejaKoppolu_Resume.pdf)."""
 import json
 import pathlib
+import shutil
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-H = json.loads((ROOT / "reports/site/headline.json").read_text())
+REP = ROOT / "reports"
+H = json.loads((REP / "site/headline.json").read_text())
 fc = "−" + H["fdx_nc"][1:] if H["fdx_nc"].startswith("-") else H["fdx_nc"]
-body = f"""Subject: Data Science Internship applicant: a FedEx Freight project built from real public data
+ATT = REP / "email_attachments"
+ATT.mkdir(exist_ok=True)
+files = {"SaiTejaKoppolu_FedExFreight_ProjectSummary.pdf": "summary/Koppolu_FedEx_Freight_project_summary.pdf",
+         "SaiTejaKoppolu_FedExFreight_Overview.pdf": "overview/Koppolu_FedEx_Freight_overview.pdf",
+         "SaiTejaKoppolu_FedExFreight_Video.mp4": "video/Koppolu_FedEx_Freight_overview.mp4"}
+for name, src in files.items():
+    shutil.copyfile(REP / src, ATT / name)
+
+body = f"""Subject: Data Science Internship applicant: a FedEx Freight project
 
 Hi [Name],
 
-I recently applied for the Data Science Internship at FedEx Freight. I'm genuinely excited about this role, and I wanted
-my application to show more than a resume can. So instead of a standard follow-up, I built a project on a question I
-expect matters to FedEx Freight right now: how much of its lost LTL volume is price, and how much is something else?
+I recently applied for the Data Science Internship. To show how interested I am, I built a project from real public
+FedEx Freight data (SEC filings and its published fuel surcharge table) on one question: how much of its lost LTL
+volume is price, and how much is something else?
 
-I collected real public data (FedEx Freight's and four competitors' SEC filings, FedEx Freight's published fuel
-surcharge table, FRED and federal freight data) and ran it like a real data science project: methods written down
-before any modeling, every model tested against a simple baseline, and results reported whether or not they worked.
+In short: price explains the 2022-23 share loss, but not the losses since. I also locked a forecast of June-September
+shipments ({fc}%) before the October 29 report.
 
-Two findings:
-- Price explains FedEx Freight's 2022-23 share loss, but not the losses since, which points to account retention
-  rather than pricing.
-- Before the October 29 report, I locked a forecast of June-September shipments per day: {fc}% year over year,
-  with a fingerprint committed to GitHub so it can't be changed after the fact.
+I've attached my resume, a one-page project summary, a one-page overview and a 2-minute video. I'd welcome an
+interview call, or an introduction to the hiring manager or data science team, to walk you through it.
 
-Attached:
-1. A one-page summary of what I did and why
-2. A one-page overview of the results
-3. A 2-minute captioned video walkthrough
-4. My resume
-
-I would really appreciate the chance to walk through this work, either in an interview call or through an
-introduction to the hiring manager or someone on the data science team. Fifteen to twenty minutes would be plenty,
-and since I'm based in Memphis, I'm happy to meet in person or by video, whichever is easier.
-
-Thank you for your time and consideration.
-
-Best regards,
+Thank you,
 Sai Teja Koppolu
-MS Data Science, University of Memphis
-skppolu1@memphis.edu | +1 901-343-7273 | https://github.com/kstc707
-Code: https://github.com/kstc707/job-search (fedex_freight_project folder)
++1 901-343-7273 | github.com/kstc707
 """
-(ROOT / "reports/email_draft.md").write_text(body)
+(REP / "email_draft.md").write_text(body)
 print(body)

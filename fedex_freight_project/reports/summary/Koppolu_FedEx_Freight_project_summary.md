@@ -10,7 +10,6 @@ After applying for the Data Science Internship, I wanted to show how I would wor
 Using only public data (SEC filings for FedEx Freight and four public competitors, FRED, the FAF5 freight database and EIA), I:
 
 - built a quarterly carrier panel in which each number is used only after it was filed, so no model sees the future;
-- wrote down my methods before fitting any model, and logged every change I made afterwards;
 - estimated how shipment share responds to relative price using the four competitors only, then applied it to FedEx out of sample;
 - backtested forecasting models, from a naive baseline to gradient boosting, over 2022 to 2026 and tested whether the differences were real;
 - locked a forecast of FedEx Freight's June–September shipments per day (**−6.0%**) before the October 29 report, with its fingerprint committed to GitHub.
@@ -19,13 +18,13 @@ Using only public data (SEC filings for FedEx Freight and four public competitor
 
 ## Why I did it this way
 
-Pricing, capacity and account decisions in freight rest on numbers that have to hold up. I wanted to show that I check data before trusting it, compare every model against a simple baseline, and say plainly when a more complex method does not help. Locking the forecast in advance keeps me honest: on October 29 it will be right or wrong in public.
+Pricing, capacity and account decisions in freight rest on numbers that have to hold up. I wanted to show that I check data before trusting it, write my methods down before modeling, compare every model against a simple baseline, and say plainly when a more complex method does not help. Locking the forecast in advance keeps me honest: on October 29 it will be right or wrong in public.
 
 ## Why I'm a good fit
 
-- **Analyst experience:** as a Data Analyst at TCS and now as a Data Analyst Intern with the Shelby County District Attorney General's office, my work has centered on data auditing, anomaly investigation, automated data-quality checks and operational reporting.
-- **Tools:** SQL, Python, R, Excel, Power BI, Azure Databricks and ETL workflows.
-- **Modeling foundation:** MS in Data Science at the University of Memphis (GPA 3.9), Weil Graduate Fellowship, and Teaching Assistant for Machine Learning.
+- **Analyst experience:** as a Data Analyst Intern with the Shelby County District Attorney General's office, I produce weekly KPI reporting for leadership and automated hand counts with Python and SQL. As a Product Analyst at TCS, I turned business questions into KPIs with product managers and engineers.
+- **Logistics modeling:** in a late-delivery prediction project on 65,752 orders, a two-predictor logistic regression matched gradient boosting, the same simple-first discipline I used here.
+- **Foundation:** MS in Data Science, University of Memphis (GPA 3.9), Weil Graduate Fellowship, Teaching Assistant for Machine Learning. Tools: SQL, Python, Power BI, Excel.
 
 ## Why this role matters to me
 
@@ -35,4 +34,4 @@ I would welcome 15 minutes to walk through the project, or to hear which questio
 
 Sai Teja Koppolu
 
-_Also attached: one-page overview and 2-minute video. Code: github.com/kstc707/job-search. Public data only; not affiliated with FedEx._
+_Code: github.com/kstc707/job-search. Public data only; not affiliated with FedEx._
