@@ -4,70 +4,67 @@ import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 H = json.loads((ROOT / "reports/site/headline.json").read_text())
-peer = (f"| Relative to 4 public LTL peers (ODFL, SAIA, XPO, ARCB), shipments/day YoY since FY2023 | **{H['rel_mean']} pp/yr** "
-        f"(last 4 quarters: {H['rel_last4']}) |\n") if H.get("rel_mean", "n/a") != "n/a" else ""
-peer_mae = ""
-for m in ("peer_ar", "peer", "peer_macro_ar"):
-    if m + "_mae" in H:
-        peer_mae += f", `{m}` {H[m + '_mae']} pp"
+text = f"""# FedEx Freight: market or share? (public data, data science project)
 
-text = f"""# FedEx Freight: market or share? (public data only)
+What explains FedEx Freight's lost LTL volume, and what will it report next? Everything here uses public data:
+SEC EDGAR filings for FedEx Corp, FedEx Freight and four LTL peers (ODFL, SAIA, XPO, ARCB), FRED, BTS/ORNL FAF5.7.1,
+EIA, and FedEx Freight's published fuel surcharge table. Every chart is generated in Python (matplotlib).
 
-An independent analysis of FedEx Freight's volume decline, yield and lanes, built to accompany a Data Science
-Internship application. **Every input is public:** SEC EDGAR filings (FedEx Corp, FedEx Freight Holding Co.
-and four LTL peers), FRED, BTS/ORNL Freight Analysis Framework 5.7.1, EIA diesel prices, and FedEx Freight's
-published fuel surcharge table. No synthetic data.
-
-**Deliverables:**
-
-| | |
+| Deliverable | Where |
 |---|---|
-| Interactive report | `reports/site/index.html`, published at https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA (private until shared) |
+| Report page | `reports/site/index.html`, published at https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA (private until shared) |
 | Two-page brief (PDF) | `reports/brief/Koppolu_FedEx_Freight_Market_or_Share.pdf` |
+| **Data science project** | `ds/` (pre-registration, deviations log, model card, locked forecasts), `ltlds/` (package), `scripts/ds_*.py` |
 | Email draft | `reports/email_draft.md` |
-| External benchmarks (guidance, valuation, peer data, NMFC, diesel) | `reports/external_benchmarks.md` |
+| External benchmarks | `reports/external_benchmarks.md` |
 | Data inventory | `data/README.md`, `data/README_peers.md` |
 
-## Headline results (as of 2026-10-23)
+## Results (as of 2026-10-23)
 
 | Question | Answer |
 |---|---|
-| FedEx Freight tonnage, 2019→2024 vs LTL-addressable truck freight (FAF5) | **{H['fedex_ton']}%** vs **{H['mkt_ton']}%** |
-{peer}| Nowcast: shipments/day YoY, Jun–Sep 2026 (FDXF reports Oct 29) | **{H['nc']}%** (80%: {H['nc_lo']}% to {H['nc_hi']}%) |
-| Realized fuel surcharge / published tariff | **{H['rho']}** (sd {H['rho_sd']}, 8 quarters) |
-| FY26 Q4 base revenue/cwt YoY (out-of-sample) vs management's "slight decline" | {H['oos']}%; weight-adjusted price **{H['wadj']}%** |
-| Fuel effect on revenue/shipment: Jun–Sep 2026 / at EIA's 2027 diesel | {H['fuel_lift']}% / **{H['fuel27']}%** |
-| Operating income per point of shipments / per point of price | **${H['oi_vol']}M / ${H['oi_price']}M** a year; 1 pt price ≈ {H['ratio']} pts volume |
-| Value of one point of shipments at ~{H['mult']}x EV/adj. op. income | ≈ ${H['per_share']}/share |
+| FedEx share of five-carrier shipments, mid-2021 to mid-2026 | **{H['share_total']} log-%** |
+| ... explained by relative price (elasticity estimated on the four peers only, {H['elas_b0']}; placebo p = {H['placebo_p']}) | {H['share_price']} |
+| ... not explained by price (the Yellow year and the spin-off year) | **{H['share_nonprice']}** |
+| Locked forecast: FedEx shipments/day, Jun-Sep 2026 (FDXF reports Oct 29) | **{H['fdx_nc']}%**; SHA-256 committed in {H['lock_commit']} |
+| Nowcast accuracy, 2022-26 out of sample | Own intra-quarter data: -{H['own_gain']}% error vs naive (DM p = {H['own_p']}). ML: -{H['ml_gain']}%, not significant (p = {H['ens_p']}) |
+| Fuel | Realized = {H['rho']} x published tariff; 2027 at EIA diesel: {H['fuel27']}% revenue/shipment |
+| Value | 1 pt of shipments ~ ${H['oi_vol']}M operating income/yr (~${H['per_share']}/share); 1 pt of price ~ {H['ratio']} pts of volume |
 
-## The four analyses
+## How it is built
 
-| Script | Question | Method |
-|---|---|---|
-| `scripts/option_a_nowcast.py` | Market or FedEx? Nowcast for Oct 29 | Rolling-origin backtest of naive, AR, macro, ridge and peer-index models on 33 fiscal quarters (COVID base effects excluded); intervals from each model's own out-of-sample errors; FedEx-vs-peer gap |
-| `scripts/option_b_yield.py` | Price, weight or fuel? | Structural fuel model (published tariff × realized ratio, LOO-CV vs linear, out-of-sample test at record diesel); exact log revenue bridge; weight elasticity from a Priority/Economy panel with quarter fixed effects |
-| `scripts/option_c_faf_lanes.py` | Where is freight going? | LTL-addressable proxy from FAF5 (2.7M rows); shift-share 2019→2024; 2035 lane growth; directional imbalance; k-means zone clustering (weak structure, reported as such) |
-| `scripts/option_d_value_sensitivity.py` | What is a point worth? | Incremental margins on volume vs price/mix revenue (HAC), converted to $ and per-share value at the market multiple |
-
-Backtest MAE (pp, one quarter ahead): best `{H['best']}` {H['best_mae']}, naive {H['naive_mae']}, macro+AR {H['macro_mae']}{peer_mae}.
+- `ds/PREREGISTRATION.md` was committed before any model was fitted. `ds/DEVIATIONS.md` logs every later change.
+- `ltlds/panel.py` builds point-in-time features: a monthly update counts only if filed on EDGAR by the forecast date.
+- `ltlds/evaluate.py` runs the rolling-origin backtest with nested tuning, the Harvey-Leybourne-Newbold Diebold-Mariano
+  test, and rolling and group-conditional conformal intervals.
+- `ltlds/share.py` builds the share panel, the weight-adjusted relative price, the panel elasticity, the permutation
+  placebo, and changepoint detection with a simulation-calibrated penalty.
+- `scripts/option_*.py` hold the earlier analyses: fuel model, revenue bridge, FAF5 lanes, value sensitivity.
+- `tests/`: {H['n_tests']} tests. They check that downloads are real data, that the data ties out to the filings,
+  that no model trains on unpublished targets, conformal coverage on synthetic data, the power of the DM test,
+  changepoint recovery, and the integrity of the forecast-file hash.
 
 ## Reproduce
 
 ```
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-bash scripts/download_data.sh       # ~550 MB: FRED, FAF5, SEC EDGAR (FedEx, FDXF), fuel table
-.venv/bin/python -I scripts/fetch_peer_filings.py   # peer 8-Ks (ODFL, SAIA, XPO, ARCB)
-bash scripts/run_all.sh             # parse, analyze, figures, report, brief, email, tests
+bash scripts/download_data.sh
+.venv/bin/python -I scripts/fetch_peer_filings.py data/raw/sec_edgar/peers
+bash scripts/run_all.sh
 ```
 
-`tests/` checks that downloads are real data, that extracted KPIs tie out to the 10-K and FDXF's recast totals,
-that the backtest never trains on its test quarter, and that the decompositions add up.
+After the actuals are published: `.venv/bin/python -I scripts/ds_score_prospective.py --fdx-junsep-yoy-pct <reported>`.
 
 ## Limits
 
-About 37 quarterly observations; FAF 2018–2024 values are BTS model estimates and FAF can't separate LTL from
-truckload; public peers are a sample of the LTL market; the fuel model extrapolates a 2025 tariff table; nothing
-here uses FedEx internal data. Independent work, not affiliated with or endorsed by FedEx, not investment advice.
+- **Small sample:** 90 test carrier-quarters on 36 issue dates.
+- **No data vintages** from FRED.
+- **Public peers are a sample** of the LTL market.
+- **Quarter alignment:** FedEx fiscal quarters are mapped to calendar quarters.
+- **Intervals for FedEx are optimistic:** about 65-71% backtest coverage at a nominal 80%.
+- **No internal data:** nothing here uses FedEx internal data.
+
+Independent work, not affiliated with or endorsed by FedEx, not investment advice.
 """
 (ROOT / "README.md").write_text(text)
 print("README written")

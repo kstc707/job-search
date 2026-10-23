@@ -193,7 +193,7 @@ tot = anchors["Q2"]
 ax.set_title("FedEx Freight's share loss: price first, then something else", pad=20)
 S.subtitle(ax, f"Mid-2021 to mid-2026: share {tot['actual']:+.1f} log-%, price explains {tot['explained']:+.1f}, "
            f"not price {tot['unexplained']:+.1f}. Elasticity from the 4 peers only")
-ax.legend(fontsize=7.5, loc="lower left")
+ax.legend(fontsize=7.5, loc="lower right")
 S.save(fig, FIG / "ds6_share_annual.png")
 
 f = f[~f["covid"]].reset_index(drop=True)

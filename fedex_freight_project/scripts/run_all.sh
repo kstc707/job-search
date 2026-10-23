@@ -14,6 +14,12 @@ $PY scripts/option_b_yield.py > reports/option_b_output.txt
 $PY scripts/option_c_faf_lanes.py > reports/option_c_output.txt
 $PY scripts/option_d_value_sensitivity.py > reports/option_d_output.txt
 $PY scripts/make_report_figures.py
+$PY scripts/ds_build_panel.py > reports/ds/panel_output.txt
+$PY scripts/ds_nowcast_eval.py > reports/ds/nowcast_eval_output.txt   # ~20 min
+$PY scripts/ds_nowcast_posthoc.py > reports/ds/posthoc_output.txt
+$PY scripts/ds_conformal_groups.py > reports/ds/conformal_groups_output.txt
+$PY scripts/ds_share_model.py > reports/ds/share_model_output.txt
+# ds_prospective.py is NOT rerun: ds/prospective_forecasts.csv was locked on 2026-10-23 (see its .sha256)
 $PY scripts/build_report.py
 $PY scripts/build_brief.py
 $PY scripts/build_email.py > /dev/null

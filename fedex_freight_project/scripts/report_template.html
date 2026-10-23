@@ -4,10 +4,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a freight bill on top, then one long-read column with full-width chart panels. */
+/* Layout: a freight bill on top, then one long-read column; every chart is a Python (matplotlib) figure. */
 :root {
   --paper: #f5f6f3; --panel: #ffffff; --ink: #14202b; --ink-2: #4c5864; --rule: #d6dbd9;
-  --accent: #2a78d6; --warm: #eb6834; --aqua: #1baf7a; --neutral: #9a9893; --win: #e9f1fb;
+  --accent: #2a78d6; --warm: #c4501f; --win: #e9f1fb; --figbg: #fcfcfb;
   --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
   --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -15,44 +15,40 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #0f151b; --panel: #151d25; --ink: #e7ecf0; --ink-2: #a6b1bb; --rule: #27323c;
-    --accent: #3987e5; --warm: #d95926; --aqua: #199e70; --neutral: #7d7b76; --win: #172a40; color-scheme: dark;
+    --accent: #5b9ff0; --warm: #ee8a5e; --win: #172a40; --figbg: #fcfcfb; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0f151b; --panel: #151d25; --ink: #e7ecf0; --ink-2: #a6b1bb; --rule: #27323c;
-  --accent: #3987e5; --warm: #d95926; --aqua: #199e70; --neutral: #7d7b76; --win: #172a40; color-scheme: dark;
+  --accent: #5b9ff0; --warm: #ee8a5e; --win: #172a40; --figbg: #fcfcfb; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { background: var(--paper); color: var(--ink); font: 17px/1.6 var(--f-body); }
 .wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 64px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.prose { max-width: 66ch; }
+.prose { max-width: 66ch; display: flex; flex-direction: column; gap: 14px; }
 h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.1; margin: 0; }
-h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 800; font-stretch: 78%; letter-spacing: -0.01em; text-transform: uppercase; }
+h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 800; font-stretch: 78%; text-transform: uppercase; }
 h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 750; font-stretch: 85%; }
-h3 { font-size: 1.05rem; font-weight: 700; font-stretch: 100%; }
+h3 { font-size: 1.05rem; font-weight: 700; }
 p { margin: 0; }
-.stack { display: flex; flex-direction: column; gap: 14px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .eyebrow { font: 500 0.72rem/1 var(--f-data); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
 .lede { font-size: 1.2rem; color: var(--ink-2); max-width: 60ch; }
-a { color: var(--accent); }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
 
-/* the freight bill */
-.bill { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1.5px solid var(--ink); margin-bottom: 30px; background: var(--panel); }
+.bill { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1.5px solid var(--ink); margin: 0 0 30px; background: var(--panel); }
 .bill > div { padding: 8px 12px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); min-width: 0; }
 .bill > div:nth-child(3n) { border-right: 0; }
 .bill > div:nth-last-child(-n+3) { border-bottom: 0; }
 .bill dt { font: 500 0.64rem/1.2 var(--f-data); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
 .bill dd { margin: 3px 0 0; font: 500 0.86rem/1.3 var(--f-data); overflow-wrap: anywhere; }
-@media (max-width: 640px) {
-  .bill { grid-template-columns: minmax(0, 1fr); }
-  .bill > div { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .bill > div:last-child { border-bottom: 0; }
-}
+@media (max-width: 640px) { .bill { grid-template-columns: minmax(0, 1fr); }
+  .bill > div { border-right: 0; border-bottom: 1px solid var(--rule); } .bill > div:last-child { border-bottom: 0; } }
 
-.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--rule); margin: 30px 0 8px; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 3px solid var(--ink); border-bottom: 1px solid var(--rule); margin: 30px 0 8px; }
 .stat { padding: 16px 14px 18px 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .stat + .stat { padding-left: 14px; border-left: 1px solid var(--rule); }
 .stat b { font: 800 clamp(1.8rem, 4vw, 2.5rem)/1 var(--f-display); font-stretch: 80%; font-variant-numeric: tabular-nums; }
@@ -64,41 +60,26 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 section.q { margin-top: 64px; display: flex; flex-direction: column; gap: 18px; }
 .qhead { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: baseline; border-top: 1px solid var(--ink); padding-top: 14px; }
 .qnum { font: 800 1rem/1 var(--f-data); color: var(--accent); }
-.panel { background: var(--panel); border: 1px solid var(--rule); padding: 18px 18px 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.panel h3 { margin-bottom: 0; }
-.panel .sub { font-size: 0.85rem; color: var(--ink-2); line-height: 1.45; }
-.src { font: 400 0.7rem/1.4 var(--f-data); color: var(--ink-2); }
-.chart { position: relative; height: 320px; width: 100%; }
-.chart.tall { height: 380px; }
+.fig { margin: 0; background: var(--figbg); border: 1px solid var(--rule); padding: 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.fig img { width: 100%; height: auto; display: block; }
+.fig figcaption { font: 0.72rem/1.4 var(--f-data); color: #4c5864; }
 .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-@media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } .chart { height: 280px; } }
-
-.tablewrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font: 0.82rem/1.4 var(--f-data); font-variant-numeric: tabular-nums; }
-th, td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
-th { font-weight: 500; color: var(--ink-2); text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.08em; }
-tr.win td { background: var(--win); font-weight: 500; }
-td.wrap-cell { white-space: normal; min-width: 14ch; }
-
+@media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } }
 .callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; font-size: 1.05rem; max-width: 66ch; }
-.toggle { display: flex; gap: 6px; flex-wrap: wrap; }
-.toggle button { font: 500 0.78rem/1 var(--f-data); padding: 8px 12px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); cursor: pointer; }
-.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.tiles { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; max-width: 640px; }
-.tile { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 500 clamp(0.5rem, 1.5vw, 0.72rem)/1.15 var(--f-data); border-radius: 2px; }
-.tile i { font-style: normal; font-size: 0.85em; opacity: 0.85; }
-.legend-scale { display: flex; align-items: center; gap: 8px; font: 0.72rem var(--f-data); color: var(--ink-2); }
-.legend-scale .bar { height: 10px; width: 160px; background: linear-gradient(90deg, var(--warm), var(--panel), var(--accent)); border: 1px solid var(--rule); }
-
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); padding: 8px 12px; }
+table { border-collapse: collapse; width: 100%; font: 0.8rem/1.4 var(--f-data); font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { font-weight: 500; color: var(--ink-2); text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.08em; }
+tr.win td { background: var(--win); font-weight: 500; }
+.src { font: 0.7rem/1.4 var(--f-data); color: var(--ink-2); }
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 760px) { .cards { grid-template-columns: minmax(0, 1fr); } }
 .card { background: var(--panel); border: 1px solid var(--rule); padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .card .tag { font: 500 0.68rem/1 var(--f-data); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .card p { font-size: 0.95rem; }
-.card .out { font: 500 0.82rem/1.45 var(--f-data); border-top: 1px dashed var(--rule); padding-top: 10px; color: var(--ink); }
-ul.checks { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; max-width: 70ch; }
+.card .out { font: 500 0.82rem/1.45 var(--f-data); border-top: 1px dashed var(--rule); padding-top: 10px; }
+ul.checks { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
 footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; font: 0.78rem/1.6 var(--f-data); color: var(--ink-2); display: flex; flex-direction: column; gap: 8px; }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 
 <div class="wrap">
@@ -106,310 +87,116 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
     <div><dt>Prepared by</dt><dd>Sai Teja Koppolu, MS Data Science, University of Memphis</dd></div>
     <div><dt>Prepared for</dt><dd>FedEx Freight data science hiring team</dd></div>
     <div><dt>Data as of</dt><dd>Oct 23, 2026</dd></div>
-    <div><dt>Check date</dt><dd>Oct 29, 2026: FDXF reports Jun to Sep 2026</dd></div>
-    <div><dt>Data class</dt><dd>Public only: SEC EDGAR, FRED, BTS FAF5, EIA</dd></div>
+    <div><dt>Forecasts locked</dt><dd>Oct 23, 2026, commit {{lock_commit}} (SHA-256 {{lock_hash}})</dd></div>
+    <div><dt>Check dates</dt><dd>Oct 29 (FDXF) and late Oct (ODFL, SAIA, XPO, ARCB)</dd></div>
     <div><dt>Code</dt><dd>github.com/kstc707/job-search</dd></div>
   </dl>
 
   <header class="stack">
     <span class="eyebrow">FedEx Freight, from public data</span>
     <h1>Market or share?</h1>
-    <p class="lede">FedEx Freight's daily shipments are down a quarter from their 2021 peak. This page separates what the freight market did from what is specific to FedEx, prices the trade-off between yield and volume, and puts a number on Jun to Sep 2026 before the company reports it.</p>
+    <p class="lede">FedEx Freight has lost a sixth of its share of the five largest public LTL carriers' shipments since mid-2021. A model estimated only on its four competitors says how much of that is price, and how much is something price cannot explain. The forecasts were fixed and fingerprinted before any of these carriers report.</p>
   </header>
 
   <div class="stats" role="list">
-    <div class="stat" role="listitem"><b class="neg">{{fedex_ton}}%</b><span>FedEx Freight tonnage, 2019 to 2024, against {{mkt_ton}}% for the truck freight it can carry</span></div>
-    <div class="stat" role="listitem"><b>{{nc}}%</b><span>Nowcast of shipments per day, Jun to Sep 2026 vs 2025. 80% range {{nc_lo}}% to {{nc_hi}}%</span></div>
-    <div class="stat" role="listitem"><b>${{oi_vol}}M</b><span>Operating income per year from one point of shipments. One point of price is worth {{ratio}} points of volume</span></div>
-    <div class="stat" role="listitem"><b class="pos">{{fuel_lift}}%</b><span>Fuel lift to revenue per shipment, Jun to Sep 2026. At EIA's 2027 diesel it turns into {{fuel27}}%</span></div>
+    <div class="stat" role="listitem"><b class="neg">{{share_total}}</b><span>Change in FedEx's share of five-carrier shipments, mid-2021 to mid-2026 (log-%)</span></div>
+    <div class="stat" role="listitem"><b>{{share_price}}</b><span>Of that, explained by FedEx's price relative to competitors</span></div>
+    <div class="stat" role="listitem"><b class="neg">{{share_nonprice}}</b><span>Not explained by price. Concentrated in the Yellow year (2023-24) and the spin-off year (2025-26)</span></div>
+    <div class="stat" role="listitem"><b>{{fdx_nc}}%</b><span>Locked forecast of FedEx shipments per day, Jun to Sep 2026. FDXF reports Oct 29</span></div>
   </div>
 
-  <!-- Q1 -->
   <section class="q" id="share">
-    <div class="qhead"><span class="qnum">Q1</span><h2>Is the volume decline the market, or FedEx?</h2></div>
-    <div class="prose stack">
-      <p>Between 2019 and 2024 the packaged and finished goods that move less-than-truckload fell {{mkt_ton_abs}}% by weight, according to the federal Freight Analysis Framework. FedEx Freight's own tonnage fell {{fedex_ton_abs}}%. Lighter shipments explain part of that: weight per shipment dropped from about 1,200 lbs to about 920. Most of the gap is shipments FedEx no longer carries.</p>
-      <p {{peers_display}}>The four public LTL carriers (Old Dominion, Saia, XPO and ArcBest) give a same-quarter benchmark. Since FY2023, FedEx Freight's shipments per day have run on average {{rel_mean_abs}} points a year behind the peer index. The deepest gap, in FY2024, includes the year after Yellow shut down (July 2023), when Saia and XPO absorbed much of its freight; FedEx took less. The gap briefly turned positive in mid-2025, then reopened in the two quarters before the spin-off. Over the last four quarters it was {{rel_last4}} points. The peer index itself was flat ({{peer_junsep}}%) over June to August 2026, while XPO grew shipments about 6% in August.</p>
-      <p {{peers_display}}>Price does not explain it. Adjusted for weight, FedEx's base price per hundredweight rose {{wadj_lo}}% to {{wadj_hi}}% in the quarter ended May 2026. Old Dominion's rose {{odfl_adj}}% and XPO's {{xpo_adj}}% in the calendar quarter to June, yet XPO gained volume. The share loss points to non-price causes: sales coverage through the transition, the unwinding of bundled parcel pricing, and service. Those are questions for account-level data.</p>
+    <div class="qhead"><span class="qnum">Q1</span><h2>How much of the share loss is price?</h2></div>
+    <div class="prose">
+      <p>Across Old Dominion, Saia, XPO and ArcBest, a carrier whose weight-adjusted price rises 1% faster than its competitors' loses about {{elas_b0}}% of its shipment share over the same year (95% CI {{elas_ci}} for the coefficient), and about {{elas_lr}}% once the following quarter is included. The relationship survives a placebo test that shuffles prices within each carrier (p = {{placebo_p}}), switching to prices excluding fuel, and adding quarter fixed effects. FedEx is left out of the estimation, so applying it to FedEx is an out-of-sample test.</p>
+      <p>The answer changes over time. In the year to mid-2023 FedEx raised its relative price about {{rel_2023}}%, and price explains essentially all of that year's share loss: the yield-first strategy cost share. In the year after Yellow shut down, and again in the year to mid-2026, FedEx lost share while its relative price was falling. Those losses, {{np_2024}} and {{np_2026}} log-points, are not price. The second one lines up with the spin-off and the unwinding of bundled parcel pricing.</p>
     </div>
-    <div class="panel" {{peers_display}}>
-      <h3>FedEx Freight vs the public LTL peers, shipments per day, YoY</h3>
-      <p class="sub">Bars show FedEx minus the peer index. Peer index weights each carrier by its year-ago daily shipments; monthly operating updates are used where carriers publish them.</p>
-      <div class="chart tall"><canvas id="cPeers" role="img" aria-label="FedEx Freight shipments per day YoY against the peer index, by fiscal quarter"></canvas></div>
-      <p class="src">Sources: FedEx Corp and FDXF 8-K earnings releases; ODFL, SAIA, XPO, ARCB 8-K releases and monthly updates (SEC EDGAR).</p>
-    </div>
-    <div class="panel">
-      <h3>Tonnage index, 2019 = 100</h3>
-      <p class="sub">Market proxy: truck tons of packaged and finished goods in FAF5.7.1 (2018 to 2024 values are BTS model estimates). FedEx: shipments per day × weight × operating days.</p>
-      <div class="chart"><canvas id="cTon" role="img" aria-label="FedEx Freight tonnage index against the LTL-addressable market, 2017 to 2024"></canvas></div>
-      <p class="src">Sources: FedEx Corp 8-K segment statistics; BTS/ORNL Freight Analysis Framework 5.7.1.</p>
+    <figure class="fig"><img src="{{img_ds6}}" alt="Annual change in FedEx Freight's share split into the part explained by relative price and the part not explained, 2022 to 2026"><figcaption>Non-overlapping Q2-to-Q2 changes, which sum exactly. Results hold for any anchor quarter: price explains 40 to 55% of the total.</figcaption></figure>
+    <div class="two">
+      <figure class="fig"><img src="{{img_f0}}" alt="FedEx Freight shipments per day YoY against the four public peers"><figcaption>FedEx vs the peer index, shipments per day YoY.</figcaption></figure>
+      <figure class="fig"><img src="{{img_f1}}" alt="FedEx Freight tonnage index against LTL-addressable truck freight, 2017 to 2024"><figcaption>Tonnage: FedEx {{fedex_ton}}% vs its addressable market {{mkt_ton}}%, 2019 to 2024.</figcaption></figure>
     </div>
   </section>
 
-  <!-- Q2 -->
-  <section class="q" id="nowcast">
-    <div class="qhead"><span class="qnum">Q2</span><h2>What will FedEx report on October 29?</h2></div>
-    <div class="prose stack">
-      <p>FDXF's first standalone release covers four months, June to September 2026. Every model below was re-estimated at each of {{n_test}} past quarters using only data available before that quarter, then scored on what actually happened. COVID base-effect quarters are excluded from training and scoring.</p>
-      <p>Two findings are negative, and both matter. Macro indicators (manufacturing output, truck tonnage, Cass shipments) did worse than simply carrying last quarter forward: mean absolute error {{macro_mae}} points against {{naive_mae}}. Same-month peer volumes did not beat persistence either ({{peer_ar_mae}} points). FedEx's volume has been following its own trajectory, which is what a share problem looks like. The headline nowcast is a combination fixed in advance of one persistence, one peer and one macro model, so its backtest is not flattered by picking the winner afterwards. It scored {{combo_mae}} points, the best of the set.</p>
+  <section class="q" id="forecast">
+    <div class="qhead"><span class="qnum">Q2</span><h2>Forecasts made before the answers exist</h2></div>
+    <div class="prose">
+      <p>The models, metrics and success criteria were written down and committed before any model was fitted. Each model was then refit at {{n_dates}} past issue dates on data published before that date, with feature availability gated by the EDGAR filing date of every monthly update, and scored on {{n_test}} carrier-quarters from 2022 to 2026.</p>
+      <p>The honest result: a carrier's own monthly updates inside the quarter cut error {{own_gain}}% against carrying last quarter forward (Diebold-Mariano p = {{own_p}}). Ridge, gradient boosting and their ensemble improved {{ml_gain}}%, which is not significant across 36 dates (p = {{ens_p}}). Competitors' data alone made it worse. For FedEx, which publishes no monthly updates, nothing beat the naive forecast. With FedEx's own daily shipment data, a quarter-end nowcast is close to solved; the open problems are longer horizons and account-level share shifts.</p>
     </div>
-    <div class="callout">Nowcast for Jun to Sep 2026: shipments per day <b>{{nc}}%</b> YoY, about <b>{{nc_ads}}k</b> a day against roughly {{base_ads}}k a year earlier. 80% range {{nc_lo}}% to {{nc_hi}}%, taken from the model's own backtest errors. For comparison, BofA published −3.0% for the September quarter, and management said in September that volumes would exit 2026 flat to slightly positive.</div>
-    <div class="panel">
-      <h3>Backtest: one-quarter-ahead forecasts vs actual (YoY %, log)</h3>
-      <div class="chart"><canvas id="cBt" role="img" aria-label="Backtest of the best model against actual FedEx Freight shipments per day YoY"></canvas></div>
-      <div class="tablewrap"><table>
-        <thead><tr><th>Model</th><th>Quarters</th><th>MAE pp</th><th>RMSE pp</th><th>Bias pp</th><th>Direction</th></tr></thead>
-        <tbody>{{score_rows}}</tbody></table></div>
-      <h3>Nowcast by model, Jun to Sep 2026</h3>
-      <div class="tablewrap"><table>
-        <thead><tr><th>Model</th><th>Inputs</th><th>Nowcast</th><th>80% range</th><th>Backtest MAE</th></tr></thead>
-        <tbody>{{nowcast_rows}}</tbody></table></div>
-      <p class="src">Rolling-origin backtest, scripts/option_a_nowcast.py. Tests confirm every training window ends before its test window.</p>
+    <div class="two">
+      <figure class="fig"><img src="{{img_ds1}}" alt="Out-of-sample mean absolute error by model with bootstrap confidence intervals"><figcaption>MAE with 90% block-bootstrap intervals over issue dates.</figcaption></figure>
+      <figure class="fig"><img src="{{img_ds3}}" alt="Ablation: change in error when each feature group is removed"><figcaption>Macro and market features add noise at this sample size.</figcaption></figure>
     </div>
+    <h3>Locked forecasts, shipments per day YoY</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Carrier</th><th>Period</th><th>Pre-registered model</th><th>80% interval</th><th>ML ensemble</th><th>Own months used</th></tr></thead>
+      <tbody>{{prospective_rows}}</tbody></table></div>
+    <p class="src">ds/prospective_forecasts.csv, SHA-256 {{lock_hash_full}}. Intervals: group-conditional split-conformal from each model's own out-of-sample errors. For rows without the carrier's own monthly data (FedEx) they covered about 65 to 71% in the backtest, not 80%, so treat them as optimistic. BofA's published estimate for FedEx's September quarter: −3.0%.</p>
   </section>
 
-  <!-- Q3 -->
   <section class="q" id="yield">
     <div class="qhead"><span class="qnum">Q3</span><h2>Is pricing holding, or is it fuel?</h2></div>
-    <div class="prose stack">
-      <p>FedEx Freight publishes its fuel surcharge tariff. In the eight quarters where it also disclosed revenue excluding fuel, it collected {{rho}} times the tariff rate, with a standard deviation of {{rho_sd}}. That steady ratio lets the tariff extrapolate to diesel prices the history never saw.</p>
-      <p>Tested on the quarter ended May 2026, when diesel spiked, the model puts base revenue per hundredweight at {{oos}}% YoY. Management described it as a slight decline. Weight per shipment rose 3%, and heavier shipments lower revenue per hundredweight mechanically. Estimated from Priority versus Economy freight with quarter fixed effects, a 10% heavier shipment carries about {{beta_pct10}}% lower revenue per hundredweight (elasticity {{beta}}, 95% CI {{beta_ci}}). A naive time-series fit gives {{beta_naive}}, which would mean heavier shipments earn less per shipment; it is biased because rate increases happened while weights fell. Across the four peers, with quarter and carrier fixed effects, the elasticity is {{beta_x}} ({{beta_x_ci}}), consistent with FedEx's own. Adjusted for weight, FedEx's like-for-like price was up {{wadj_lo}}% to {{wadj_hi}}% that quarter. Weight per shipment is rising across the industry as truckload tightens, so FedEx's 3% increase is not a FedEx-specific density effect.</p>
+    <div class="prose">
+      <p>FedEx Freight collects {{rho}} times its published fuel surcharge, with a standard deviation of {{rho_sd}} over eight quarters. That splits fuel from price even at record diesel: in the quarter ended May 2026, base revenue per hundredweight was {{oos}}% (management called it a slight decline), and weight-adjusted price was up {{wadj_lo}}% to {{wadj_hi}}%. If diesel follows EIA's 2027 forecast, fuel alone takes {{fuel27_abs}}% off revenue per shipment.</p>
     </div>
     <div class="two">
-      <div class="panel">
-        <h3>FY26 Q4 revenue, YoY, by driver</h3>
-        <p class="sub">Log-points, which add up exactly. Quarter ended May 31, 2026.</p>
-        <div class="chart"><canvas id="cBridge" role="img" aria-label="Waterfall of FY26 Q4 revenue change by driver"></canvas></div>
-      </div>
-      <div class="panel">
-        <h3>Fuel surcharge: tariff vs realized</h3>
-        <p class="sub">% of revenue excluding fuel, against EIA diesel with the 10-day lag the tariff uses.</p>
-        <div class="chart"><canvas id="cFuel" role="img" aria-label="Published fuel surcharge tariff, the 0.59 times tariff model, and disclosed quarters"></canvas></div>
-      </div>
+      <figure class="fig"><img src="{{img_f2}}" alt="FY26 Q4 revenue change by driver"><figcaption>Log-point bridge; components sum exactly.</figcaption></figure>
+      <figure class="fig"><img src="{{img_f3}}" alt="Published fuel surcharge tariff vs realized surcharge"><figcaption>Leave-one-out error {{loo}} pts.</figcaption></figure>
     </div>
-    <p class="src">Sources: fedexfreight.com fuel surcharge table (effective 2025-06-09); FDXF 8-K recast (2026-08-06); FedEx Corp 8-K (2026-06-23); EIA diesel via FRED.</p>
   </section>
 
-  <!-- Q4 -->
   <section class="q" id="value">
     <div class="qhead"><span class="qnum">Q4</span><h2>What is a point of volume worth?</h2></div>
-    <div class="prose stack">
-      <p>Over {{d_n}} quarters (FY2018 to FY2026, excluding COVID), each dollar of revenue gained from more shipments added about {{vol_c}} cents of operating income (95% CI {{vol_ci}}). Each dollar from price and mix added about {{price_c}} cents ({{price_ci}}). One point of shipments is worth about ${{oi_vol}}M a year and one point of price about ${{oi_price}}M, so a price increase pays for itself until it costs about {{ratio}} points of volume.</p>
-      <p>At the market's current valuation of about {{mult}} times adjusted operating income, one point of shipments is worth roughly ${{per_share}} a share. That is the scale of the question in Q1.</p>
+    <div class="prose">
+      <p>Over {{d_n}} quarters, each revenue dollar from more shipments added {{vol_c}} cents of operating income and each dollar from price and mix {{price_c}} cents. One point of shipments is worth about ${{oi_vol}}M a year, roughly ${{per_share}} a share at the market's ~{{mult}}x multiple. The {{share_nonprice}} log-points of non-price share loss since mid-2021 is the size of the retention problem in those units.</p>
     </div>
-    <div class="panel">
-      <h3>Operating income per year from one extra point</h3>
-      <div class="chart" style="height:200px"><canvas id="cValue" role="img" aria-label="Operating income from one point of shipments versus one point of price"></canvas></div>
-      <p class="src">YoY change in adjusted segment operating income regressed on revenue change split into volume and price/mix; HAC standard errors. Market inputs: StockAnalysis (2026-10-22), $4.3B debt at spin.</p>
-    </div>
+    <figure class="fig"><img src="{{img_f4}}" alt="Operating income from one point of shipments vs one point of price"><figcaption>Incremental margins, HAC standard errors.</figcaption></figure>
   </section>
 
-  <!-- Q5 -->
   <section class="q" id="lanes">
     <div class="qhead"><span class="qnum">Q5</span><h2>Where is the freight going?</h2></div>
-    <div class="prose stack">
-      <p>FAF5's mid-range forecast has interstate LTL-type freight on lanes over 250 miles growing {{lane_cagr}}% a year to 2035. Georgia to Florida, Illinois to Michigan, and lanes into Texas add the most tons. From 2019 to 2024 the national total fell {{nat_abs}}%; the Southeast, Texas and New Jersey outperformed what their commodity mix predicted, and the upper Midwest and Northeast lagged.</p>
-      <p>Freight is also unbalanced by direction. Tennessee receives more than it ships ({{tn_net}}% net), and Nevada, New Mexico and the Mountain states are heavily inbound. Those lanes are where backhaul pricing and network design pay.</p>
+    <div class="prose">
+      <p>In FAF5's forecast, interstate LTL-type freight on lanes over 250 miles grows {{lane_cagr}}% a year to 2035, led by Georgia to Florida, Midwest corridors and lanes into Texas. Tennessee receives more freight than it ships ({{tn_net}}% net), and the Mountain states are heavily inbound.</p>
     </div>
     <div class="two">
-      <div class="panel">
-        <h3>Most added tons by 2035</h3>
-        <div class="chart tall"><canvas id="cLanes" role="img" aria-label="Top 12 interstate lanes by forecast added tons to 2035"></canvas></div>
-      </div>
-      <div class="panel">
-        <div class="toggle" role="group" aria-label="Map layer">
-          <button type="button" id="bShift" aria-pressed="true">Regional effect 2019 to 2024</button>
-          <button type="button" id="bImb" aria-pressed="false">Directional balance 2024</button>
-        </div>
-        <p class="sub" id="mapSub"></p>
-        <div class="tiles" id="tiles" aria-live="polite"></div>
-        <div class="legend-scale"><span id="lgLo"></span><span class="bar"></span><span id="lgHi"></span></div>
-      </div>
+      <figure class="fig"><img src="{{img_f5}}" alt="Top interstate lanes by forecast added tons"><figcaption>FAF5.7.1 mid-range forecast.</figcaption></figure>
+      <figure class="fig"><img src="{{img_c4}}" alt="Directional balance of LTL-type freight by state"><figcaption>Outbound minus inbound, 2024.</figcaption></figure>
     </div>
-    <p class="src">BTS/ORNL Freight Analysis Framework 5.7.1, truck mode, packaged and finished goods (20 of 42 SCTG commodity groups). Shift-share and imbalance in scripts/option_c_faf_lanes.py.</p>
   </section>
 
-  <!-- what I'd build -->
   <section class="q" id="build">
     <div class="qhead"><span class="qnum">Next</span><h2>What I would build with FedEx Freight's data</h2></div>
-    <p class="prose">Public data stops at the quarter and the company. Each of these takes the method above down to the account, lane or shipment, where the decisions are made.</p>
     <div class="cards">
-      <div class="card"><span class="tag">Retention</span><h3>Account-level volume early warning</h3>
-        <p>Model each account's expected weekly shipments and flag drift before it shows up as churn, including the roughly 10% of accounts that were bundled with FedEx parcel. Rank the list for the 500-person sales team by expected volume at risk.</p>
-        <p class="out">Outcome: points of shipments retained. Each point is worth about ${{oi_vol}}M of operating income a year.</p></div>
+      <div class="card"><span class="tag">Retention</span><h3>Account-level share early warning</h3>
+        <p>The non-price share loss is an account problem. Model each account's expected weekly shipments, flag drift before it becomes churn, and rank accounts for the sales team by expected volume at risk, starting with the roughly 10% that were bundled with parcel.</p>
+        <p class="out">Validated the same way as here: pre-registered, rolling-origin, scored against a naive baseline.</p></div>
       <div class="card"><span class="tag">Pricing</span><h3>Price response by segment</h3>
-        <p>Estimate how volume responds to rate changes by lane, customer size and commodity, using renewals and general rate increases as natural experiments. Use the {{ratio}}-to-1 price-volume exchange rate as the guardrail in the new pricing system.</p>
-        <p class="out">Outcome: rate actions that clear the break-even, accounts where a smaller increase keeps more profit.</p></div>
+        <p>The share elasticity here is an industry average. Estimate it by lane, customer size and commodity from renewals and general rate increases, and use the {{ratio}}-to-1 price-volume exchange rate as the guardrail.</p>
+        <p class="out">Outcome: rate actions that clear break-even; accounts where a smaller increase keeps more profit.</p></div>
       <div class="card"><span class="tag">Revenue integrity</span><h3>Density and dimensioner audit</h3>
-        <p>With dimensioners on more than 90% of shipments and freight classes now set by density, predict each shipment's density from shipper, commodity and history, and send the largest expected differences to inspection first.</p>
-        <p class="out">Outcome: reclass revenue per inspection, measured against today's inspection hit rate.</p></div>
+        <p>With dimensioners on more than 90% of shipments and density-based freight classes, predict each shipment's density and send the largest expected differences to inspection first.</p>
+        <p class="out">Outcome: reclass revenue per inspection against today's hit rate.</p></div>
       <div class="card"><span class="tag">Fuel</span><h3>Fuel surcharge exposure</h3>
-        <p>FedEx collects {{rho}} times its published surcharge on average. Break that ratio down by contract to find fuel caps and discounts, and plan for 2027, when EIA's diesel forecast turns fuel from a {{fuel_lift}}% tailwind into a {{fuel27}}% headwind on revenue per shipment.</p>
-        <p class="out">Outcome: ex-fuel yield reporting and contract terms that hold up when diesel falls.</p></div>
-      <div class="card"><span class="tag">Network</span><h3>Imbalance-aware lane pricing</h3>
-        <p>Combine lane-level directional balance with cube data from the dimensioners to price backhaul capacity into inbound-heavy markets and protect head-haul margins out of net-shipper states.</p>
-        <p class="out">Outcome: fewer empty linehaul miles; higher revenue per trailer on balanced lanes.</p></div>
-      <div class="card"><span class="tag">Planning</span><h3>Weekly volume nowcast</h3>
-        <p>Run this page's backtested nowcast weekly with internal daily shipments and peer monthly updates, for capacity planning and investor guidance.</p>
-        <p class="out">Outcome: forecast error tracked every quarter against a naive baseline, so the model has to earn its place.</p></div>
+        <p>Break the {{rho}} realized-to-tariff ratio down by contract to find caps and discounts before diesel falls and fuel becomes a {{fuel27_abs}}% headwind.</p>
+        <p class="out">Outcome: ex-fuel yield reporting and contract terms that hold when diesel falls.</p></div>
     </div>
   </section>
 
-  <!-- checks -->
   <section class="q" id="checks">
-    <div class="qhead"><span class="qnum">QA</span><h2>How the numbers were checked</h2></div>
+    <div class="qhead"><span class="qnum">QA</span><h2>How it was tested</h2></div>
     <ul class="checks">
-      <li>Every download was checked to be real data rather than an error page. 37 quarters of FedEx Freight statistics were parsed from 47 FedEx Corp earnings releases.</li>
-      <li>FY2026 quarters add up to the 10-K: revenue $8,795M, segment operating income $616M, 86.1k shipments per day. Calendar-year tonnage reproduces FDXF's reported totals within 0.5%.</li>
-      <li>The backtest refits every model at each origin, and an automated test fails if any training window overlaps its test quarter.</li>
-      <li>The fuel model was tested on a quarter outside its diesel range and agrees with management's own description.</li>
-      <li>Peer statistics from {{peer_files}} SEC filings were tied out against the carriers' own totals (shipments per day × workdays, annual sums). The weight elasticity was estimated two independent ways: within FedEx, and across the four peers.</li>
-      <li>The LTL market proxy was rebuilt under stricter and broader commodity definitions; the market change stays within a point.</li>
-      <li>Known limits: about 37 quarterly observations; FAF 2018 to 2024 values are modeled; public peers are a sample of the LTL market, not all of it; nothing here uses FedEx internal data.</li>
+      <li>Pre-registration (targets, information sets, splits, metrics, success criteria) committed before any model was fitted. Every later change is logged with its reason in ds/DEVIATIONS.md.</li>
+      <li>Point-in-time features: a monthly update is used only if its EDGAR filing date is on or before the forecast date. Automated tests fail if any training window includes an unpublished target.</li>
+      <li>Significance: Diebold-Mariano with the Harvey-Leybourne-Newbold correction. Uncertainty: block-bootstrap confidence intervals and conformal prediction intervals with measured coverage.</li>
+      <li>Share model: estimated on competitors only, applied to FedEx out of sample; permutation placebo; leave-one-carrier-out prediction; four robustness specifications.</li>
+      <li>Negative results are reported: ML did not beat persistence significantly; nothing beat naive for FedEx alone; changepoint detection found no reliable break (its simulated false-alarm rate at this length is 24%).</li>
+      <li>Data tie-outs: 37 FedEx quarters reconcile to the 10-K; 1,139 peer filings reconcile to the carriers' own totals. {{n_tests}} automated tests pass.</li>
     </ul>
   </section>
 
   <footer>
-    <span>Public sources: SEC EDGAR (FedEx Corp CIK 1048911, FDXF CIK 2082247, ODFL, SAIA, XPO, ARCB), FRED (ATA tonnage, Cass, industrial production, PPI, EIA diesel), BTS/ORNL FAF5.7.1, fedexfreight.com fuel surcharge table, and press coverage of analyst estimates.</span>
+    <span>Public sources: SEC EDGAR (FedEx Corp, FDXF, ODFL, SAIA, XPO, ARCB), FRED, BTS/ORNL FAF5.7.1, EIA, fedexfreight.com fuel surcharge table, press coverage of analyst estimates. All charts generated in Python (matplotlib) by the repository's scripts.</span>
     <span>Independent analysis by Sai Teja Koppolu for a job application. Not affiliated with or endorsed by FedEx. Not investment advice.</span>
   </footer>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script id="data" type="application/json">/*__DATA__*/{}</script>
-<script>
-(function () {
-  const D = JSON.parse(document.getElementById("data").textContent);
-  const MONO = "'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";
-  if (window.Chart) { Chart.defaults.font.family = MONO; Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue("--ink-2").trim(); }
-  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  let charts = [];
-  const fmt = (v, s = "") => (v > 0 ? "+" : "") + v.toFixed(1) + s;
-
-  function base(ext) {
-    const ink = css("--ink-2"), rule = css("--rule");
-    return Object.assign({
-      responsive: true, maintainAspectRatio: false, animation: false,
-      interaction: { mode: "index", intersect: false },
-      plugins: { legend: { labels: { color: ink, boxWidth: 12, font: { family: MONO, size: 11 } } },
-        tooltip: { titleFont: { family: MONO }, bodyFont: { family: MONO } } },
-      scales: {
-        x: { ticks: { color: ink, font: { family: MONO, size: 10 }, maxRotation: 0, autoSkip: true }, grid: { display: false }, border: { color: rule } },
-        y: { ticks: { color: ink, font: { family: MONO, size: 10 } }, grid: { color: rule }, border: { display: false } }
-      }
-    }, ext || {});
-  }
-
-  function draw() {
-    charts.forEach((c) => c.destroy()); charts = [];
-    if (!window.Chart) return;
-    const A = css("--accent"), W = css("--warm"), N = css("--neutral"), Q = css("--aqua"), INK = css("--ink");
-
-    if (D.peers) {
-      const o = base(); o.scales.y.title = { display: true, text: "YoY %", color: css("--ink-2") };
-      charts.push(new Chart(document.getElementById("cPeers"), { data: { labels: D.peers.labels, datasets: [
-        { type: "line", label: "FedEx Freight", data: D.peers.fedex, borderColor: W, backgroundColor: W, borderWidth: 2, pointRadius: 2.5 },
-        { type: "line", label: "Peer index (ODFL, SAIA, XPO, ARCB)", data: D.peers.peers, borderColor: A, backgroundColor: A, borderWidth: 2, pointRadius: 2.5 },
-        { type: "bar", label: "FedEx minus peers (pp)", data: D.peers.gap, backgroundColor: D.peers.gap.map((v) => v != null && v < 0 ? W + "55" : A + "55"), borderRadius: 3 }
-      ] }, options: o }));
-    }
-
-    const ot = base(); ot.scales.y.min = 60; ot.scales.y.max = 112;
-    charts.push(new Chart(document.getElementById("cTon"), { type: "line", data: { labels: D.tonnage.years, datasets: [
-      { label: "LTL-addressable truck freight (FAF5)", data: D.tonnage.market, borderColor: N, backgroundColor: N, borderWidth: 2, pointRadius: 3 },
-      { label: "FedEx Freight tonnage", data: D.tonnage.fedex, borderColor: W, backgroundColor: W, borderWidth: 2.5, pointRadius: 3.5, spanGaps: true }
-    ] }, options: ot }));
-
-    const ob = base(); ob.scales.x.ticks.maxTicksLimit = 8;
-    charts.push(new Chart(document.getElementById("cBt"), { type: "line", data: { labels: D.backtest.labels, datasets: [
-      { label: "Actual", data: D.backtest.actual, borderColor: INK, backgroundColor: INK, borderWidth: 2, pointRadius: 2.5 },
-      { label: "Forecast: " + D.backtest.best_name + " (out-of-sample)", data: D.backtest.best, borderColor: A, backgroundColor: A, borderWidth: 2, borderDash: [5, 4], pointRadius: 2.5 }
-    ] }, options: ob }));
-
-    let cum = 0; const fl = [], cols = [], labs = [];
-    D.bridge.forEach(([l, v]) => { fl.push([cum, cum + v]); cols.push(v < 0 ? W : A); labs.push(l); cum += v; });
-    fl.push([0, cum]); cols.push(N); labs.push("LTL revenue");
-    const obr = base({ interaction: { mode: "nearest", intersect: true } });
-    obr.plugins.legend = { display: false };
-    obr.plugins.tooltip.callbacks = { label: (c) => fmt(c.raw[1] - c.raw[0], " log-pts") };
-    obr.scales.x.ticks.autoSkip = false;
-    charts.push(new Chart(document.getElementById("cBridge"), { type: "bar", data: { labels: labs, datasets: [
-      { data: fl, backgroundColor: cols, borderRadius: 3, borderSkipped: false } ] }, options: obr }));
-
-    const of = base({ interaction: { mode: "nearest", intersect: false } });
-    of.scales.x = Object.assign(of.scales.x, { type: "linear", min: 3.3, max: 6.6, title: { display: true, text: "Diesel $/gal", color: css("--ink-2") } });
-    of.scales.y.title = { display: true, text: "% of ex-fuel revenue", color: css("--ink-2") };
-    const xy = (a) => a.map((p) => ({ x: p[0], y: p[1] }));
-    charts.push(new Chart(document.getElementById("cFuel"), { type: "scatter", data: { datasets: [
-      { type: "line", label: "Published tariff", data: xy(D.fuel.tariff), borderColor: N, borderWidth: 1.5, pointRadius: 0 },
-      { type: "line", label: "Model: realized ratio x tariff", data: xy(D.fuel.model), borderColor: A, borderWidth: 2, pointRadius: 0 },
-      { label: "Disclosed quarters 2024-25", data: D.fuel.obs.map((p) => ({ x: p[0], y: p[1], q: p[2] })), backgroundColor: INK, pointRadius: 4 },
-      { label: "Jun-Sep 2026 (model)", data: [{ x: D.fuel.now[0], y: D.fuel.now[1] }], backgroundColor: W, pointStyle: "rectRot", pointRadius: 7 },
-      { label: "2027 at EIA diesel (model)", data: [{ x: D.fuel.y27[0], y: D.fuel.y27[1] }], backgroundColor: Q, pointStyle: "triangle", pointRadius: 7 }
-    ] }, options: of }));
-
-    const ov = base({ indexAxis: "y", interaction: { mode: "nearest", intersect: true } });
-    ov.plugins.legend = { display: false };
-    ov.scales.x.grid = { color: css("--rule") }; ov.scales.y.grid = { display: false };
-    ov.scales.x.title = { display: true, text: "$M operating income per year", color: css("--ink-2") };
-    charts.push(new Chart(document.getElementById("cValue"), { type: "bar", data: {
-      labels: ["+1 pt shipments", "+1 pt price/mix"],
-      datasets: [{ data: [Number("{{oi_vol}}"), Number("{{oi_price}}")], backgroundColor: [A, Q], borderRadius: 3, barThickness: 28 }] }, options: ov }));
-
-    const ol = base({ indexAxis: "y", interaction: { mode: "nearest", intersect: true } });
-    ol.plugins.legend = { display: false };
-    ol.plugins.tooltip.callbacks = { label: (c) => c.raw.toFixed(2) + "M tons added, " + D.lanes[c.dataIndex][2].toFixed(1) + "%/yr" };
-    ol.scales.x.grid = { color: css("--rule") }; ol.scales.y.grid = { display: false };
-    ol.scales.x.title = { display: true, text: "million tons added, 2024 to 2035", color: css("--ink-2") };
-    ol.scales.y.ticks.autoSkip = false;
-    charts.push(new Chart(document.getElementById("cLanes"), { type: "bar", data: {
-      labels: D.lanes.map((l) => l[0]), datasets: [{ data: D.lanes.map((l) => l[1]), backgroundColor: A, borderRadius: 3 }] }, options: ol }));
-  }
-
-  // tile maps
-  const TILE = {AK:[0,0],ME:[0,11],VT:[1,10],NH:[1,11],WA:[2,1],ID:[2,2],MT:[2,3],ND:[2,4],MN:[2,5],IL:[2,6],WI:[2,7],MI:[2,8],NY:[2,9],MA:[2,10],
-    OR:[3,1],NV:[3,2],WY:[3,3],SD:[3,4],IA:[3,5],IN:[3,6],OH:[3,7],PA:[3,8],NJ:[3,9],CT:[3,10],RI:[3,11],CA:[4,1],UT:[4,2],CO:[4,3],NE:[4,4],
-    MO:[4,5],KY:[4,6],WV:[4,7],VA:[4,8],MD:[4,9],DE:[4,10],AZ:[5,2],NM:[5,3],KS:[5,4],AR:[5,5],TN:[5,6],NC:[5,7],SC:[5,8],DC:[5,9],OK:[6,4],
-    LA:[6,5],MS:[6,6],AL:[6,7],GA:[6,8],HI:[7,0],TX:[7,4],FL:[7,8]};
-  const MAPS = {
-    shift: { sub: "Growth in LTL-type truck tons, 2019 to 2024, not explained by the national trend or the state's commodity mix (% of 2019 tons).", lo: "lagged", hi: "outperformed", lim: 3.5 },
-    imb: { sub: "(Outbound − inbound) ÷ total interstate LTL-type tons over 250 miles, 2024. Blue ships more than it receives; orange receives more.", lo: "net receiver", hi: "net shipper", lim: 40 }
-  };
-  function mix(c1, c2, t) {
-    const p = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
-    const a = p(c1), b = p(c2); return "rgb(" + a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",") + ")";
-  }
-  let layer = "shift";
-  function drawTiles() {
-    const box = document.getElementById("tiles"); box.innerHTML = "";
-    const m = MAPS[layer], vals = D.maps[layer], panel = css("--panel");
-    document.getElementById("mapSub").textContent = m.sub;
-    document.getElementById("lgLo").textContent = m.lo; document.getElementById("lgHi").textContent = m.hi;
-    const cells = {}; Object.entries(TILE).forEach(([s, rc]) => cells[rc[0] * 12 + rc[1]] = s);
-    for (let i = 0; i < 96; i++) {
-      const d = document.createElement("div"); d.className = "tile"; const s = cells[i];
-      if (s) {
-        const v = vals[s]; const t = v == null ? 0 : Math.max(-1, Math.min(1, v / m.lim));
-        d.style.background = t >= 0 ? mix(panel, css("--accent"), t * 0.85) : mix(panel, css("--warm"), -t * 0.85);
-        d.style.color = Math.abs(t) > 0.55 ? "#fff" : css("--ink");
-        d.innerHTML = s + "<i>" + (v == null ? "–" : fmt(v)) + "</i>";
-        d.title = s + ": " + (v == null ? "n/a" : fmt(v, "%"));
-        d.style.border = "1px solid " + css("--rule");
-      }
-      box.appendChild(d);
-    }
-  }
-  function setLayer(l) {
-    layer = l; document.getElementById("bShift").setAttribute("aria-pressed", l === "shift");
-    document.getElementById("bImb").setAttribute("aria-pressed", l === "imb"); drawTiles();
-  }
-  document.getElementById("bShift").addEventListener("click", () => setLayer("shift"));
-  document.getElementById("bImb").addEventListener("click", () => setLayer("imb"));
-
-  function all() { draw(); drawTiles(); }
-  all();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", all);
-  new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-})();
-</script>
