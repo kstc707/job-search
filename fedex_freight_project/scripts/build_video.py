@@ -110,13 +110,13 @@ slides = [
      f"fuel alone takes about {round(float(H['fuel27_abs']))} percent off revenue per shipment in 2027."),
     (12, f"""<h2>What I'd build first with FedEx Freight's data</h2>
         <table class="build">
-        <tr><td>Pricing</td><td>Account- and lane-level price response: which customers are price-sensitive and which are leaving for non-price reasons, with the {H['ratio']}:1 price-to-volume exchange rate as a guardrail</td></tr>
         <tr><td>Retention</td><td>Account-level share early warning: expected weekly shipments per account, drift flagged before churn, ranked by volume at risk</td></tr>
+        <tr><td>Pricing</td><td>Account- and lane-level price response: which customers are price-sensitive and which are leaving for non-price reasons, with the {H['ratio']}:1 price-to-volume exchange rate as a guardrail</td></tr>
         <tr><td>Revenue integrity</td><td>Predicted shipment density vs dimensioner reads under density-based NMFC classes</td></tr>
         <tr><td>Method</td><td>Validated the same way: pre-registered, rolling-origin, against a naive baseline. One point of shipments ≈ ${H['oi_vol']}M operating income a year</td></tr>
         </table>
         <p class="contact">Sai Teja Koppolu · skppolu1@memphis.edu · +1 901-343-7273 · github.com/kstc707</p>""",
-     "The first thing I'd build with your data is account-level price response: which customers are price-sensitive, and which are leaving for other reasons. I'd value 15 minutes to walk you through it."),
+     "The first thing I'd build with your data is an account-level early warning for share loss, tested the same way. I'd value 15 minutes to walk you through it."),
 ]
 
 CSS = """

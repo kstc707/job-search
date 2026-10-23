@@ -1,4 +1,4 @@
-# Narration script (118 s)
+# Narration script (117 s)
 
 **00:00–00:14 · slide 1**  
 Hi, I'm Sai. I built a short data science project on one question: how much of FedEx Freight's lost volume is the market, and how much is FedEx?
@@ -21,5 +21,5 @@ Honest result: a carrier's own in-quarter data was the only significant gain. Ma
 **01:29–01:43 · slide 7**  
 Separately, FedEx collects about 59 percent of its published fuel surcharge. If diesel falls as EIA forecasts, fuel alone takes about 8 percent off revenue per shipment in 2027.
 
-**01:43–01:58 · slide 8**  
-The first thing I'd build with your data is account-level price response: which customers are price-sensitive, and which are leaving for other reasons. I'd value 15 minutes to walk you through it.
+**01:43–01:57 · slide 8**  
+The first thing I'd build with your data is an account-level early warning for share loss, tested the same way. I'd value 15 minutes to walk you through it.
