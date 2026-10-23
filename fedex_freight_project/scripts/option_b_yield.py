@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import statsmodels.formula.api as smf
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RAW, PROC = ROOT / "data/raw", ROOT / "data/processed"
@@ -219,6 +220,40 @@ print(f"=> if diesel follows EIA, fuel alone moves revenue/shipment {head:+.1f}%
 res["fuel_2027"] = {"oct2026_diesel": round(d_q4, 2), "oct2026_fuel_pct": round(fp_now_q4, 1), "eia_2027_diesel": 4.49,
                     "eia_2027_fuel_pct": round(fp_27, 1), "rps_change_vs_oct2026_pct": round(head, 1),
                     "rps_change_vs_junsep2026_pct": round(100 * ((1 + fp_27 / 100) / (1 + fp_now / 100) - 1), 1)}
+
+section("7. Peer cross-check (ODFL, SAIA, XPO, ARCB 8-Ks): elasticity across carriers, weight and price trends")
+pq_f = PROC / "peer_ltl_quarterly_kpis.csv"
+if pq_f.exists():
+    pw = pd.read_csv(pq_f).pivot_table(index=["ticker", "period"], columns="metric", values="value").reset_index()
+    pw = pw.sort_values(["ticker", "period"])
+    for c in ["revenue_per_cwt_usd", "weight_per_shipment_lbs", "revenue_per_cwt_ex_fuel_usd"]:
+        pw["d_" + c] = pw.groupby("ticker")[c].transform(lambda x: np.log(x).diff(4))
+    dd_ = pw.dropna(subset=["d_revenue_per_cwt_usd", "d_weight_per_shipment_lbs"])
+    dd_ = dd_[~dd_["period"].isin(["2020Q2", "2020Q3", "2020Q4", "2021Q1", "2021Q2"])]
+    mx = smf.ols("d_revenue_per_cwt_usd ~ d_weight_per_shipment_lbs + C(period) + C(ticker)", dd_).fit(
+        cov_type="cluster", cov_kwds={"groups": dd_["period"]})
+    bx, cx = mx.params["d_weight_per_shipment_lbs"], mx.conf_int().loc["d_weight_per_shipment_lbs"].tolist()
+    print(f"cross-carrier elasticity (4 peers x quarter FE x carrier FE, ex-COVID): {bx:.2f} (95% CI {cx[0]:.2f} to {cx[1]:.2f}), "
+          f"n={int(mx.nobs)} -> consistent with FedEx's internal Priority/Economy estimate {beta:.2f}")
+    lo_b, hi_b = sorted([bx, beta])
+    fq = b.loc["FY2026Q4"]
+    adj_rng = [100 * (fq["base_yield_per_cwt"] - bb * fq["weight_per_shipment"]) for bb in (bx, beta)]
+    print(f"FY26Q4 weight-adjusted base yield across the two elasticities: {min(adj_rng):+.1f}% to {max(adj_rng):+.1f}%")
+    recent = pw[pw["period"].isin(["2026Q1", "2026Q2"])].set_index(["period", "ticker"])
+    wt = (100 * recent["d_weight_per_shipment_lbs"]).unstack().round(1)
+    px = (100 * recent["d_revenue_per_cwt_ex_fuel_usd"]).unstack().round(1)
+    px_adj = (100 * (recent["d_revenue_per_cwt_ex_fuel_usd"] - bx * recent["d_weight_per_shipment_lbs"])).unstack().round(1)
+    print("peer weight/shipment YoY %:"); print(wt.to_string())
+    print("peer revenue/cwt ex-fuel YoY %:"); print(px.to_string())
+    print("peer weight-adjusted ex-fuel revenue/cwt YoY % (cross-carrier elasticity):"); print(px_adj.to_string())
+    print(f"FedEx FY26Q4 (Mar-May 2026): weight {100 * fq['weight_per_shipment']:+.1f}%, base yield {100 * fq['base_yield_per_cwt']:+.1f}%, "
+          f"weight-adjusted {min(adj_rng):+.1f}% to {max(adj_rng):+.1f}%")
+    res["peer_check"] = {"cross_carrier_beta": round(bx, 2), "cross_carrier_ci95": [round(c_, 2) for c_ in cx], "n": int(mx.nobs),
+                         "fy26q4_weight_adj_range": [round(min(adj_rng), 1), round(max(adj_rng), 1)],
+                         "peer_weight_yoy_2026Q2": wt.loc["2026Q2"].dropna().to_dict(),
+                         "peer_exfuel_cwt_yoy_2026Q2": px.loc["2026Q2"].dropna().to_dict(),
+                         "peer_exfuel_cwt_weight_adj_2026Q2": px_adj.loc["2026Q2"].dropna().to_dict(),
+                         "fedex_fy26q4_weight_yoy": round(100 * fq["weight_per_shipment"], 1)}
 
 fig, ax = plt.subplots(figsize=(8, 4.5))
 xs = np.linspace(3.3, 6.5, 100)

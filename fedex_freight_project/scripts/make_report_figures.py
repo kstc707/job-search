@@ -144,10 +144,17 @@ def fig_peers():
     if not f.exists():
         print("skip fig_peers: no peer data"); return
     rel = pd.read_csv(f, parse_dates=["period_end"])
+    allq = pd.read_csv(PROC / "fedex_freight_segment_quarterly_kpis.csv")["fiscal_period"]
+    allq = allq[(allq >= rel["fiscal_period"].iloc[0])]
+    rel = allq.to_frame().merge(rel, how="left")  # COVID quarters stay as gaps (excluded from the analysis)
     x = np.arange(len(rel))
     fig, ax = plt.subplots(figsize=(7.2, 3.9))
     gap = rel["fedex_minus_peers_pp"]
-    ax.bar(x, gap, color=[S.ORANGE if v < 0 else S.BLUE for v in gap], alpha=0.35, width=0.7, label="FedEx minus peers (pp)")
+    ax.bar(x, gap.fillna(0), color=[S.ORANGE if v < 0 else S.BLUE for v in gap.fillna(0)], alpha=0.35, width=0.7, label="FedEx minus peers (pp)")
+    cov = np.where(gap.isna())[0]
+    if len(cov):
+        ax.axvspan(cov.min() - 0.5, cov.max() + 0.5, color=S.GRID, alpha=0.6, lw=0)
+        ax.text((cov.min() + cov.max()) / 2, -14, "COVID base\neffects\nexcluded", ha="center", fontsize=7, color=S.INK_2)
     ax.plot(x, 100 * rel["y"], color=S.ORANGE, marker="o", ms=3.5, label="FedEx Freight")
     ax.plot(x, 100 * rel["peer_yoy"], color=S.BLUE, marker="o", ms=3.5, label="Peer index (ODFL, SAIA, XPO, ARCB)")
     ax.axhline(0, color=S.INK_2, lw=0.8)
@@ -155,7 +162,7 @@ def fig_peers():
     step = max(1, len(x) // 8)
     ax.set_xticks(x[::step]); ax.set_xticklabels(short.iloc[::step], fontsize=8)
     ax.set_ylabel("shipments per day, YoY %")
-    m = rel.loc[rel["period_end"] >= "2022-06-01", "fedex_minus_peers_pp"].mean()
+    m = rel.loc[rel["period_end"] >= "2022-06-01", "fedex_minus_peers_pp"].mean()  # NaT rows drop out
     ax.set_title(f"FedEx Freight has trailed its public peers by {abs(m):.1f} pts a year since FY2023" if m < 0 else
                  f"FedEx Freight vs public peers: {m:+.1f} pts a year since FY2023", pad=20)
     S.subtitle(ax, "Peer index weights each carrier by year-ago daily shipments; monthly updates used where published")
@@ -168,13 +175,13 @@ def fig_peers():
 def fig_nowcast():
     bt = pd.read_csv(REP / "option_a/backtest_predictions.csv")
     nc = pd.DataFrame(oa["nowcast"]["models"]).set_index("model")
-    m = "peer_ar" if "peer_ar" in nc.index and pd.notna(nc.loc["peer_ar", "lo80_pct"]) else pd.DataFrame(oa["backtest"])["model"].iloc[0]
+    m = "combo" if "combo" in nc.index else pd.DataFrame(oa["backtest"])["model"].iloc[0]
     act = bt.drop_duplicates("fiscal_period")
-    pr = bt[bt["model"] == m]
+    pr = act[["fiscal_period"]].merge(bt[bt["model"] == m][["fiscal_period", "yhat"]], how="left")
     x = np.arange(len(act))
     fig, ax = plt.subplots(figsize=(7.2, 3.8))
     ax.plot(x, 100 * act["y"], color=S.INK, marker="o", ms=3, label="Actual")
-    ax.plot(x, 100 * pr["yhat"].to_numpy(), color=S.BLUE, ls="--", marker="o", ms=3, label=f"{m}, out-of-sample")
+    ax.plot(x, 100 * pr["yhat"].to_numpy(), color=S.BLUE, ls="--", marker="o", ms=3, label=("combination" if m == "combo" else m) + ", out-of-sample")
     xn = len(x) + 0.6
     y, lo, hi = nc.loc[m, ["yhat_pct", "lo80_pct", "hi80_pct"]]
     ax.errorbar([xn], [y], yerr=[[y - lo], [hi - y]], fmt="D", color=S.ORANGE, ms=7, capsize=5, lw=1.5, label="Nowcast Jun-Sep 2026 (80%)")

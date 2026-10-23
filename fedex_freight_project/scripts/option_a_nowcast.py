@@ -120,7 +120,7 @@ def build_peer_yoy(peer_q, peer_m):
         tick_w.loc[mth] = ref
     src = pd.DataFrame("quarterly", index=months, columns=lv.columns)
     if peer_m is not None and len(peer_m):
-        mm = peer_m[(peer_m["metric"] == "shipments_per_day") & (peer_m["unit"] == "yoy_pct")
+        mm = peer_m[(peer_m["metric"] == "shipments_per_day_yoy_pct") & (peer_m["unit"] == "yoy_pct")
                     & peer_m["ticker"].isin(PEER_TICKERS)].copy()
         mm["month"] = pd.to_datetime(mm["month"].astype(str).str[:7] + "-01")
         for _, r_ in mm.iterrows():
@@ -232,6 +232,14 @@ for i, row in clean.iterrows():
                           y=row["y"], yhat=p, n_train=len(train), test_start=row["start"],
                           train_last_end=train["period_end"].max()))
 bt = pd.DataFrame(preds)
+# forecast combination with members fixed by design (one persistence, one market, one macro model), not chosen
+# by backtest rank - so its own backtest is not flattered by selection
+COMBO = ["ar1", "peer_ar", "macro3_ar"] if PEER_COL else ["ar1", "macro3_ar"]
+cb = bt[bt["model"].isin(COMBO)].groupby("fiscal_period").agg(
+    period_end=("period_end", "first"), y=("y", "first"), yhat=("yhat", "mean"), n_train=("n_train", "max"),
+    test_start=("test_start", "first"), train_last_end=("train_last_end", "max"), k=("yhat", "count"))
+cb = cb[cb["k"] == len(COMBO)].drop(columns="k").reset_index().assign(model="combo")
+bt = pd.concat([bt, cb], ignore_index=True).sort_values(["period_end", "model"])
 bt["err"] = bt["yhat"] - bt["y"]
 score = bt.dropna(subset=["yhat"]).groupby("model").agg(
     n=("err", "size"), mae_pp=("err", lambda e: 100 * e.abs().mean()), rmse_pp=("err", lambda e: 100 * np.sqrt((e ** 2).mean())),
@@ -324,6 +332,12 @@ for name in MODELS:
     lo, hi = (p - np.quantile(e_, 0.9), p - np.quantile(e_, 0.1)) if len(e_) >= 8 else (np.nan, np.nan)
     rows.append(dict(model=name, yhat_pct=100 * p, lo80_pct=100 * lo, hi80_pct=100 * hi,
                      backtest_mae_pp=score.loc[name, "mae_pp"] if name in score.index else np.nan))
+members = [r_ for r_ in rows if r_["model"] in COMBO]
+if len(members) == len(COMBO):
+    p = np.mean([m_["yhat_pct"] for m_ in members]) / 100
+    e_ = errs.get_group("combo")
+    rows.append(dict(model="combo", yhat_pct=100 * p, lo80_pct=100 * (p - np.quantile(e_, 0.9)),
+                     hi80_pct=100 * (p - np.quantile(e_, 0.1)), backtest_mae_pp=score.loc["combo", "mae_pp"]))
 nc = pd.DataFrame(rows).sort_values("backtest_mae_pp")
 # base: Jun-Sep 2025 ADS from FY2026Q1 (Jun-Aug 2025) and CY2025Q3 (Jul-Sep 2025): bounded by the two
 rc = pd.read_csv(PROC / "fdxf_calendar_quarterly_kpis_recast.csv").set_index("period")
@@ -333,6 +347,7 @@ nc["ads_k"] = base * np.exp(nc["yhat_pct"] / 100)
 print(f"Jun-Sep 2025 ADS base ~{base:.1f}k (between {base_lo:.2f}k and {base_hi:.2f}k)")
 print(nc.round(2).to_string(index=False))
 nc.to_csv(OUT / "nowcast_jun_sep_2026.csv", index=False)
+res["combo_members"] = COMBO
 res["nowcast"] = {"window": NOWCAST, "base_ads_k": round(base, 2), "models": nc.round(2).to_dict(orient="records"),
                   "external": {"BofA_Q3_shipments_yoy_pct": -3.0,
                                "mgmt_sept8": "mid-single-digit decline 1H26, exit 2026 flat to slightly positive"}}

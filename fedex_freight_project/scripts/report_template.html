@@ -129,7 +129,8 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
     <div class="qhead"><span class="qnum">Q1</span><h2>Is the volume decline the market, or FedEx?</h2></div>
     <div class="prose stack">
       <p>Between 2019 and 2024 the packaged and finished goods that move less-than-truckload fell {{mkt_ton_abs}}% by weight, according to the federal Freight Analysis Framework. FedEx Freight's own tonnage fell {{fedex_ton_abs}}%. Lighter shipments explain part of that: weight per shipment dropped from about 1,200 lbs to about 920. Most of the gap is shipments FedEx no longer carries.</p>
-      <p {{peers_display}}>Against the four public LTL carriers (Old Dominion, Saia, XPO and ArcBest), FedEx's shipments per day have grown {{rel_mean}} points a year relative to the peer index since FY2023. In the last four quarters the gap was {{rel_last4}} points.</p>
+      <p {{peers_display}}>The four public LTL carriers (Old Dominion, Saia, XPO and ArcBest) give a same-quarter benchmark. Since FY2023, FedEx Freight's shipments per day have run on average {{rel_mean_abs}} points a year behind the peer index. The gap briefly turned positive in mid-2025, then reopened in the two quarters before the spin-off. Over the last four quarters it was {{rel_last4}} points. The peer index itself was flat ({{peer_junsep}}%) over June to August 2026, while XPO grew shipments about 6% in August.</p>
+      <p {{peers_display}}>Price does not explain it. Adjusted for weight, FedEx's base price per hundredweight rose {{wadj_lo}}% to {{wadj_hi}}% in the quarter ended May 2026. Old Dominion's rose {{odfl_adj}}% and XPO's {{xpo_adj}}% in the calendar quarter to June, yet XPO gained volume. The share loss points to non-price causes: sales coverage through the transition, the unwinding of bundled parcel pricing, and service. Those are questions for account-level data.</p>
     </div>
     <div class="panel" {{peers_display}}>
       <h3>FedEx Freight vs the public LTL peers, shipments per day, YoY</h3>
@@ -150,7 +151,7 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
     <div class="qhead"><span class="qnum">Q2</span><h2>What will FedEx report on October 29?</h2></div>
     <div class="prose stack">
       <p>FDXF's first standalone release covers four months, June to September 2026. Every model below was re-estimated at each of {{n_test}} past quarters using only data available before that quarter, then scored on what actually happened. COVID base-effect quarters are excluded from training and scoring.</p>
-      <p>The useful finding is negative. Macro indicators alone (manufacturing output, truck tonnage, Cass shipments) did worse than last quarter's trend: mean absolute error {{macro_mae}} points against {{naive_mae}} for the naive forecast. Same-month peer data is the signal that helps.</p>
+      <p>Two findings are negative, and both matter. Macro indicators (manufacturing output, truck tonnage, Cass shipments) did worse than simply carrying last quarter forward: mean absolute error {{macro_mae}} points against {{naive_mae}}. Same-month peer volumes did not beat persistence either ({{peer_ar_mae}} points). FedEx's volume has been following its own trajectory, which is what a share problem looks like. The headline nowcast is a combination fixed in advance of one persistence, one peer and one macro model, so its backtest is not flattered by picking the winner afterwards. It scored {{combo_mae}} points, the best of the set.</p>
     </div>
     <div class="callout">Nowcast for Jun to Sep 2026: shipments per day <b>{{nc}}%</b> YoY, about <b>{{nc_ads}}k</b> a day against roughly {{base_ads}}k a year earlier. 80% range {{nc_lo}}% to {{nc_hi}}%, taken from the model's own backtest errors. For comparison, BofA published −3.0% for the September quarter, and management said in September that volumes would exit 2026 flat to slightly positive.</div>
     <div class="panel">
@@ -172,7 +173,7 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
     <div class="qhead"><span class="qnum">Q3</span><h2>Is pricing holding, or is it fuel?</h2></div>
     <div class="prose stack">
       <p>FedEx Freight publishes its fuel surcharge tariff. In the eight quarters where it also disclosed revenue excluding fuel, it collected {{rho}} times the tariff rate, with a standard deviation of {{rho_sd}}. That steady ratio lets the tariff extrapolate to diesel prices the history never saw.</p>
-      <p>Tested on the quarter ended May 2026, when diesel spiked, the model puts base revenue per hundredweight at {{oos}}% YoY. Management described it as a slight decline. Weight per shipment rose 3%, and heavier shipments lower revenue per hundredweight mechanically. Estimated from Priority versus Economy freight with quarter fixed effects, a 10% heavier shipment carries about {{beta_pct10}}% lower revenue per hundredweight (elasticity {{beta}}, 95% CI {{beta_ci}}). A naive time-series fit gives {{beta_naive}}, which would mean heavier shipments earn less per shipment; it is biased because rate increases happened while weights fell. Adjusted for weight, FedEx's like-for-like price was up about {{wadj}}% that quarter.</p>
+      <p>Tested on the quarter ended May 2026, when diesel spiked, the model puts base revenue per hundredweight at {{oos}}% YoY. Management described it as a slight decline. Weight per shipment rose 3%, and heavier shipments lower revenue per hundredweight mechanically. Estimated from Priority versus Economy freight with quarter fixed effects, a 10% heavier shipment carries about {{beta_pct10}}% lower revenue per hundredweight (elasticity {{beta}}, 95% CI {{beta_ci}}). A naive time-series fit gives {{beta_naive}}, which would mean heavier shipments earn less per shipment; it is biased because rate increases happened while weights fell. Across the four peers, with quarter and carrier fixed effects, the elasticity is {{beta_x}} ({{beta_x_ci}}), consistent with FedEx's own. Adjusted for weight, FedEx's like-for-like price was up {{wadj_lo}}% to {{wadj_hi}}% that quarter. Weight per shipment is rising across the industry as truckload tightens, so FedEx's 3% increase is not a FedEx-specific density effect.</p>
     </div>
     <div class="two">
       <div class="panel">
@@ -262,6 +263,7 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
       <li>FY2026 quarters add up to the 10-K: revenue $8,795M, segment operating income $616M, 86.1k shipments per day. Calendar-year tonnage reproduces FDXF's reported totals within 0.5%.</li>
       <li>The backtest refits every model at each origin, and an automated test fails if any training window overlaps its test quarter.</li>
       <li>The fuel model was tested on a quarter outside its diesel range and agrees with management's own description.</li>
+      <li>Peer statistics from {{peer_files}} SEC filings were tied out against the carriers' own totals (shipments per day × workdays, annual sums). The weight elasticity was estimated two independent ways: within FedEx, and across the four peers.</li>
       <li>The LTL market proxy was rebuilt under stricter and broader commodity definitions; the market change stays within a point.</li>
       <li>Known limits: about 37 quarterly observations; FAF 2018 to 2024 values are modeled; public peers are a sample of the LTL market, not all of it; nothing here uses FedEx internal data.</li>
     </ul>
@@ -308,7 +310,7 @@ footer { margin-top: 64px; border-top: 1px solid var(--ink); padding-top: 16px; 
       charts.push(new Chart(document.getElementById("cPeers"), { data: { labels: D.peers.labels, datasets: [
         { type: "line", label: "FedEx Freight", data: D.peers.fedex, borderColor: W, backgroundColor: W, borderWidth: 2, pointRadius: 2.5 },
         { type: "line", label: "Peer index (ODFL, SAIA, XPO, ARCB)", data: D.peers.peers, borderColor: A, backgroundColor: A, borderWidth: 2, pointRadius: 2.5 },
-        { type: "bar", label: "FedEx minus peers (pp)", data: D.peers.gap, backgroundColor: D.peers.gap.map((v) => v < 0 ? W + "55" : A + "55"), borderRadius: 3 }
+        { type: "bar", label: "FedEx minus peers (pp)", data: D.peers.gap, backgroundColor: D.peers.gap.map((v) => v != null && v < 0 ? W + "55" : A + "55"), borderRadius: 3 }
       ] }, options: o }));
     }
 

@@ -4,9 +4,13 @@ import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 H = json.loads((ROOT / "reports/site/headline.json").read_text())
-peer = (f"- Relative to the four public LTL carriers (Old Dominion, Saia, XPO, ArcBest), FedEx Freight's shipments "
-        f"per day have run {H['rel_mean']} points a year versus the peer index since FY2023 "
-        f"(last four quarters: {H['rel_last4']}).\n") if "rel_mean" in H else ""
+price_ok = all(k in H for k in ("wadj_hi", "odfl_adj", "xpo_adj")) and \
+    float(H["wadj_hi"]) < min(float(H["odfl_adj"]), float(H["xpo_adj"]))
+price_line = ("Price doesn't explain it: FedEx's weight-adjusted price rose less than Old Dominion's\n"
+              "  or XPO's, and XPO still grew volume.\n") if price_ok else "\n"
+peer = (f"- Against the four public LTL carriers (Old Dominion, Saia, XPO, ArcBest), FedEx Freight's shipments\n"
+        f"  per day have run {H['rel_mean_abs']} points a year behind the peer index since FY2023 (last four quarters:\n"
+        f"  {H['rel_last4']}). " + price_line) if "rel_mean_abs" in H else ""
 body = f"""Subject: Data Science Internship applicant: a public-data nowcast of FedEx Freight's Jun-Sep volumes
 
 Hi [Hiring manager name],
@@ -17,10 +21,11 @@ market, and how much is specific to FedEx Freight. I used only public data: SEC 
 LTL peers, FRED, the federal Freight Analysis Framework, and FedEx Freight's published fuel surcharge table.
 
 A few results:
-- From 2019 to 2024, the packaged and finished goods that move LTL fell {H['mkt_ton']}% by weight; FedEx Freight's
-  tonnage fell {H['fedex_ton']}%.
+- From 2019 to 2024, the packaged and finished goods that move LTL fell {H['mkt_ton_abs']}% by weight; FedEx
+  Freight's tonnage fell {H['fedex_ton_abs']}%.
 {peer}- FedEx Freight collects {H['rho']}x its published fuel surcharge, almost exactly, quarter after quarter. That
-  separates fuel from price: weight-adjusted, like-for-like price was up about {H['wadj']}% in the May quarter.
+  separates fuel from price: weight-adjusted, like-for-like price was up {H['wadj_lo']}% to {H['wadj_hi']}% in the
+  quarter ended May 2026.
   At EIA's 2027 diesel forecast, fuel flips to a {H['fuel27']}% headwind on revenue per shipment.
 - One point of shipments is worth about ${H['oi_vol']}M of operating income a year; one point of price is worth
   about {H['ratio']} points of volume.
@@ -28,7 +33,7 @@ A few results:
 My backtested nowcast for the June-September period you report on October 29: shipments per day {H['nc']}% year
 over year (80% range {H['nc_lo']}% to {H['nc_hi']}%). I'll compare it with the actual release.
 
-Two-page brief attached. Interactive version: [report link]. Code and tests: https://github.com/kstc707/job-search
+Two-page brief attached. Interactive version: https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA. Code and tests: https://github.com/kstc707/job-search
 (fedex_freight_project).
 
 I'm based in Memphis and would value 15 minutes to walk through the method, or to hear which of these questions

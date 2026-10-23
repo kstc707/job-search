@@ -250,7 +250,7 @@ def parse_monthly_text(text: str):
 
 def parse_monthly_tables(path: pathlib.Path):
     """SAIA/ARCB style tables with month columns ('July 2026') and YoY % rows."""
-    out = []
+    out, seen = [], set()
     soup = BeautifulSoup(path.read_bytes(), "lxml")
     for table in soup.find_all("table"):
         rows = []
@@ -291,7 +291,10 @@ def parse_monthly_tables(path: pathlib.Path):
                     if v is not None:
                         vals.append(v)
             for mo, v in zip(months, vals):
-                if mo is not None:
+                # first table wins: ArcBest follows each YoY table with a sequential (month-over-month)
+                # table and an Asset-Light table under the same month headers
+                if mo is not None and (mo, key) not in seen:
+                    seen.add((mo, key))
                     out.append((mo, key, v))
     return out
 
@@ -314,7 +317,7 @@ for tdir in sorted(p for p in SRC.iterdir() if p.is_dir()):
                                    filed=filed.date(), basis="as_reported", source_row=" | ".join(cells)[:200]))
         # monthly updates
         months = parse_monthly_tables(f)
-        if ticker in ("ODFL", "XPO", "SAIA", "ARCB"):
+        if ticker in ("ODFL", "XPO"):  # prose-style updates; SAIA and ARCB publish tables
             months += parse_monthly_text(doc_text(f))
         for mo, key, v in months:
             m_rows.append(dict(ticker=ticker, month=str(mo), metric=key, value=v, unit="yoy_pct",
@@ -372,8 +375,12 @@ wide.to_csv(OUT / "peer_ltl_quarterly_kpis_wide.csv", index=False)
 
 m = pd.DataFrame(m_rows)
 if len(m):
-    # keep the first report of each month (mid-quarter update), later documents may repeat it
-    m = m.sort_values(["ticker", "month", "metric", "filed"]).drop_duplicates(["ticker", "month", "metric"], keep="first")
+    # a month is often reported twice: preliminary (rounded) in the mid-quarter update, then final in a later
+    # update or earnings exhibit; keep the latest report and record how many times it was reported
+    m = m.sort_values(["ticker", "month", "metric", "filed", "source_file"])
+    m["n_reports"] = m.groupby(["ticker", "month", "metric"])["value"].transform("size")
+    m["first_reported_value"] = m.groupby(["ticker", "month", "metric"])["value"].transform("first")
+    m = m.drop_duplicates(["ticker", "month", "metric"], keep="last")
     m.to_csv(OUT / "peer_ltl_monthly_kpis.csv", index=False)
 print(q.groupby("ticker")["period"].agg(["min", "max", "nunique"]).to_string())
 big = chk[chk["diff_pct"].abs() > 1]

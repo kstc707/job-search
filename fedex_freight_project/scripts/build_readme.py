@@ -22,7 +22,7 @@ published fuel surcharge table. No synthetic data.
 
 | | |
 |---|---|
-| Interactive report | `reports/site/index.html` (also published as a private claude.ai page) |
+| Interactive report | `reports/site/index.html`, published at https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA (private until shared) |
 | Two-page brief (PDF) | `reports/brief/Koppolu_FedEx_Freight_Market_or_Share.pdf` |
 | Email draft | `reports/email_draft.md` |
 | External benchmarks (guidance, valuation, peer data, NMFC, diesel) | `reports/external_benchmarks.md` |

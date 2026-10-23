@@ -79,15 +79,18 @@ D["kpi"] = {"labels": k["fiscal_period"].tolist(), "ads": k["avg_daily_shipments
 
 if HAS_PEERS:
     rel = pd.read_csv(REP / "option_a/fedex_vs_peers_quarterly.csv")
-    D["peers"] = {"labels": rel["fiscal_period"].tolist(), "fedex": [r(100 * v, 1) for v in rel["y"]],
-                  "peers": [r(100 * v, 1) for v in rel["peer_yoy"]], "gap": [r(v, 1) for v in rel["fedex_minus_peers_pp"]]}
+    allq = k["fiscal_period"][k["fiscal_period"] >= rel["fiscal_period"].iloc[0]]
+    rel = allq.to_frame().merge(rel, how="left")  # COVID quarters become null -> visible gaps
+    nz = lambda v, m=1: None if pd.isna(v) else r(m * v, 1)
+    D["peers"] = {"labels": rel["fiscal_period"].tolist(), "fedex": [nz(v, 100) for v in rel["y"]],
+                  "peers": [nz(v, 100) for v in rel["peer_yoy"]], "gap": [nz(v) for v in rel["fedex_minus_peers_pp"]]}
     py = pd.read_csv(REP / "option_a/peer_index_monthly_yoy.csv", index_col=0, parse_dates=True).dropna()
     D["peer_recent"] = [[f"{d:%b %Y}", r(100 * v, 1), int(n)] for d, v, n in zip(py.index[-6:], py["peer_yoy"][-6:], py["n_tickers"][-6:])]
 
 # ---------------------------------------------------------------- headline numbers
 fx24 = D["tonnage"]["fedex"][-1]; mk24 = D["tonnage"]["market"][-1]
-ncb = D["nowcast"].get("peer_ar") or D["nowcast"].get(best)
-nc_name = "peer_ar" if "peer_ar" in D["nowcast"] else best
+nc_name = "combo" if "combo" in D["nowcast"] else best
+ncb = D["nowcast"][nc_name]
 base = oa["nowcast"]["base_ads_k"]
 dd = od["dollars"]
 H = {
@@ -115,10 +118,23 @@ H = {
     "tn_net": f1(oc["imbalance"]["TN"]["net_pct"], True),
     "best": best, "best_mae": f"{scores.loc[best, 'mae_pp']:.1f}",
     "naive_mae": f"{scores.loc['naive_last', 'mae_pp']:.1f}", "macro_mae": f"{scores.loc['macro3_ar', 'mae_pp']:.1f}",
-    "n_test": int(scores.loc[best, "n"]),
+    "n_test": int(scores["n"].max()),
+    "combo_mae": f"{scores.loc['combo', 'mae_pp']:.1f}" if "combo" in scores.index else "n/a",
+    "wadj_lo": f1(ob.get("peer_check", {}).get("fy26q4_weight_adj_range", [np.nan])[0], True),
+    "wadj_hi": f1(ob.get("peer_check", {}).get("fy26q4_weight_adj_range", [np.nan, np.nan])[-1], True),
 }
+pc = ob.get("peer_check")
+if pc:
+    H["beta_x"] = f"{pc['cross_carrier_beta']:.2f}"
+    H["beta_x_ci"] = f"95% CI {pc['cross_carrier_ci95'][0]:.2f} to {pc['cross_carrier_ci95'][1]:.2f}"
+    H["odfl_adj"] = f1(pc["peer_exfuel_cwt_weight_adj_2026Q2"]["ODFL"], True)
+    H["xpo_adj"] = f1(pc["peer_exfuel_cwt_weight_adj_2026Q2"]["XPO"], True)
+H["peer_files"] = sum(1 for _ in (RAW / "sec_edgar/peers").glob("*/*.htm")) if (RAW / "sec_edgar/peers").exists() else 0
 if HAS_PEERS:
     H["rel_mean"] = f1(oa["relative_vs_peers"]["mean_since_fy23_pp"], True)
+    H["rel_mean_abs"] = f1(abs(oa["relative_vs_peers"]["mean_since_fy23_pp"]))
+    pyy = pd.read_csv(REP / "option_a/peer_index_monthly_yoy.csv", index_col=0, parse_dates=True)
+    H["peer_junsep"] = f1(100 * pyy.loc["2026-06":"2026-09", "peer_yoy"].dropna().mean(), True)
     last4 = list(oa["relative_vs_peers"]["by_quarter_pp"].values())[-4:]
     H["rel_last4"] = ", ".join(f1(v, True) for v in last4)
     for m in ["peer_ar", "peer", "peer_macro_ar"]:  # noqa
@@ -136,7 +152,8 @@ MODEL_DESC = {"naive_last": "last quarter's YoY carried forward", "mean4": "aver
               "ar1": "regression on last quarter's YoY", "macro3": "manufacturing output, truck tonnage, Cass shipments",
               "macro3_ar": "macro3 plus last quarter", "ridge_all": "ridge on 14 macro series plus last quarter",
               "peer": "public LTL peers' shipments/day, same months", "peer_ar": "peers plus last quarter",
-              "peer_macro_ar": "peers, macro, last quarter"}
+              "peer_macro_ar": "peers, macro, last quarter",
+              "combo": "average of ar1, peer_ar, macro3_ar (fixed in advance)"}
 nowcast_rows = "".join(
     f"<tr{' class=\"win\"' if m == nc_name else ''}><td>{html.escape(m)}</td><td>{html.escape(MODEL_DESC.get(m, ''))}</td>"
     f"<td>{v['y']:+.1f}%</td><td>{v['lo']:+.1f}% to {v['hi']:+.1f}%</td><td>{v['mae']:.1f}</td></tr>"
