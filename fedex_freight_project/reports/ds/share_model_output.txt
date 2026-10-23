@@ -1,0 +1,76 @@
+
+=== 1. Share panel ===
+calendar quarters with all 5 carriers: 27 (2019Q4..2026Q2)
+ticker   ARCB    FDX   ODFL   SAIA    XPO
+cq                                       
+2019Q4  0.075  0.435  0.175  0.114  0.200
+2021Q4  0.075  0.429  0.200  0.116  0.180
+2023Q4  0.079  0.391  0.195  0.132  0.203
+2025Q4  0.087  0.377  0.178  0.150  0.208
+2026Q2  0.086  0.363  0.177  0.155  0.219
+FDX share: {'first': ['2019Q4', np.float64(0.4346)], 'peak': ['2019Q4', np.float64(0.4346)], 'last': ['2026Q2', np.float64(0.3634)]}
+
+=== 2. Share-price elasticity, estimated on the four peers (FedEx held out) ===
+  primary: peers, carrier FE, +lag b0=-0.652 CI[-0.99,-0.31] b1=-0.324 sum=-0.975 n=80 R2=0.47
+  no lag                           b0=-0.906 CI[-1.12,-0.69] b1=+nan sum=-0.906 n=80 R2=0.45
+  + time FE                        b0=-1.450 CI[-1.87,-1.02] b1=+0.254 sum=-1.196 n=80 R2=0.64
+  incl. FDX                        b0=-0.423 CI[-0.75,-0.09] b1=-0.420 sum=-0.843 n=100 R2=0.50
+  ex-fuel prices (ODFL/SAIA/XPO only): b0=-0.963 n=60
+  permutation placebo (2,000 within-carrier shuffles): b0=-0.652, p=0.0150
+  leave-one-carrier-out (price-only prediction of share change vs predicting zero):
+ticker  n  mae_price_model  mae_zero  corr
+  ODFL 20            3.168     3.908 0.650
+  SAIA 20            5.866     6.032 0.400
+   XPO 20            5.017     4.900 0.389
+  ARCB 20            2.399     5.744 0.910
+
+=== 3. FedEx Freight out of sample: share change explained by relative price vs not ===
+    cq  d4_share  d4_rel  explained  unexplained  covid
+2021Q1     -0.56   -2.29       1.00        -1.56   True
+2021Q2      4.14   -7.51       5.63        -1.49   True
+2021Q3      3.17   -2.63       4.14        -0.97  False
+2021Q4     -0.82   -1.79       2.02        -2.84  False
+2022Q1     -1.58    0.27       0.40        -1.98  False
+2022Q2     -2.02    4.92      -3.29         1.27  False
+2022Q3     -1.62    9.44      -7.74         6.12  False
+2022Q4     -2.97    7.64      -8.03         5.07  False
+2023Q1     -5.43   11.42      -9.91         4.48  False
+2023Q2     -9.43   10.25     -10.37         0.94  False
+2023Q3    -10.69    0.04      -3.34        -7.34  False
+2023Q4     -6.47    2.06      -1.35        -5.11  False
+2024Q1     -4.84   -2.64       1.05        -5.89  False
+2024Q2     -3.30   -2.59       2.54        -5.84  False
+2024Q3     -1.49    2.71      -0.93        -0.56  False
+2024Q4     -3.26   -0.64      -0.46        -2.80  False
+2025Q1     -1.30   -0.48       0.52        -1.82  False
+2025Q2      1.82   -1.86       1.37         0.45  False
+2025Q3      0.83   -3.15       2.65        -1.82  False
+2025Q4     -0.44   -0.53       1.37        -1.80  False
+2026Q1     -3.18   -2.03       1.49        -4.67  False
+2026Q2     -3.74   -1.80       1.83        -5.57  False
+
+=== 4. Changepoints in FedEx's YoY share change (exploratory; detector characteristics measured below) ===
+detector: {'phi': 0.95, 'sd': 7.191, 'penalty': 598.88, 'fpr': 0.05, 'sims': 1000} changepoints at []
+leave-one-out stability (how often each break date recurs, n=20): {}
+simulated at this n/phi/sd: false-alarm rate 0.24, power for a 2-sd shift 0.87
+regimes (mean YoY log-% change in share):
+ start    end  n  actual  explained  unexplained  rel_price
+2021Q3 2026Q2 20   -2.84       -1.3        -1.53       1.43
+fixed split at spin announcement: {'2022Q3-2024Q3': {'n': 9, 'actual': np.float64(-5.14), 'explained': np.float64(-4.23), 'unexplained': np.float64(-0.9)}, '2024Q4-': {'n': 7, 'actual': np.float64(-1.32), 'explained': np.float64(1.25), 'unexplained': np.float64(-2.58)}}
+
+=== 5. Non-overlapping annual decomposition (YoY changes at one anchor quarter per year sum exactly) ===
+cumulative log-% change in FedEx share, by anchor quarter (robustness to the anchor choice):
+             years  n actual explained unexplained
+Q1  2022Q1..2026Q1  5 -16.33     -6.45       -9.89
+Q2  2022Q2..2026Q2  5 -16.67     -7.93       -8.74
+Q3  2021Q3..2025Q3  5  -9.79     -5.22       -4.58
+Q4  2021Q4..2025Q4  5 -13.96     -6.47       -7.49
+annual (Q2 to Q2):
+    cq  d4_share  explained  unexplained  d4_rel
+2022Q2     -2.02      -3.29         1.27    4.92
+2023Q2     -9.43     -10.37         0.94   10.25
+2024Q2     -3.30       2.54        -5.84   -2.59
+2025Q2      1.82       1.37         0.45   -1.86
+2026Q2     -3.74       1.83        -5.57   -1.80
+
+written /home/user/job-search/fedex_freight_project/reports/ds

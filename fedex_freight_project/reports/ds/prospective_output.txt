@@ -1,0 +1,30 @@
+model                                         ensemble  gbm  hybrid  market  naive  own_monthly  ridge  ridge_select
+ticker period                                                                                                       
+ARCB   2026Q3                                     -3.5 -4.5    -3.7     1.5   -2.9         -3.7   -2.4           0.3
+FDX    FY2027Q1                                   -4.5 -5.1    -4.5    -4.0   -6.0         -6.0   -3.8          -5.6
+       Jun-Sep 2026 (FDXF transition period)      -4.7 -5.0    -4.7     0.1   -6.0         -6.0   -4.3          -6.1
+ODFL   2026Q3                                     -2.8 -2.6    -2.4     1.2   -5.9         -2.4   -2.8          -2.8
+SAIA   2026Q3                                      2.0  0.7     1.0     0.2    4.3          1.0    3.2           3.1
+XPO    2026Q3                                      3.6  3.9     5.5    -1.2    2.8          5.5    3.2           5.4
+
+pre-registered best (own_monthly) and ensemble with intervals:
+ticker                                period       model  yoy_log_pct   lo80  hi80  spd_forecast
+   FDX                              FY2027Q1 own_monthly        -6.04 -11.19 -2.02       84723.0
+  ARCB                                2026Q3 own_monthly        -3.72  -5.10 -2.17       20325.0
+  ODFL                                2026Q3 own_monthly        -2.43  -3.81 -0.88       43140.0
+  SAIA                                2026Q3 own_monthly         0.95  -0.44  2.49       36796.0
+   XPO                                2026Q3 own_monthly         5.54   4.16  7.09       52949.0
+   FDX Jun-Sep 2026 (FDXF transition period) own_monthly        -6.04 -11.19 -2.02           NaN
+   FDX                              FY2027Q1    ensemble        -4.48  -8.79 -1.81       86055.0
+  ARCB                                2026Q3    ensemble        -3.47  -7.51 -1.00       20376.0
+  ODFL                                2026Q3    ensemble        -2.75  -6.78 -0.28       43004.0
+  SAIA                                2026Q3    ensemble         1.96  -2.08  4.43       37172.0
+   XPO                                2026Q3    ensemble         3.58  -0.45  6.05       51922.0
+   FDX Jun-Sep 2026 (FDXF transition period)    ensemble        -4.66  -8.96 -1.99           NaN
+   FDX                              FY2027Q1      hybrid        -4.48  -8.79 -1.81       86055.0
+  ARCB                                2026Q3      hybrid        -3.72  -5.10 -2.17       20325.0
+  ODFL                                2026Q3      hybrid        -2.43  -3.81 -0.88       43140.0
+  SAIA                                2026Q3      hybrid         0.95  -0.44  2.49       36796.0
+   XPO                                2026Q3      hybrid         5.54   4.16  7.09       52949.0
+   FDX Jun-Sep 2026 (FDXF transition period)      hybrid        -4.66  -8.96 -1.99           NaN
+sha256 256eee154fe9547891b224ec60e8956f51b4b1bc4751ebd8ed108f4b479d5934

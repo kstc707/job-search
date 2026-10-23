@@ -1,0 +1,406 @@
+{
+  "preregistration": "ds/PREREGISTRATION.md",
+  "test_from": "2022-01-01",
+  "metrics_all": {
+    "own_monthly": {
+      "n": 90.0,
+      "mae": 1.8545,
+      "rmse": 2.6461,
+      "bias": 0.207,
+      "direction": 0.9,
+      "mase": 0.568,
+      "coverage": 0.7889,
+      "width": 6.6772,
+      "n_interval": 90.0
+    },
+    "ensemble": {
+      "n": 90.0,
+      "mae": 2.5321,
+      "rmse": 3.3208,
+      "bias": 0.9834,
+      "direction": 0.8222,
+      "mase": 0.7755,
+      "coverage": 0.8111,
+      "width": 7.673,
+      "n_interval": 90.0
+    },
+    "gbm": {
+      "n": 90.0,
+      "mae": 2.809,
+      "rmse": 3.7948,
+      "bias": 0.4569,
+      "direction": 0.7889,
+      "mase": 0.8603,
+      "coverage": 0.8222,
+      "width": 9.2242,
+      "n_interval": 90.0
+    },
+    "ridge": {
+      "n": 90.0,
+      "mae": 2.8802,
+      "rmse": 3.5522,
+      "bias": 1.5099,
+      "direction": 0.8111,
+      "mase": 0.8821,
+      "coverage": 0.7667,
+      "width": 7.7177,
+      "n_interval": 90.0
+    },
+    "naive": {
+      "n": 90.0,
+      "mae": 3.2653,
+      "rmse": 4.1847,
+      "bias": 0.2958,
+      "direction": 0.8,
+      "mase": 1.0,
+      "coverage": 0.7222,
+      "width": 8.993,
+      "n_interval": 90.0
+    },
+    "market": {
+      "n": 90.0,
+      "mae": 6.719,
+      "rmse": 8.1676,
+      "bias": 1.4669,
+      "direction": 0.5,
+      "mase": 2.0577,
+      "coverage": 0.7778,
+      "width": 20.7193,
+      "n_interval": 90.0
+    }
+  },
+  "metrics_fdx": {
+    "naive": {
+      "n": 18.0,
+      "mae": 3.4908,
+      "rmse": 4.1466,
+      "bias": 0.5081,
+      "direction": 0.8333,
+      "mase": 1.0,
+      "coverage": 0.7778,
+      "width": 8.993,
+      "n_interval": 18.0
+    },
+    "own_monthly": {
+      "n": 18.0,
+      "mae": 3.4908,
+      "rmse": 4.1466,
+      "bias": 0.5081,
+      "direction": 0.8333,
+      "mase": 1.0,
+      "coverage": 0.5556,
+      "width": 6.6772,
+      "n_interval": 18.0
+    },
+    "ensemble": {
+      "n": 18.0,
+      "mae": 3.5615,
+      "rmse": 4.3815,
+      "bias": 3.1149,
+      "direction": 0.8333,
+      "mase": 1.0203,
+      "coverage": 0.7222,
+      "width": 7.673,
+      "n_interval": 18.0
+    },
+    "ridge": {
+      "n": 18.0,
+      "mae": 3.6874,
+      "rmse": 4.2995,
+      "bias": 3.4281,
+      "direction": 0.8889,
+      "mase": 1.0563,
+      "coverage": 0.6667,
+      "width": 7.7177,
+      "n_interval": 18.0
+    },
+    "gbm": {
+      "n": 18.0,
+      "mae": 4.0167,
+      "rmse": 5.0428,
+      "bias": 2.8018,
+      "direction": 0.7222,
+      "mase": 1.1507,
+      "coverage": 0.6667,
+      "width": 9.2242,
+      "n_interval": 18.0
+    },
+    "market": {
+      "n": 18.0,
+      "mae": 7.5629,
+      "rmse": 9.6331,
+      "bias": 5.645,
+      "direction": 0.3333,
+      "mase": 2.1665,
+      "coverage": 0.8889,
+      "width": 20.7193,
+      "n_interval": 18.0
+    }
+  },
+  "mae_by_carrier": {
+    "naive": {
+      "ARCB": 2.646,
+      "FDX": 3.491,
+      "ODFL": 3.917,
+      "SAIA": 4.029,
+      "XPO": 2.243
+    },
+    "market": {
+      "ARCB": 6.964,
+      "FDX": 7.563,
+      "ODFL": 6.928,
+      "SAIA": 6.698,
+      "XPO": 5.442
+    },
+    "own_monthly": {
+      "ARCB": 2.646,
+      "FDX": 3.491,
+      "ODFL": 1.071,
+      "SAIA": 1.007,
+      "XPO": 1.058
+    },
+    "ridge": {
+      "ARCB": 2.431,
+      "FDX": 3.687,
+      "ODFL": 3.196,
+      "SAIA": 3.068,
+      "XPO": 2.019
+    },
+    "gbm": {
+      "ARCB": 2.473,
+      "FDX": 4.017,
+      "ODFL": 3.423,
+      "SAIA": 2.827,
+      "XPO": 1.306
+    },
+    "ensemble": {
+      "ARCB": 2.32,
+      "FDX": 3.562,
+      "ODFL": 2.793,
+      "SAIA": 2.492,
+      "XPO": 1.494
+    }
+  },
+  "mae_ci90_block_bootstrap": {
+    "naive": [
+      2.706,
+      3.89
+    ],
+    "market": [
+      5.87,
+      7.643
+    ],
+    "own_monthly": [
+      1.54,
+      2.231
+    ],
+    "ridge": [
+      2.478,
+      3.309
+    ],
+    "gbm": [
+      2.403,
+      3.277
+    ],
+    "ensemble": [
+      2.144,
+      2.961
+    ]
+  },
+  "diebold_mariano": {
+    "own_monthly_vs_naive": {
+      "stat": -3.551,
+      "p": 0.0011,
+      "T": 36
+    },
+    "ensemble_vs_naive": {
+      "stat": -1.224,
+      "p": 0.229,
+      "T": 36
+    },
+    "gbm_vs_naive": {
+      "stat": -0.239,
+      "p": 0.8126,
+      "T": 36
+    },
+    "ridge_vs_naive": {
+      "stat": -0.438,
+      "p": 0.6642,
+      "T": 36
+    },
+    "market_vs_naive": {
+      "stat": 4.947,
+      "p": 0.0,
+      "T": 36
+    },
+    "gbm_vs_ridge": {
+      "stat": 0.242,
+      "p": 0.81,
+      "T": 36
+    },
+    "ensemble_vs_ridge": {
+      "stat": -1.499,
+      "p": 0.1429,
+      "T": 36
+    },
+    "ensemble_vs_market": {
+      "stat": -6.156,
+      "p": 0.0,
+      "T": 36
+    },
+    "gbm_vs_market": {
+      "stat": -6.333,
+      "p": 0.0,
+      "T": 36
+    }
+  },
+  "best_model": "own_monthly",
+  "usefulness_criterion_met": true,
+  "intervals_80": {
+    "naive": {
+      "coverage": 0.722,
+      "width": 8.99,
+      "n": 90
+    },
+    "market": {
+      "coverage": 0.778,
+      "width": 20.72,
+      "n": 90
+    },
+    "own_monthly": {
+      "coverage": 0.789,
+      "width": 6.68,
+      "n": 90
+    },
+    "ridge": {
+      "coverage": 0.767,
+      "width": 7.72,
+      "n": 90
+    },
+    "gbm": {
+      "coverage": 0.822,
+      "width": 9.22,
+      "n": 90
+    },
+    "ensemble": {
+      "coverage": 0.811,
+      "width": 7.67,
+      "n": 90
+    },
+    "quantile_gbm": {
+      "coverage": 0.511,
+      "width": 5.94,
+      "n": 90
+    }
+  },
+  "ablation_delta_mae": {
+    "ridge": {
+      "own_history": 0.856,
+      "own_monthly": 0.705,
+      "market": -0.212,
+      "macro": -0.395,
+      "price_mix": -0.245,
+      "carrier": -0.053
+    },
+    "gbm": {
+      "own_history": 0.428,
+      "own_monthly": 0.466,
+      "market": -0.258,
+      "macro": -0.01,
+      "price_mix": -0.097,
+      "carrier": -0.049
+    }
+  },
+  "permutation_importance_holdout": {
+    "ridge": {
+      "holdout_mae": 4.922,
+      "own_history": 1.395,
+      "own_monthly": 0.941,
+      "market": -0.215,
+      "macro": -0.258,
+      "price_mix": -0.177,
+      "carrier": -0.438
+    },
+    "gbm": {
+      "holdout_mae": 3.497,
+      "own_history": 2.299,
+      "own_monthly": 0.027,
+      "market": -0.044,
+      "macro": -0.001,
+      "price_mix": 0.019,
+      "carrier": 0.0
+    }
+  },
+  "largest_errors": [
+    {
+      "ticker": "FDX",
+      "period": "FY2024Q2",
+      "y": -5.22,
+      "yhat": -13.52,
+      "err": -8.31
+    },
+    {
+      "ticker": "FDX",
+      "period": "FY2023Q4",
+      "y": -19.39,
+      "yhat": -12.41,
+      "err": 6.98
+    },
+    {
+      "ticker": "ARCB",
+      "period": "2023Q1",
+      "y": 7.62,
+      "yhat": 0.78,
+      "err": -6.84
+    },
+    {
+      "ticker": "FDX",
+      "period": "FY2024Q1",
+      "y": -13.52,
+      "yhat": -19.39,
+      "err": -5.87
+    },
+    {
+      "ticker": "ARCB",
+      "period": "2025Q2",
+      "y": 5.45,
+      "yhat": -0.38,
+      "err": -5.84
+    },
+    {
+      "ticker": "FDX",
+      "period": "FY2025Q2",
+      "y": -8.43,
+      "yhat": -2.79,
+      "err": 5.64
+    },
+    {
+      "ticker": "ODFL",
+      "period": "2022Q1",
+      "y": 12.43,
+      "yhat": 18.07,
+      "err": 5.64
+    },
+    {
+      "ticker": "ARCB",
+      "period": "2024Q1",
+      "y": -6.38,
+      "yhat": -0.8,
+      "err": 5.59
+    },
+    {
+      "ticker": "FDX",
+      "period": "FY2022Q4",
+      "y": -3.82,
+      "yhat": 1.63,
+      "err": 5.45
+    },
+    {
+      "ticker": "ARCB",
+      "period": "2026Q2",
+      "y": -2.87,
+      "yhat": 1.77,
+      "err": 4.64
+    }
+  ]
+}

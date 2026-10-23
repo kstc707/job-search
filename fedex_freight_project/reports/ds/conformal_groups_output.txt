@@ -1,0 +1,19 @@
+                                  coverage           width       
+method                            mondrian pooled mondrian pooled
+model       group                                                
+ensemble    FDX                       0.71   0.72     6.62   7.67
+            all                       0.81   0.81     7.39   7.67
+            not available             0.68   0.78     6.48   7.70
+            own monthly available     0.93   0.84     8.23   7.65
+hybrid      FDX                       0.71   0.61     6.62   5.73
+            all                       0.80   0.79     4.93   5.73
+            not available             0.68   0.63     6.48   5.67
+            own monthly available     0.90   0.92     3.49   5.78
+naive       FDX                       0.65   0.78     8.42   8.99
+            all                       0.72   0.72     9.40   8.99
+            not available             0.66   0.76     8.25   8.78
+            own monthly available     0.78   0.69    10.46   9.17
+own_monthly FDX                       0.65   0.56     8.42   6.68
+            all                       0.78   0.79     5.78   6.68
+            not available             0.66   0.58     8.25   6.68
+            own monthly available     0.90   0.96     3.49   6.67

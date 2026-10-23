@@ -1,0 +1,65 @@
+model,method,group,n,coverage,width
+ensemble,pooled,all,90,0.811,7.67
+ensemble,pooled,own monthly available,49,0.837,7.65
+ensemble,pooled,not available,41,0.78,7.7
+ensemble,pooled,FDX,18,0.722,7.67
+ensemble,mondrian,all,79,0.81,7.39
+ensemble,mondrian,own monthly available,41,0.927,8.23
+ensemble,mondrian,not available,38,0.684,6.48
+ensemble,mondrian,FDX,17,0.706,6.62
+gbm,pooled,all,90,0.822,9.22
+gbm,pooled,own monthly available,49,0.857,9.27
+gbm,pooled,not available,41,0.78,9.17
+gbm,pooled,FDX,18,0.667,9.22
+gbm,mondrian,all,79,0.797,8.96
+gbm,mondrian,own monthly available,41,0.902,9.93
+gbm,mondrian,not available,38,0.684,7.92
+gbm,mondrian,FDX,17,0.647,8.03
+hybrid,pooled,all,90,0.789,5.73
+hybrid,pooled,own monthly available,49,0.918,5.78
+hybrid,pooled,not available,41,0.634,5.67
+hybrid,pooled,FDX,18,0.611,5.73
+hybrid,mondrian,all,79,0.797,4.93
+hybrid,mondrian,own monthly available,41,0.902,3.49
+hybrid,mondrian,not available,38,0.684,6.48
+hybrid,mondrian,FDX,17,0.706,6.62
+market,pooled,all,90,0.778,20.72
+market,pooled,own monthly available,49,0.837,20.91
+market,pooled,not available,41,0.707,20.49
+market,pooled,FDX,18,0.889,20.72
+market,mondrian,all,79,0.772,20.58
+market,mondrian,own monthly available,41,0.878,22.58
+market,mondrian,not available,38,0.658,18.42
+market,mondrian,FDX,17,0.824,19.02
+naive,pooled,all,90,0.722,8.99
+naive,pooled,own monthly available,49,0.694,9.17
+naive,pooled,not available,41,0.756,8.78
+naive,pooled,FDX,18,0.778,8.99
+naive,mondrian,all,79,0.722,9.4
+naive,mondrian,own monthly available,41,0.78,10.46
+naive,mondrian,not available,38,0.658,8.25
+naive,mondrian,FDX,17,0.647,8.42
+own_monthly,pooled,all,90,0.789,6.68
+own_monthly,pooled,own monthly available,49,0.959,6.67
+own_monthly,pooled,not available,41,0.585,6.68
+own_monthly,pooled,FDX,18,0.556,6.68
+own_monthly,mondrian,all,79,0.785,5.78
+own_monthly,mondrian,own monthly available,41,0.902,3.49
+own_monthly,mondrian,not available,38,0.658,8.25
+own_monthly,mondrian,FDX,17,0.647,8.42
+ridge,pooled,all,90,0.767,7.72
+ridge,pooled,own monthly available,49,0.796,7.72
+ridge,pooled,not available,41,0.732,7.71
+ridge,pooled,FDX,18,0.667,7.72
+ridge,mondrian,all,79,0.785,7.8
+ridge,mondrian,own monthly available,41,0.854,8.18
+ridge,mondrian,not available,38,0.711,7.39
+ridge,mondrian,FDX,17,0.647,7.47
+ridge_select,pooled,all,90,0.867,7.8
+ridge_select,pooled,own monthly available,49,0.918,7.73
+ridge_select,pooled,not available,41,0.805,7.88
+ridge_select,pooled,FDX,18,0.722,7.8
+ridge_select,mondrian,all,79,0.861,7.56
+ridge_select,mondrian,own monthly available,41,0.976,7.61
+ridge_select,mondrian,not available,38,0.737,7.51
+ridge_select,mondrian,FDX,17,0.647,7.61
