@@ -1,31 +1,31 @@
 1
-00:00:00,200 --> 00:00:10,800
+00:00:00,200 --> 00:00:13,800
 Hi, I'm Sai. I built a short data science project on one question: how much of FedEx Freight's lost volume is the market, and how much is FedEx?
 
 2
-00:00:11,200 --> 00:00:23,800
+00:00:14,200 --> 00:00:25,800
 Among the five largest public LTL carriers, FedEx Freight's share of daily shipments fell from 43 to 36 percent between 2019 and mid-2026.
 
 3
-00:00:24,200 --> 00:00:43,800
+00:00:26,200 --> 00:00:46,800
 I estimated how share responds to relative price using only FedEx's four competitors, then applied it to FedEx. Price explains the 2022–23 loss. It doesn't explain the year after Yellow's shutdown, or the year to mid-2026, when FedEx lost share while its relative price was falling.
 
 4
-00:00:44,200 --> 00:00:55,800
+00:00:47,200 --> 00:00:58,800
 The relationship holds up: a placebo test, prices excluding fuel, and leaving each carrier out in turn. FedEx was never used to estimate it.
 
 5
-00:00:56,200 --> 00:01:08,800
+00:00:59,200 --> 00:01:11,800
 Before FedEx Freight reports on October 29, I locked a forecast: shipments per day down about 6 percent for June to September, fingerprinted on GitHub.
 
 6
-00:01:09,200 --> 00:01:22,800
+00:01:12,200 --> 00:01:28,800
 Honest result: a carrier's own in-quarter data was the only significant gain. Machine learning helped a little, but not significantly. With FedEx's daily data, the real value is at the account level, not at quarter end.
 
 7
-00:01:23,200 --> 00:01:36,800
+00:01:29,200 --> 00:01:42,800
 Separately, FedEx collects about 59 percent of its published fuel surcharge. If diesel falls as EIA forecasts, fuel alone takes about 8 percent off revenue per shipment in 2027.
 
 8
-00:01:37,200 --> 00:01:48,800
+00:01:43,200 --> 00:01:56,800
 The first thing I'd build with your data is an account-level early warning for share loss, tested the same way. I'd value 15 minutes to walk you through it.

@@ -23,6 +23,7 @@ $PY scripts/ds_share_model.py > reports/ds/share_model_output.txt
 $PY scripts/build_report.py
 $PY scripts/build_brief.py
 $PY scripts/build_overview.py
+$PY scripts/build_summary.py
 $PY scripts/build_video.py
 $PY scripts/build_email.py > /dev/null
 $PY scripts/build_readme.py

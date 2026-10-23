@@ -15,7 +15,7 @@ Before you report on October 29, I locked a forecast of June-September shipments
 year, with its SHA-256 committed to GitHub on October 23. The methods were pre-registered, every model was
 backtested out of sample, and the write-up says plainly what did not work.
 
-Attached: a one-page overview and a 2-minute narrated video. The two-page brief has more detail. Full report: https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA
+Attached: a short summary of what I did and why, a one-page overview, and a 2-minute captioned video. The two-page brief has more detail. Full report: https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA
 Code and tests: https://github.com/kstc707/job-search (fedex_freight_project)
 
 I'm based in Memphis and would value 15 minutes to walk through the method, or to hear which of these questions

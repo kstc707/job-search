@@ -1,8 +1,8 @@
 """Build the ~100-second overview video (reports/video/).
 
 Slides are 1920x1080 HTML pages rendered with headless Chromium; charts are the project's Python (matplotlib)
-figures. Each slide carries its narration as a caption bar, so the video also works muted. The voiceover is synthesized
-locally with Piper TTS (voice files in data/tts_voices/, gitignored; see VOICE below); without them the video is silent.
+figures. Each slide carries its narration as a caption bar, so the video works muted. The default is a silent video;
+--voice adds an optional Piper TTS voiceover (voice files in data/tts_voices/, gitignored; see VOICE below).
 ffmpeg (imageio-ffmpeg build) joins the slides with crossfades. Also writes the narration script and an .srt.
 Every number is read from the results files. Run: .venv/bin/python -I scripts/build_video.py
 """
@@ -38,6 +38,7 @@ CHROME, FF = "/opt/pw-browsers/chromium", imageio_ffmpeg.get_ffmpeg_exe()
 FADE = 0.6
 WPS = 2.5  # comfortable narration pace, ~150 words a minute; each slide stays up at least this long
 VOICE = ROOT / "data/tts_voices/en_US-ryan-high.onnx"  # download: huggingface.co/rhasspy/piper-voices (en/en_US/ryan/high)
+USE_VOICE = "--voice" in sys.argv and VOICE.exists()
 LEAD, TAIL = 0.7, 1.0  # seconds of silence before and after each slide's narration
 SPOKEN = {"LTL": "L T L", "2022–23": "2022 to 2023", "mid-2026": "mid 2026"}  # caption text -> what the voice should say
 
@@ -76,7 +77,7 @@ peers_line = " · ".join(f"{t} {pct(pre.loc[(t, '2026Q3'), 'yoy_log_pct'])}" for
 slides = [
     (8, f"""<div class="title"><span class="eyebrow">A public-data data science project · October 2026</span>
         <h1>Market or share?</h1><p class="sub">What explains FedEx Freight's lost volume, and what it will report next</p>
-        <p class="who">Sai Teja Koppolu · MS Data Science, University of Memphis</p>{'<p class="note">Narration: synthetic voice (Piper TTS) reading my script</p>' if VOICE.exists() else ''}</div>""",
+        <p class="who">Sai Teja Koppolu · MS Data Science, University of Memphis</p>{'<p class="note">Narration: synthetic voice (Piper TTS) reading my script</p>' if USE_VOICE else ''}</div>""",
      "Hi, I'm Sai. I built a short data science project on one question: how much of FedEx Freight's lost volume is the market, and how much is FedEx?"),
     (12, f"""<h2>FedEx Freight's share of public LTL shipments fell from {100 * first['share']:.0f}% to {100 * last['share']:.0f}%</h2>
         <img class="chart" src="{img(SL / 'chart_share.png')}">
@@ -158,7 +159,7 @@ slides = [(max(d, math.ceil(len(n.split()) / WPS) + 2), b, n) for d, b, n in sli
 
 # ---------------------------------------------------------------- voiceover: one clip per slide, slide lasts as long as its clip
 clips, rate = [], 22050
-if VOICE.exists():
+if USE_VOICE:
     from piper import PiperVoice
     voice = PiperVoice.load(str(VOICE))
     for k, (d, b, n) in enumerate(slides):
