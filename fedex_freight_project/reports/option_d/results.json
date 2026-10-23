@@ -1,0 +1,79 @@
+{
+  "all": {
+    "n": 33,
+    "r2": 0.73,
+    "volume_margin": 0.28,
+    "volume_ci": [
+      0.18,
+      0.38
+    ],
+    "price_margin": 0.48,
+    "price_ci": [
+      0.37,
+      0.59
+    ],
+    "const": -13.0
+  },
+  "ex_covid": {
+    "n": 27,
+    "r2": 0.77,
+    "volume_margin": 0.24,
+    "volume_ci": [
+      0.15,
+      0.32
+    ],
+    "price_margin": 0.51,
+    "price_ci": [
+      0.42,
+      0.61
+    ],
+    "const": -31.4
+  },
+  "dollars": {
+    "fy26_revenue": 8795.0,
+    "fy26_adj_oi": 1108.0,
+    "oi_per_volume_pt": 21,
+    "oi_per_price_pt": 45,
+    "price_pts_to_offset_1pt_volume": 0.47,
+    "volume_pts_offset_by_1pt_price": 2.1,
+    "ev_musd": 20900,
+    "ev_to_adj_oi": 18.9,
+    "value_per_volume_pt_per_share": 2.66,
+    "market_inputs": {
+      "price": 111.02,
+      "shares_m": 149.52,
+      "gross_debt_musd": 4300.0,
+      "source": "StockAnalysis 2026-10-22; debt at spin per Investor Day (see external_benchmarks.md)"
+    }
+  },
+  "scorecard_by_fy": {
+    "FY2023": {
+      "d_rev_volume": -1174.0,
+      "d_rev_price": 1163.0,
+      "d_oi": 262.0,
+      "oi_from_volume": -282.0,
+      "oi_from_price": 593.0
+    },
+    "FY2024": {
+      "d_rev_volume": -552.0,
+      "d_rev_price": -82.0,
+      "d_oi": -111.0,
+      "oi_from_volume": -132.0,
+      "oi_from_price": -42.0
+    },
+    "FY2025": {
+      "d_rev_volume": -459.0,
+      "d_rev_price": -83.0,
+      "d_oi": -325.0,
+      "oi_from_volume": -110.0,
+      "oi_from_price": -42.0
+    },
+    "FY2026": {
+      "d_rev_volume": -402.0,
+      "d_rev_price": 301.0,
+      "d_oi": -381.0,
+      "oi_from_volume": -96.0,
+      "oi_from_price": 154.0
+    }
+  }
+}

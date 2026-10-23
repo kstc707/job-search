@@ -1,0 +1,27 @@
+FY2026 separation costs by quarter: {'FY2026Q1': 9.0, 'FY2026Q2': 152.0, 'FY2026Q3': 126.0, 'FY2026Q4': 205.0} sum 492.0
+
+[all] n=33 R2=0.73
+  incremental margin on VOLUME revenue: 0.28 (95% CI 0.18 to 0.38)
+  incremental margin on PRICE/MIX revenue: 0.48 (95% CI 0.37 to 0.59)
+  constant (cost drift per quarter, $M YoY): -13.0
+
+[ex_covid] n=27 R2=0.77
+  incremental margin on VOLUME revenue: 0.24 (95% CI 0.15 to 0.32)
+  incremental margin on PRICE/MIX revenue: 0.51 (95% CI 0.42 to 0.61)
+  constant (cost drift per quarter, $M YoY): -31.4
+
+FY2026 revenue $8,795M, adjusted op. income $1,108M (Investor Day baseline ~$1.1B)
+1 pt of shipments ~ $88M revenue -> ~$21M op. income/yr
+1 pt of price      ~ $88M revenue -> ~$45M op. income/yr
+break-even: 1 pt of price offsets ~2.1 pts of lost shipments
+illustrative EV $20,900M = 18.9x FY26 adj. op. income -> 1 pt of shipments ~ $2.66/share
+
+YoY adjusted op. income attributed to volume vs price/mix ($M, by fiscal year):
+               d_rev_volume  d_rev_price  oi_from_volume  oi_from_price   d_oi
+fiscal_period                                                                 
+FY2023              -1174.0       1163.0          -282.0          593.0  262.0
+FY2024               -552.0        -82.0          -132.0          -42.0 -111.0
+FY2025               -459.0        -83.0          -110.0          -42.0 -325.0
+FY2026               -402.0        301.0           -96.0          154.0 -381.0
+
+(fuel model rho = 0.59; see option_b) - fuel expense line, $M: {'FY2025Q1': 121.0, 'FY2025Q2': 111.0, 'FY2025Q3': 112.0, 'FY2025Q4': 113.0, 'FY2026Q1': 113.0, 'FY2026Q2': 110.0, 'FY2026Q3': 104.0, 'FY2026Q4': 158.0}

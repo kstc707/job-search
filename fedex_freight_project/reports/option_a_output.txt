@@ -1,0 +1,63 @@
+usable quarters: 33; excluded COVID-affected: 6
+
+=== 1. Rolling-origin backtest (one quarter ahead of each origin, re-fit every time) ===
+             n  mae_pp  rmse_pp  bias_pp  direction_hit
+model                                                  
+ar1         19    3.31     4.29    -0.44           0.95
+naive_last  19    3.75     4.48     0.93           0.84
+ridge_all   19    3.88     4.60     3.29           0.74
+macro3_ar   19    4.48     5.39     1.04           0.79
+mean4       19    5.01     6.03     0.06           0.84
+macro3      19    5.34     5.92     2.27           0.58
+best by MAE: ar1
+
+=== 2. Market-implied vs actual: the FedEx-specific gap ===
+market model on 11 pre-2022-06 quarters, cols=['ipman', 'tonnage', 'cass'], coefs=[0.87 1.04 0.27]
+                  y  market_implied   gap
+fiscal_period                            
+FY2022Q4       -3.8             1.7  -5.5
+FY2023Q1       -5.0             3.0  -8.0
+FY2023Q2       -9.3             1.1 -10.5
+FY2023Q3      -12.4            -2.8  -9.6
+FY2023Q4      -19.4            -7.9 -11.5
+FY2024Q1      -13.5            -8.4  -5.2
+FY2024Q2       -5.2            -8.6   3.4
+FY2024Q3       -4.3            -7.3   3.0
+FY2024Q4        0.1            -4.9   5.0
+FY2025Q1       -2.8            -4.6   1.8
+FY2025Q2       -8.4            -5.4  -3.0
+FY2025Q3       -4.7            -5.9   1.2
+FY2025Q4       -1.1            -3.7   2.6
+FY2026Q1       -2.2            -3.2   1.0
+FY2026Q2       -4.0            -3.5  -0.6
+FY2026Q3       -5.9            -2.8  -3.1
+FY2026Q4       -6.0            -0.6  -5.4
+mean gap since FY2023: -2.4 pp/yr (n=16); cumulative shortfall vs market since FY2022Q4 ~ -9.7% of volume (annualized YoY gaps / 4)
+
+=== 3. Nowcast: FDXF transition period Jun-Sep 2026 (reported 2026-10-29) ===
+months of Jun-Sep 2026 available per indicator: {'ipman': 4, 'tonnage': 2, 'cass': 4, 'tsi': 2, 'dgorder': 3, 'retail': 4, 'intermodal': 2, 'truck_jobs': 4, 'ppi_ltl': 4, 'ppi_tl': 4}
+feature values (log YoY):
+ipman             1.40
+tonnage           0.35
+cass             -1.26
+tsi              -1.17
+dgorder           8.87
+retail            5.43
+intermodal        7.98
+truck_jobs       -0.72
+ppi_ltl          14.57
+ppi_tl           14.52
+isratio          -7.33
+diesel           37.95
+ltl_tl_spread     0.04
+y_lag1           -6.04
+Jun-Sep 2025 ADS base ~89.9k (between 89.72k and 90.00k)
+     model  yhat_pct  lo80_pct  hi80_pct  backtest_mae_pp  ads_k
+       ar1     -6.24    -10.86     -0.06             3.31  84.42
+naive_last     -6.04    -11.95     -1.36             3.75  84.59
+ ridge_all     -3.73    -10.55     -2.44             3.88  86.57
+ macro3_ar     -5.59    -11.35      0.91             4.48  84.98
+     mean4     -4.55    -12.85      3.82             5.01  85.86
+    macro3     -2.77    -10.83      3.03             5.34  87.40
+
+written: /home/user/job-search/fedex_freight_project/reports/option_a

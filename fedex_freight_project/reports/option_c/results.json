@@ -1,0 +1,149 @@
+{
+  "proxy": {
+    "ltl_share_of_truck_tons_2024_pct": 29.799999237060547,
+    "ltl_share_of_truck_value_2024_pct": 74.69999694824219,
+    "ltl_value_per_ton": 2677,
+    "non_ltl_value_per_ton": 384
+  },
+  "proxy_vs_fedex": {
+    "index_2019_100": {
+      "index": [
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "all_truck": [
+        99.6,
+        100.8,
+        100.0,
+        96.8,
+        99.0,
+        98.6,
+        99.1,
+        99.9
+      ],
+      "ltl_proxy": [
+        97.7,
+        100.7,
+        100.0,
+        97.9,
+        98.6,
+        98.5,
+        95.0,
+        95.6
+      ],
+      "ltl_proxy_250mi": [
+        96.6,
+        101.3,
+        100.0,
+        96.8,
+        98.8,
+        99.5,
+        96.8,
+        97.7
+      ],
+      "bulk_truck": [
+        100.4,
+        100.9,
+        100.0,
+        96.3,
+        99.2,
+        98.6,
+        101.0,
+        101.9
+      ],
+      "fedex_freight": [
+        NaN,
+        105.8,
+        100.0,
+        88.2,
+        95.6,
+        90.3,
+        73.5,
+        68.6
+      ]
+    },
+    "corr_annual_changes": {
+      "all_truck": 0.57,
+      "ltl_proxy": 0.88,
+      "ltl_proxy_250mi": 0.87,
+      "bulk_truck": 0.36
+    }
+  },
+  "proxy_sensitivity": {
+    "strict (chem/plastics/metal goods/machinery/electronics/vehicles/instruments/furniture/misc/mixed)": {
+      "index_2024": 96.19999694824219,
+      "corr_with_fedex": 0.58
+    },
+    "baseline": {
+      "index_2024": 95.5999984741211,
+      "corr_with_fedex": 0.88
+    },
+    "broad (+ bulk-ish packaged: milled grain, basic chem, newsprint, base metals)": {
+      "index_2024": 96.0999984741211,
+      "corr_with_fedex": 0.48
+    }
+  },
+  "shift_share": {
+    "national_growth_pct": -4.400000095367432,
+    "weakest": {
+      "VT": -5.900000095367432,
+      "DC": -3.4000000953674316,
+      "OR": -2.5,
+      "AK": -2.5,
+      "RI": -2.299999952316284
+    },
+    "strongest": {
+      "SC": 2.299999952316284,
+      "NJ": 2.299999952316284,
+      "GA": 2.5,
+      "FL": 3.299999952316284,
+      "ND": 5.0
+    }
+  },
+  "lanes": {
+    "cagr_2024_2035_pct": 2.9200000762939453,
+    "top10_add_ktons": {
+      "GA->FL": 2526.0,
+      "IL->MI": 2476.0,
+      "CA->AZ": 2437.0,
+      "OH->PA": 2342.0,
+      "OH->TX": 2207.0,
+      "CA->TX": 2147.0,
+      "IL->TX": 2140.0,
+      "IL->OH": 2065.0,
+      "OH->IL": 2062.0,
+      "TX->LA": 1998.0
+    }
+  },
+  "imbalance": {
+    "TN": {
+      "out_in_ratio": 0.8299999833106995,
+      "net_pct": -9.479999542236328
+    },
+    "most_inbound": {
+      "DC": -50.70000076293945,
+      "AK": -43.5,
+      "WY": -43.29999923706055,
+      "MT": -39.400001525878906,
+      "NV": -37.0
+    },
+    "most_outbound": {
+      "SC": 14.0,
+      "OR": 17.5,
+      "AR": 19.399999618530273,
+      "VT": 25.899999618530273,
+      "ME": 46.70000076293945
+    }
+  },
+  "clusters": {
+    "best_k": 7,
+    "silhouette": 0.145,
+    "ari_seed_stability": 0.69
+  }
+}

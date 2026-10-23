@@ -1,0 +1,67 @@
+{
+  "fuel_model": {
+    "rho_mean": 0.59,
+    "rho_sd": 0.009,
+    "loo_mae_structural_pts": 0.28,
+    "loo_mae_linear_pts": 0.27,
+    "linear_slope_pts_per_usd": 6.03,
+    "diesel_range_in_sample": [
+      3.53,
+      3.95
+    ]
+  },
+  "oos_fy26q4": {
+    "structural": 0.3,
+    "linear": -0.0
+  },
+  "bridge_fy26q4": {
+    "ltl_revenue": 4.8,
+    "days": 0.0,
+    "shipments_per_day": -6.0,
+    "weight_per_shipment": 3.0,
+    "fuel": 7.5,
+    "base_yield_per_cwt": 0.3
+  },
+  "weight_elasticity": {
+    "preferred_beta": -0.77,
+    "ci95": [
+      -0.89,
+      -0.65
+    ],
+    "n": 66,
+    "naive_beta": -1.35,
+    "naive_ci95": [
+      -1.8,
+      -0.9
+    ]
+  },
+  "weight_adjusted_base_yield_yoy": {
+    "FY2025Q1": 3.9,
+    "FY2025Q2": 1.4,
+    "FY2025Q3": 1.4,
+    "FY2025Q4": 0.9,
+    "FY2026Q1": -0.6,
+    "FY2026Q2": 1.4,
+    "FY2026Q3": 0.8,
+    "FY2026Q4": 2.7
+  },
+  "jun_sep_2026": {
+    "diesel": [
+      3.7,
+      5.36
+    ],
+    "fuel_pct": [
+      19.4,
+      29.1
+    ],
+    "fuel_lift_rps_pct": 8.1
+  },
+  "fuel_2027": {
+    "oct2026_diesel": 6.25,
+    "oct2026_fuel_pct": 34.4,
+    "eia_2027_diesel": 4.49,
+    "eia_2027_fuel_pct": 24.0,
+    "rps_change_vs_oct2026_pct": -7.7,
+    "rps_change_vs_junsep2026_pct": -4.0
+  }
+}

@@ -1,0 +1,68 @@
+
+=== 1. Fuel model on FDXF's 8 disclosed quarters ===
+   period  diesel  tariff_pct  fuel_pct    rho  revenue_per_cwt_ex_fuel_usd
+0  2024Q1   3.955      35.285    21.031  0.596                        33.31
+1  2024Q2   3.881      34.554    20.293  0.587                        33.34
+2  2024Q3   3.705      32.914    19.239  0.585                        34.24
+3  2024Q4   3.534      31.723    18.641  0.588                        34.34
+4  2025Q1   3.621      32.146    18.787  0.584                        33.99
+5  2025Q2   3.548      31.854    18.328  0.575                        34.18
+6  2025Q3   3.754      33.285    20.067  0.603                        33.84
+7  2025Q4   3.718      32.969    19.787  0.600                        34.28
+rho (realized / tariff) mean=0.590 sd=0.009 cv=1.6%
+LOO MAE (fuel % pts): structural 0.28, linear 0.27; linear slope 6.03 pts per $1 vs tariff slope 10.0 pts per $1 x rho 0.59 = 5.90
+
+=== 2. Out-of-sample test: FY2026 Q4 (Mar-May 2026, diesel spike) vs FY2025 Q4 ===
+     period      method  diesel  tariff_pct  fuel_pct_hat     rps  rps_ex_fuel_hat    cwt  cwt_ex_fuel_hat    wps
+0  FY2025Q4  structural    3.57       31.85         18.79  372.55           313.63  40.49            34.09  920.0
+1  FY2025Q4      linear    3.57       31.85         18.64  372.55           314.00  40.49            34.13  920.0
+2  FY2026Q4  structural    5.18       47.52         28.02  415.22           324.33  43.79            34.20  948.0
+3  FY2026Q4      linear    5.18       47.52         28.34  415.22           323.53  43.79            34.12  948.0
+structural: base (ex-fuel) revenue/cwt YoY = +0.3%   [management, 8-K 2026-06-25: 'a slight decline in base revenue per hundredweight']
+linear    : base (ex-fuel) revenue/cwt YoY = -0.0%   [management, 8-K 2026-06-25: 'a slight decline in base revenue per hundredweight']
+FY26Q4 diesel 5.18 is +1.22 $/gal beyond the in-sample range: the structural model leans on the published tariff to extrapolate; the linear one cannot.
+
+=== 3. Revenue bridge, YoY, exact log decomposition ===
+Implied LTL revenue / reported segment revenue: median 0.995, range 0.949-1.001
+identity check, max |sum of components - log revenue change| = 0.0008
+Log-points (~%) contribution to YoY LTL revenue change:
+               ltl_revenue  days  shipments_per_day  weight_per_shipment  fuel  base_yield_per_cwt
+fiscal_period                                                                                     
+FY2024Q1             -17.8   0.0              -13.5                 -6.6  -6.9                 9.2
+FY2024Q2              -4.3   0.0               -5.2                 -5.8  -3.2                10.0
+FY2024Q3              -3.3   1.6               -4.3                 -3.2  -3.3                 5.8
+FY2024Q4               1.2   0.0                0.1                 -2.8  -0.6                 4.5
+FY2025Q1              -2.1  -1.6               -2.8                 -2.9  -1.0                 6.1
+FY2025Q2             -12.0   0.0               -8.4                 -3.6  -4.2                 4.1
+FY2025Q3              -5.6   0.0               -4.7                 -3.1  -1.6                 3.8
+FY2025Q4              -4.0  -1.6               -1.1                 -2.0  -1.8                 2.5
+FY2026Q1              -3.1   0.0               -2.2                 -0.3  -0.2                -0.3
+FY2026Q2              -1.8   0.0               -4.0                  1.2   0.7                 0.5
+FY2026Q3              -4.8   0.0               -5.9                  1.0   0.2                 0.0
+FY2026Q4               4.8   0.0               -6.0                  3.0   7.5                 0.3
+
+=== 4. Weight elasticity of revenue/cwt ===
+naive time series: beta=-1.35 (95% CI -1.80 to -0.90), n=33 -> implies heavier shipments earn LESS per shipment: not credible (pricing confounded)
+preferred panel (Priority/Economy x quarter FE): beta=-0.77 (95% CI -0.89 to -0.65), n=66
+=> a 10% heavier shipment lowers revenue/cwt ~7.7% but raises revenue/shipment ~2.3%
+Weight-adjusted base yield/cwt YoY (log-pts) - a like-for-like price signal:
+fiscal_period
+FY2025Q1    3.9
+FY2025Q2    1.4
+FY2025Q3    1.4
+FY2025Q4    0.9
+FY2026Q1   -0.6
+FY2026Q2    1.4
+FY2026Q3    0.8
+FY2026Q4    2.7
+
+=== 5. Fuel effect in FDXF's Jun-Sep 2026 transition period (reports 2026-10-29) ===
+diesel 3.70 -> 5.36; tariff 32.9% -> 49.4%; modeled realized fuel 19.4% -> 29.1%
+=> fuel alone lifts revenue/shipment by about +8.1% YoY
+
+=== 6. 2027 fuel headwind (EIA STEO forecasts $4.49/gal diesel for 2027; Sept 2026 averaged $6.29) ===
+Oct 2026 to date   diesel $6.25 -> tariff 58.3% -> realized ~34.4%
+EIA 2027 forecast  diesel $4.49 -> tariff 40.7% -> realized ~24.0%
+=> if diesel follows EIA, fuel alone moves revenue/shipment -7.7% from the Oct-2026 run-rate; vs Jun-Sep 2026 (29.1% fuel): -4.0%
+
+written: /home/user/job-search/fedex_freight_project/reports/option_b

@@ -169,3 +169,19 @@ above plus:
   decline.
 - **Small sample.** There are 37 quarterly observations, and COVID quarters dominate any correlation. Keep models
   small and backtest honestly.
+
+---
+
+## 6. Added in the analysis phase (2026-10-23)
+
+| File | Source | Notes |
+|---|---|---|
+| `raw/external/fedex_freight_fuel_surcharge_effective_2025-06-09.pdf` | https://www.fedexfreight.com/content/dam/web/us/documents/fuel-surcharge-effective6-9-25.pdf | FedEx Freight's published U.S. LTL/TL fuel surcharge table, effective June 9, 2025 |
+| `raw/external/fedex_freight_fuel_surcharge_table_2025-06-09.csv` | parsed from the PDF with `pdftotext -layout` | 471 rows, `eia_index_cents` 330–800 (EIA diesel, cents/gal) mapped to `surcharge_pct` 31.00–75.80. Checked complete and monotonic in `tests/` |
+| `raw/sec_edgar/peers/<TICKER>/` (git-ignored) | SEC EDGAR 8-K exhibits for ODFL, SAIA, XPO, ARCB | Fetched by `scripts/fetch_peer_filings.py`. See `README_peers.md` |
+| `processed/peer_ltl_quarterly_kpis.csv`, `processed/peer_ltl_monthly_kpis.csv` | parsed by `scripts/parse_peer_kpis.py` | Peer LTL shipments/day, tons/day, weight/shipment and yield. See `README_peers.md` |
+| `../reports/external_benchmarks.md` | web research with links and dates | FDXF guidance, valuation and analyst targets, peer July–August 2026 volumes, NMFC Docket 2025-1, the 2026 diesel spike and EIA's forecast |
+
+**Fuel table caveat.** The table took effect on 2025-06-09. Quarters before that date were billed on earlier
+tables. The realized/tariff ratio is still stable across 2024–2025 (sd 0.009), which suggests the earlier tables were
+similar in the $3.5–4.0 diesel range. FedEx says it updates the table if the surcharge leaves the 31.00–75.80% band.

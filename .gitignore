@@ -16,3 +16,6 @@ fedex_freight_project/data/raw/faf5/FAF5.7.1.zip
 fedex_freight_project/data/raw/faf5/FAF5.7.1/
 fedex_freight_project/data/processed/faf5_7_1.parquet
 fedex_freight_project/data/raw/sec_edgar/fedex_corp_earnings/*.htm
+fedex_freight_project/data/raw/sec_edgar/peers/*/*.htm
+fedex_freight_project/data/raw/sec_edgar/peers/*/*.html
+fedex_freight_project/reports/brief/brief.html

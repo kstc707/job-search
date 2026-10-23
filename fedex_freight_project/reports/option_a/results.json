@@ -1,0 +1,150 @@
+{
+  "backtest": [
+    {
+      "model": "ar1",
+      "n": 19,
+      "mae_pp": 3.31,
+      "rmse_pp": 4.29,
+      "bias_pp": -0.44,
+      "direction_hit": 0.95
+    },
+    {
+      "model": "naive_last",
+      "n": 19,
+      "mae_pp": 3.75,
+      "rmse_pp": 4.48,
+      "bias_pp": 0.93,
+      "direction_hit": 0.84
+    },
+    {
+      "model": "ridge_all",
+      "n": 19,
+      "mae_pp": 3.88,
+      "rmse_pp": 4.6,
+      "bias_pp": 3.29,
+      "direction_hit": 0.74
+    },
+    {
+      "model": "macro3_ar",
+      "n": 18,
+      "mae_pp": 4.1,
+      "rmse_pp": 4.85,
+      "bias_pp": 0.47,
+      "direction_hit": 0.78
+    },
+    {
+      "model": "mean4",
+      "n": 19,
+      "mae_pp": 5.01,
+      "rmse_pp": 6.03,
+      "bias_pp": 0.06,
+      "direction_hit": 0.84
+    },
+    {
+      "model": "macro3",
+      "n": 19,
+      "mae_pp": 5.34,
+      "rmse_pp": 5.92,
+      "bias_pp": 2.27,
+      "direction_hit": 0.58
+    }
+  ],
+  "backtest_common_sample": {
+    "n": 18,
+    "mae_pp": {
+      "ar1": 3.14,
+      "macro3": 5.27,
+      "macro3_ar": 4.1,
+      "mean4": 4.91,
+      "naive_last": 3.49,
+      "ridge_all": 3.57
+    }
+  },
+  "gap": {
+    "cols": [
+      "ipman",
+      "tonnage",
+      "cass"
+    ],
+    "mean_gap_pp_since_fy23": -2.4,
+    "by_quarter": {
+      "FY2023Q1": -8.0,
+      "FY2023Q2": -10.5,
+      "FY2023Q3": -9.6,
+      "FY2023Q4": -11.5,
+      "FY2024Q1": -5.2,
+      "FY2024Q2": 3.4,
+      "FY2024Q3": 3.0,
+      "FY2024Q4": 5.0,
+      "FY2025Q1": 1.8,
+      "FY2025Q2": -3.0,
+      "FY2025Q3": 1.2,
+      "FY2025Q4": 2.6,
+      "FY2026Q1": 1.0,
+      "FY2026Q2": -0.6,
+      "FY2026Q3": -3.1,
+      "FY2026Q4": -5.4
+    }
+  },
+  "nowcast": {
+    "window": [
+      "2026-06-01",
+      "2026-09-30"
+    ],
+    "base_ads_k": 89.86,
+    "models": [
+      {
+        "model": "ar1",
+        "yhat_pct": -6.24,
+        "lo80_pct": -10.86,
+        "hi80_pct": -0.06,
+        "backtest_mae_pp": 3.31,
+        "ads_k": 84.42
+      },
+      {
+        "model": "naive_last",
+        "yhat_pct": -6.04,
+        "lo80_pct": -11.95,
+        "hi80_pct": -1.36,
+        "backtest_mae_pp": 3.75,
+        "ads_k": 84.59
+      },
+      {
+        "model": "ridge_all",
+        "yhat_pct": -3.73,
+        "lo80_pct": -10.55,
+        "hi80_pct": -2.44,
+        "backtest_mae_pp": 3.88,
+        "ads_k": 86.57
+      },
+      {
+        "model": "macro3_ar",
+        "yhat_pct": -5.59,
+        "lo80_pct": -10.99,
+        "hi80_pct": 1.22,
+        "backtest_mae_pp": 4.1,
+        "ads_k": 84.98
+      },
+      {
+        "model": "mean4",
+        "yhat_pct": -4.55,
+        "lo80_pct": -12.85,
+        "hi80_pct": 3.82,
+        "backtest_mae_pp": 5.01,
+        "ads_k": 85.86
+      },
+      {
+        "model": "macro3",
+        "yhat_pct": -2.77,
+        "lo80_pct": -10.83,
+        "hi80_pct": 3.03,
+        "backtest_mae_pp": 5.34,
+        "ads_k": 87.4
+      }
+    ],
+    "external": {
+      "BofA_Q3_shipments_yoy_pct": -3.0,
+      "mgmt_sept8": "mid-single-digit decline 1H26, exit 2026 flat to slightly positive"
+    }
+  }
+}

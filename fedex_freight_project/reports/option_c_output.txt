@@ -1,0 +1,143 @@
+
+=== 1. LTL-addressable proxy ===
+       tons_2024  value_2024   tmiles_2024  value_per_ton   avg_miles  share_tons_pct  share_value_pct
+ltl                                                                                                   
+False  9021325.0   3465939.5  1.429356e+06     384.200012  158.399994       70.199997        25.299999
+True   3822624.5  10232772.0  9.787593e+05    2676.899902  256.000000       29.799999        74.699997
+
+=== 2. Proxy vs FedEx Freight tonnage ===
+Index, 2019 = 100:
+      all_truck  ltl_proxy  ltl_proxy_250mi  bulk_truck  fedex_freight
+2017       99.6       97.7             96.6       100.4            NaN
+2018      100.8      100.7            101.3       100.9          105.8
+2019      100.0      100.0            100.0       100.0          100.0
+2020       96.8       97.9             96.8        96.3           88.2
+2021       99.0       98.6             98.8        99.2           95.6
+2022       98.6       98.5             99.5        98.6           90.3
+2023       99.1       95.0             96.8       101.0           73.5
+2024       99.9       95.6             97.7       101.9           68.6
+Correlation of annual index changes with FedEx Freight tonnage (n<=6 years - descriptive):
+all_truck          0.57
+ltl_proxy          0.88
+ltl_proxy_250mi    0.87
+bulk_truck         0.36
+Proxy definition sensitivity (index 2024, 2019=100; corr of annual changes with FedEx):
+    96.2  r=+0.58  strict (chem/plastics/metal goods/machinery/electronics/vehicles/instruments/furniture/misc/mixed)
+    95.6  r=+0.88  baseline
+    96.1  r=+0.48  broad (+ bulk-ish packaged: milled grain, basic chem, newsprint, base metals)
+
+=== 3. Shift-share 2019 -> 2024, LTL-addressable tons by origin state ===
+National LTL-addressable growth 2019->2024: -4.4%
+Commodity growth 2019->2024 (%):
+sctg2
+Printed prods.          -23.900000
+Tobacco prods.          -20.100000
+Textiles/leather        -16.200001
+Furniture               -15.300000
+Articles-base metal     -14.500000
+Misc. mfg. prods.       -12.800000
+Nonmetal min. prods.    -11.900000
+Transport equip.        -11.900000
+Paper articles          -11.600000
+Machinery                -7.400000
+Plastics/rubber          -5.100000
+Precision instruments    -4.000000
+Mixed freight            -2.100000
+Chemical prods.          -1.200000
+Motorized vehicles        0.700000
+Other foodstuffs          2.500000
+Alcoholic beverages       2.900000
+Electronics               8.800000
+Wood prods.              10.200000
+Pharmaceuticals          38.099998
+Weakest regional effects:
+             tons_2024  actual_chg_pct  national_pct  mix_pct  regional_pct
+o_state                                                                    
+VT         7541.100098            -5.8          -4.4      4.5          -5.9
+DC         3707.000000           -12.1          -4.4     -4.3          -3.4
+OR        55539.601562            -3.4          -4.4      3.5          -2.5
+AK         2546.199951            -8.8          -4.4     -1.9          -2.5
+RI         9159.700195            -9.3          -4.4     -2.6          -2.3
+MN        70839.796875            -6.8          -4.4     -0.4          -2.1
+NY       148746.593750            -6.5          -4.4     -0.1          -2.0
+OH       149361.203125            -6.8          -4.4     -0.5          -1.9
+Strongest regional effects:
+             tons_2024  actual_chg_pct  national_pct  mix_pct  regional_pct
+o_state                                                                    
+TX       424930.187500            -4.1          -4.4     -1.0           1.3
+MD        62969.398438            -2.6          -4.4      0.4           1.4
+MT         9217.700195            -1.3          -4.4      1.5           1.6
+SC        75883.000000            -1.5          -4.4      0.6           2.3
+NJ       112968.898438            -1.8          -4.4      0.2           2.3
+GA       146095.906250            -1.3          -4.4      0.6           2.5
+FL       201139.796875            -1.8          -4.4     -0.7           3.3
+ND        14224.099609            -0.7          -4.4     -1.3           5.0
+
+=== 4. Forecast lane growth 2024 -> 2035 (FAF mid-range), LTL-addressable, 250+ mi, state pairs ===
+          tons_2024     tons_2035    add_ktons  cagr_pct
+GA->FL  8420.500000  10946.599609  2526.100098       2.4
+IL->MI  5374.500000   7850.200195  2475.699951       3.5
+CA->AZ  7723.299805  10160.099609  2436.800049       2.5
+OH->PA  3870.399902   6212.000000  2341.500000       4.4
+OH->TX  3721.600098   5928.399902  2206.800049       4.3
+CA->TX  7516.799805   9663.900391  2147.100098       2.3
+IL->TX  4810.000000   6950.399902  2140.399902       3.4
+IL->OH  3749.699951   5814.500000  2064.800049       4.1
+OH->IL  4168.600098   6230.200195  2061.600098       3.7
+TX->LA  4360.700195   6358.700195  1998.000000       3.5
+OH->NY  2757.899902   4688.700195  1930.699951       4.9
+AZ->CA  4942.100098   6815.600098  1873.500000       3.0
+TX->CA  6503.299805   8375.700195  1872.500000       2.3
+TX->OK  3364.399902   5105.399902  1741.099976       3.9
+FL->GA  3688.699951   5427.100098  1738.400024       3.6
+All interstate 250+ mi LTL-addressable lanes: CAGR 2024->2035 = 2.92%/yr
+
+=== 5. Directional imbalance 2024 (LTL-addressable, interstate 250+ mi) ===
+Most outbound-heavy (headhaul origins):
+        outbound       inbound  out_in_ratio    net_pct
+CA  69998.843750  53346.011719          1.31  13.500000
+SC  18296.730469  13796.879883          1.33  14.020000
+OR  14042.879883   9852.660156          1.43  17.540001
+AR  15016.549805  10133.750000          1.48  19.410000
+VT   1901.859985   1119.449951          1.70  25.900000
+ME   7069.330078   2571.760010          2.75  46.650002
+Most inbound-heavy (empty-backhaul risk):
+       outbound       inbound  out_in_ratio    net_pct
+DC   102.059998    311.950012          0.33 -50.700001
+AK     7.580000     19.250000          0.39 -43.509998
+WY  1129.420044   2855.520020          0.40 -43.320000
+MT  2748.879883   6324.339844          0.43 -39.410000
+NV  6115.580078  13291.769531          0.46 -36.980000
+NM  2928.919922   5770.959961          0.51 -32.669998
+Tennessee:
+        outbound       inbound  out_in_ratio  net_pct
+TN  23696.339844  28657.160156          0.83    -9.48
+
+=== 6. Clustering FAF zones ===
+Silhouette by k: {3: 0.127, 4: 0.135, 5: 0.142, 6: 0.144, 7: 0.145, 8: 0.133}
+best k=7; seed stability ARI mean=0.69
+Verdict: silhouette < 0.25 means weak cluster structure - zones form a continuum, so clusters are used
+only as a descriptive segmentation; the growth quadrant chart (history vs forecast) carries the message.
+         hist_growth  fcst_cagr  value_per_ton  avg_miles  log_size  share_food_bev  share_chem_plastic_pharma  share_wood_paper_print  share_metal_machinery  share_electronics_instruments  share_vehicles_transport  share_furniture_misc  share_mixed_freight  n_zones  tons_2024_m
+cluster                                                                                                                                                                                                                                                                                
+0             -0.078      0.029          1.893      0.155     9.093           0.131                      0.063                   0.076                  0.571                          0.023                     0.030                 0.036                0.071       22   262.326996
+1             -0.032      0.027          2.199      0.262     9.948           0.115                      0.100                   0.304                  0.297                          0.014                     0.038                 0.043                0.089       19   506.235992
+2             -0.008      0.020          3.663      0.328     9.965           0.157                      0.113                   0.073                  0.385                          0.095                     0.050                 0.071                0.057       10   422.166992
+3             -0.033      0.025          2.102      0.265    10.068           0.354                      0.053                   0.125                  0.307                          0.018                     0.024                 0.036                0.083       22   682.872986
+4              0.329      0.009          5.148      0.919    10.161           0.165                      0.100                   0.015                  0.356                          0.098                     0.218                 0.045                0.004        1    25.870001
+5             -0.057      0.032          2.682      0.230    10.168           0.172                      0.107                   0.105                  0.367                          0.022                     0.034                 0.043                0.150       47  1620.312012
+6             -0.038      0.027          3.275      0.248    10.042           0.163                      0.086                   0.093                  0.278                          0.015                     0.191                 0.037                0.138       11   302.839996
+cluster 0: ['San Antonio TX', 'Austin TX', 'Washington DC-VA-MD-WV (MD Part)', 'Rest of CO', 'Rest of KS', 'Richmond VA']
+cluster 1: ['Rest of GA', 'Arkansas', 'Rest of NC', 'Rest of VA', 'Rest of AL', 'Rest of SC']
+cluster 2: ['Los Angeles CA', 'New York NY-NJ-CT-PA (NJ Part)', 'Savannah GA', 'Virginia Beach-Norfolk VA-NC (VA Part)', 'Charleston SC', 'San Diego CA']
+cluster 3: ['Rest of TX', 'Rest of WI', 'Rest of CA', 'Iowa', 'Miami FL', 'Rest of MI']
+cluster 4: ['Laredo TX']
+cluster 5: ['Dallas-Fort Worth TX-OK (TX Part)', 'Chicago IL-IN-WI (IL Part)', 'Houston TX', 'San Francisco CA', 'Rest of PA', 'New York NY-NJ-CT-PA (NY Part)']
+cluster 6: ['Detroit MI', 'Rest of IN', 'Rest of KY', 'Baltimore MD', 'Indianapolis IN', 'Grand Rapids MI']
+
+=== 7. Memphis zone ===
+Memphis TN-MS-AR (TN Part): outbound 11,518 kt, inbound 11,803 kt, 2019->2024 outbound -4.2%, 2024->2035 outbound CAGR 2.26%
+  top outbound commodities: {'Nonmetal min. prods.': 3388, 'Mixed freight': 2076, 'Other foodstuffs': 2038, 'Electronics': 681, 'Wood prods.': 584}
+  cluster: [2]
+
+written: /home/user/job-search/fedex_freight_project/reports/option_c
