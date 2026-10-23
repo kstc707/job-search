@@ -1,39 +1,32 @@
-"""Draft the short follow-up email (reports/email_draft.md) and gather the attachments under clean names in
-reports/email_attachments/ (gitignored; the resume is added by hand as SaiTejaKoppolu_Resume.pdf)."""
-import json
+"""Draft the short follow-up message (reports/email_draft.md) and copy its one attachment, the project summary,
+under a clean name into reports/email_attachments/ (gitignored)."""
 import pathlib
 import shutil
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 REP = ROOT / "reports"
-H = json.loads((REP / "site/headline.json").read_text())
-fc = "−" + H["fdx_nc"][1:] if H["fdx_nc"].startswith("-") else H["fdx_nc"]
 ATT = REP / "email_attachments"
 ATT.mkdir(exist_ok=True)
-files = {"SaiTejaKoppolu_FedExFreight_ProjectSummary.pdf": "summary/Koppolu_FedEx_Freight_project_summary.pdf",
-         "SaiTejaKoppolu_FedExFreight_Overview.pdf": "overview/Koppolu_FedEx_Freight_overview.pdf",
-         "SaiTejaKoppolu_FedExFreight_Video.mp4": "video/Koppolu_FedEx_Freight_overview.mp4"}
+files = {"SaiTejaKoppolu_FedExFreight_ProjectSummary.pdf": "summary/Koppolu_FedEx_Freight_project_summary.pdf"}
+for old in ATT.glob("SaiTejaKoppolu_FedExFreight_*"):
+    if old.name not in files:
+        old.unlink()
 for name, src in files.items():
     shutil.copyfile(REP / src, ATT / name)
 
-body = f"""Subject: Intern-Data Scientist (Pricing Science & Analysis) applicant: a FedEx Freight pricing project
+body = """Subject: Intern-Data Scientist applicant: a FedEx Freight project
 
 Hi [Name],
 
-I recently applied for the Intern-Data Scientist role with Pricing Science & Analysis. To show how interested I am, I
-built a project from real public FedEx Freight data (SEC filings and its published fuel surcharge table) on one pricing
-question: how does FedEx Freight's shipment share respond to its price relative to competitors?
+I applied for the Intern-Data Scientist role (Pricing Science & Analysis). To show my interest, I built a short project
+on FedEx Freight's pricing and market share from real public data, including a forecast locked before the October 29
+report. The one-page summary is attached.
 
-In short: price explains the 2022-23 share loss, but not the losses since, which suggests price alone won't win that
-share back. I also locked a forecast of June-September shipments ({fc}%) before the October 29 report.
-
-I've attached my resume, a one-page project summary, a one-page overview and a 2-minute video. I'd welcome an
-interview call, or an introduction to the hiring manager or someone on the Pricing Science & Analysis team, to walk you
-through it.
+Could you forward it to the team lead or hiring manager? I'd love a quick call to walk them through it.
 
 Thank you,
 Sai Teja Koppolu
-+1 901-343-7273 | github.com/kstc707
++1 901-343-7273
 """
 (REP / "email_draft.md").write_text(body)
 print(body)
