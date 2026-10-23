@@ -19,3 +19,4 @@ fedex_freight_project/data/raw/sec_edgar/fedex_corp_earnings/*.htm
 fedex_freight_project/data/raw/sec_edgar/peers/*/*.htm
 fedex_freight_project/data/raw/sec_edgar/peers/*/*.html
 fedex_freight_project/reports/brief/brief.html
+fedex_freight_project/data/raw/sec_edgar/peers/*/.done_*
