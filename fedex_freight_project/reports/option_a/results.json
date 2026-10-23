@@ -1,6 +1,14 @@
 {
   "backtest": [
     {
+      "model": "combo",
+      "n": 18,
+      "mae_pp": 3.24,
+      "rmse_pp": 4.09,
+      "bias_pp": -0.62,
+      "direction_hit": 0.83
+    },
+    {
       "model": "ar1",
       "n": 19,
       "mae_pp": 3.31,
@@ -9,28 +17,12 @@
       "direction_hit": 0.95
     },
     {
-      "model": "combo",
-      "n": 18,
-      "mae_pp": 3.32,
-      "rmse_pp": 4.22,
-      "bias_pp": -0.71,
-      "direction_hit": 0.83
-    },
-    {
       "model": "ridge_all",
       "n": 19,
-      "mae_pp": 3.68,
-      "rmse_pp": 4.59,
-      "bias_pp": 2.71,
+      "mae_pp": 3.69,
+      "rmse_pp": 4.54,
+      "bias_pp": 2.68,
       "direction_hit": 0.79
-    },
-    {
-      "model": "peer_ar",
-      "n": 19,
-      "mae_pp": 3.71,
-      "rmse_pp": 5.1,
-      "bias_pp": -1.56,
-      "direction_hit": 0.89
     },
     {
       "model": "naive_last",
@@ -51,10 +43,26 @@
     {
       "model": "peer_macro_ar",
       "n": 18,
-      "mae_pp": 4.34,
-      "rmse_pp": 5.62,
-      "bias_pp": -0.58,
+      "mae_pp": 4.23,
+      "rmse_pp": 5.48,
+      "bias_pp": -0.52,
       "direction_hit": 0.83
+    },
+    {
+      "model": "peer_ar",
+      "n": 19,
+      "mae_pp": 4.4,
+      "rmse_pp": 6.35,
+      "bias_pp": -0.44,
+      "direction_hit": 0.89
+    },
+    {
+      "model": "peer_ar_yellow",
+      "n": 19,
+      "mae_pp": 4.72,
+      "rmse_pp": 6.59,
+      "bias_pp": 0.31,
+      "direction_hit": 0.84
     },
     {
       "model": "mean4",
@@ -75,9 +83,9 @@
     {
       "model": "peer",
       "n": 19,
-      "mae_pp": 5.92,
-      "rmse_pp": 7.43,
-      "bias_pp": 3.74,
+      "mae_pp": 5.9,
+      "rmse_pp": 7.45,
+      "bias_pp": 3.75,
       "direction_hit": 0.79
     }
   ],
@@ -85,59 +93,60 @@
     "n": 18,
     "mae_pp": {
       "ar1": 3.14,
-      "combo": 3.32,
+      "combo": 3.24,
       "macro3": 5.27,
       "macro3_ar": 4.1,
       "mean4": 4.91,
       "naive_last": 3.49,
-      "peer": 5.33,
-      "peer_ar": 3.79,
-      "peer_macro_ar": 4.34,
-      "ridge_all": 3.29
+      "peer": 5.3,
+      "peer_ar": 3.6,
+      "peer_ar_yellow": 3.93,
+      "peer_macro_ar": 4.23,
+      "ridge_all": 3.31
     }
   },
   "gap": {
     "cols": [
       "peer_yoy"
     ],
-    "mean_gap_pp_since_fy23": -5.9,
+    "mean_gap_pp_since_fy23": -5.6,
     "by_quarter": {
-      "FY2023Q1": -3.5,
-      "FY2023Q2": -8.3,
+      "FY2023Q1": -3.6,
+      "FY2023Q2": -5.9,
       "FY2023Q3": -8.0,
-      "FY2023Q4": -15.2,
+      "FY2023Q4": -14.8,
       "FY2024Q1": -15.5,
       "FY2024Q2": -11.1,
       "FY2024Q3": -9.4,
       "FY2024Q4": -5.6,
       "FY2025Q1": -4.5,
-      "FY2025Q2": -5.8,
-      "FY2025Q3": -1.6,
-      "FY2025Q4": 2.7,
-      "FY2026Q1": 2.0,
-      "FY2026Q2": -0.1,
-      "FY2026Q3": -3.9,
+      "FY2025Q2": -5.6,
+      "FY2025Q3": -1.5,
+      "FY2025Q4": 2.8,
+      "FY2026Q1": 2.1,
+      "FY2026Q2": 0.0,
+      "FY2026Q3": -3.8,
       "FY2026Q4": -5.9
     }
   },
   "relative_vs_peers": {
-    "mean_since_fy23_pp": -5.7,
+    "mean_since_fy23_pp": -5.6,
     "by_quarter_pp": {
-      "FY2018Q4": 6.9,
-      "FY2019Q1": 7.7,
-      "FY2019Q2": 6.3,
-      "FY2019Q3": 4.5,
-      "FY2019Q4": 0.7,
-      "FY2020Q1": -3.7,
-      "FY2020Q2": -4.5,
-      "FY2020Q3": -2.9,
-      "FY2022Q2": -1.6,
-      "FY2022Q3": -2.9,
-      "FY2022Q4": -5.1,
-      "FY2023Q1": -3.5,
-      "FY2023Q2": -8.2,
-      "FY2023Q3": -8.4,
-      "FY2023Q4": -15.6,
+      "FY2018Q4": 6.7,
+      "FY2019Q1": 7.5,
+      "FY2019Q2": 6.1,
+      "FY2019Q3": 4.6,
+      "FY2019Q4": 0.9,
+      "FY2020Q1": -3.6,
+      "FY2020Q2": -4.3,
+      "FY2020Q3": -3.2,
+      "FY2022Q2": -1.5,
+      "FY2022Q3": -3.2,
+      "FY2022Q4": -5.2,
+      "FY2023Q1": -3.6,
+      "FY2023Q2": -6.3,
+      "FY2023Q3": -8.6,
+      "FY2023Q4": -15.4,
       "FY2024Q1": -14.9,
       "FY2024Q2": -9.9,
       "FY2024Q3": -8.3,
@@ -165,6 +174,14 @@
     "base_ads_k": 89.86,
     "models": [
       {
+        "model": "combo",
+        "yhat_pct": -5.93,
+        "lo80_pct": -10.11,
+        "hi80_pct": -0.43,
+        "backtest_mae_pp": 3.24,
+        "ads_k": 84.68
+      },
+      {
         "model": "ar1",
         "yhat_pct": -6.24,
         "lo80_pct": -10.86,
@@ -173,28 +190,12 @@
         "ads_k": 84.42
       },
       {
-        "model": "combo",
-        "yhat_pct": -5.95,
-        "lo80_pct": -9.94,
-        "hi80_pct": -0.39,
-        "backtest_mae_pp": 3.32,
-        "ads_k": 84.67
-      },
-      {
         "model": "ridge_all",
-        "yhat_pct": -4.27,
-        "lo80_pct": -10.78,
-        "hi80_pct": -3.1,
-        "backtest_mae_pp": 3.68,
-        "ads_k": 86.1
-      },
-      {
-        "model": "peer_ar",
-        "yhat_pct": -6.02,
-        "lo80_pct": -8.92,
-        "hi80_pct": 1.94,
-        "backtest_mae_pp": 3.71,
-        "ads_k": 84.61
+        "yhat_pct": -3.91,
+        "lo80_pct": -10.39,
+        "hi80_pct": -2.65,
+        "backtest_mae_pp": 3.69,
+        "ads_k": 86.41
       },
       {
         "model": "naive_last",
@@ -214,11 +215,27 @@
       },
       {
         "model": "peer_macro_ar",
-        "yhat_pct": -5.61,
-        "lo80_pct": -11.02,
-        "hi80_pct": 3.22,
-        "backtest_mae_pp": 4.34,
-        "ads_k": 84.95
+        "yhat_pct": -5.58,
+        "lo80_pct": -10.65,
+        "hi80_pct": 4.55,
+        "backtest_mae_pp": 4.23,
+        "ads_k": 84.98
+      },
+      {
+        "model": "peer_ar",
+        "yhat_pct": -5.96,
+        "lo80_pct": -9.93,
+        "hi80_pct": 1.75,
+        "backtest_mae_pp": 4.4,
+        "ads_k": 84.66
+      },
+      {
+        "model": "peer_ar_yellow",
+        "yhat_pct": -6.7,
+        "lo80_pct": -13.06,
+        "hi80_pct": 0.92,
+        "backtest_mae_pp": 4.72,
+        "ads_k": 84.04
       },
       {
         "model": "mean4",
@@ -238,11 +255,11 @@
       },
       {
         "model": "peer",
-        "yhat_pct": -3.66,
-        "lo80_pct": -15.59,
-        "hi80_pct": 0.53,
-        "backtest_mae_pp": 5.92,
-        "ads_k": 86.63
+        "yhat_pct": -3.6,
+        "lo80_pct": -15.56,
+        "hi80_pct": 0.49,
+        "backtest_mae_pp": 5.9,
+        "ads_k": 86.68
       }
     ],
     "external": {

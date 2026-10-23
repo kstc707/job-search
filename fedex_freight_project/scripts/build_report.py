@@ -153,7 +153,8 @@ MODEL_DESC = {"naive_last": "last quarter's YoY carried forward", "mean4": "aver
               "macro3_ar": "macro3 plus last quarter", "ridge_all": "ridge on 14 macro series plus last quarter",
               "peer": "public LTL peers' shipments/day, same months", "peer_ar": "peers plus last quarter",
               "peer_macro_ar": "peers, macro, last quarter",
-              "combo": "average of ar1, peer_ar, macro3_ar (fixed in advance)"}
+              "combo": "average of ar1, peer_ar, macro3_ar (fixed in advance)",
+              "peer_ar_yellow": "peer_ar plus an ex-post Yellow-shutdown dummy (sensitivity)"}
 nowcast_rows = "".join(
     f"<tr{' class=\"win\"' if m == nc_name else ''}><td>{html.escape(m)}</td><td>{html.escape(MODEL_DESC.get(m, ''))}</td>"
     f"<td>{v['y']:+.1f}%</td><td>{v['lo']:+.1f}% to {v['hi']:+.1f}%</td><td>{v['mae']:.1f}</td></tr>"

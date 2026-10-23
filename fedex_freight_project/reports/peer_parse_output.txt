@@ -1,0 +1,29 @@
+           min     max  nunique
+ticker                         
+ARCB    2016Q4  2026Q2       39
+ODFL    2016Q4  2026Q2       39
+SAIA    2017Q1  2026Q2       38
+XPO     2016Q4  2026Q2       39
+restatement check: 1524 comparisons, 20 differ by >1%
+ticker  metric                      
+ARCB    operating_income_musd           4
+XPO     adjusted_operating_ratio_pct    4
+        operating_income_musd           8
+        operating_ratio_pct             4
+                                        min      max  nunique
+ticker metric                                                
+ARCB   revenue_per_cwt_yoy_pct      2022-01  2026-08       50
+       revenue_per_day_yoy_pct      2020-04  2026-08       77
+       shipments_per_day_yoy_pct    2020-04  2026-08       77
+       tons_per_day_yoy_pct         2020-04  2026-08       77
+       weight_per_shipment_yoy_pct  2022-01  2026-08       50
+ODFL   revenue_per_day_yoy_pct      2019-02  2026-08       31
+       shipments_per_day_yoy_pct    2017-02  2026-08       37
+       tons_per_day_yoy_pct         2017-02  2026-08       38
+       weight_per_shipment_yoy_pct  2017-02  2026-08       38
+SAIA   shipments_per_day_yoy_pct    2017-01  2026-08       77
+       tons_per_day_yoy_pct         2017-01  2026-08       77
+       weight_per_shipment_yoy_pct  2019-10  2026-08       55
+XPO    shipments_per_day_yoy_pct    2023-05  2026-08       14
+       tons_per_day_yoy_pct         2023-05  2026-08       14
+       weight_per_shipment_yoy_pct  2023-05  2026-08       14

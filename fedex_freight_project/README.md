@@ -9,7 +9,7 @@ published fuel surcharge table. No synthetic data.
 
 | | |
 |---|---|
-| Interactive report | `reports/site/index.html` (also published as a private claude.ai page) |
+| Interactive report | `reports/site/index.html`, published at https://claude.ai/artifact/Ee3dgrWjP7n7E8FSMNHTuA (private until shared) |
 | Two-page brief (PDF) | `reports/brief/Koppolu_FedEx_Freight_Market_or_Share.pdf` |
 | Email draft | `reports/email_draft.md` |
 | External benchmarks (guidance, valuation, peer data, NMFC, diesel) | `reports/external_benchmarks.md` |
@@ -20,8 +20,8 @@ published fuel surcharge table. No synthetic data.
 | Question | Answer |
 |---|---|
 | FedEx Freight tonnage, 2019→2024 vs LTL-addressable truck freight (FAF5) | **-31.4%** vs **-4.4%** |
-| Relative to 4 public LTL peers (ODFL, SAIA, XPO, ARCB), shipments/day YoY since FY2023 | **-5.7 pp/yr** (last 4 quarters: +1.6, -0.5, -4.0, -5.7) |
-| Nowcast: shipments/day YoY, Jun–Sep 2026 (FDXF reports Oct 29) | **-6.0%** (80%: -9.9% to -0.4%) |
+| Relative to 4 public LTL peers (ODFL, SAIA, XPO, ARCB), shipments/day YoY since FY2023 | **-5.6 pp/yr** (last 4 quarters: +1.6, -0.5, -4.0, -5.7) |
+| Nowcast: shipments/day YoY, Jun–Sep 2026 (FDXF reports Oct 29) | **-5.9%** (80%: -10.1% to -0.4%) |
 | Realized fuel surcharge / published tariff | **0.59** (sd 0.009, 8 quarters) |
 | FY26 Q4 base revenue/cwt YoY (out-of-sample) vs management's "slight decline" | +0.3%; weight-adjusted price **+2.7%** |
 | Fuel effect on revenue/shipment: Jun–Sep 2026 / at EIA's 2027 diesel | +8.1% / **-7.7%** |
@@ -37,7 +37,7 @@ published fuel surcharge table. No synthetic data.
 | `scripts/option_c_faf_lanes.py` | Where is freight going? | LTL-addressable proxy from FAF5 (2.7M rows); shift-share 2019→2024; 2035 lane growth; directional imbalance; k-means zone clustering (weak structure, reported as such) |
 | `scripts/option_d_value_sensitivity.py` | What is a point worth? | Incremental margins on volume vs price/mix revenue (HAC), converted to $ and per-share value at the market multiple |
 
-Backtest MAE (pp, one quarter ahead): best `ar1` 3.3, naive 3.8, macro+AR 4.1, `peer_ar` 3.7 pp, `peer` 5.9 pp, `peer_macro_ar` 4.3 pp.
+Backtest MAE (pp, one quarter ahead): best `combo` 3.2, naive 3.8, macro+AR 4.1, `peer_ar` 4.4 pp, `peer` 5.9 pp, `peer_macro_ar` 4.2 pp.
 
 ## Reproduce
 

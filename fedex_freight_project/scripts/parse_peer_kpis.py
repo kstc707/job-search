@@ -57,7 +57,7 @@ QUARTERLY = {
         (r"^ltl revenue/shipment, excluding fuel", "revenue_per_shipment_ex_fuel_usd", "usd", 1),
         (r"^ltl revenue/shipment$", "revenue_per_shipment_usd", "usd", 1),
         (r"^ltl pounds/shipment", "weight_per_shipment_lbs", "lbs", 1),
-        (r"^ltl average length of haul", "length_of_haul_miles", "miles", 1),
+        (r"^ltl (average )?length of haul", "length_of_haul_miles", "miles", 1),
         (r"^operating revenue$", "revenue_musd", "usd_m", 1e-3),
         (r"^operating income$", "operating_income_musd", "usd_m", 1e-3),
         # tonnage and shipments rows carry quarter totals then per-workday values; handled specially
@@ -216,15 +216,25 @@ def sign(word: str) -> int:
     return -1 if re.fullmatch(DOWN, word, re.I) else 1
 
 
-def parse_monthly_text(text: str):
-    """ODFL/XPO style prose: 'for August 2026 ... a 2.4% decrease in LTL shipments per day ...'."""
+MONTH_RX = "(" + "|".join(MONTHS) + r"),? (20\d\d)"
+TRIGGERS = {
+    # ODFL / XPO: "... operating metrics for August 2026. Revenue per day increased ..."
+    "for": r"(?:metrics|data|results) for (?:the month of )?" + MONTH_RX,
+    # Saia (2017-2023 prose): "In April 2019, LTL shipments per workday increased 1.3% ..."
+    "in": r"\bIn " + MONTH_RX + r",",
+}
+
+
+def parse_monthly_text(text: str, trigger: str = "for"):
+    """Prose updates: 'for August 2026 ... a 2.4% decrease in LTL shipments per day ...'."""
     out = []
-    # split into per-month segments on "<Month> <Year>" mentions that are the subject of a sentence
-    for m in re.finditer(r"(?:metrics|data|results) for (?:the month of )?(" + "|".join(MONTHS) + r"),? (20\d\d)",
-                         text, re.I):
+    hits = list(re.finditer(TRIGGERS[trigger], text, re.I))
+    for i, m in enumerate(hits):
         month = pd.Period(f"{m.group(2)}-{MONTHS[m.group(1).lower()]:02d}", "M")
-        seg = text[m.end(): m.end() + 900]
-        seg = re.split(r"(?:quarter-to-date|quarter to date|for the quarter)", seg, flags=re.I)[0]
+        end = hits[i + 1].start() if i + 1 < len(hits) else m.end() + 900
+        seg = text[m.end(): min(end, m.end() + 900)]
+        # stop before quarter-to-date figures and calendar/holiday-adjusted restatements of the same month
+        seg = re.split(r"(?:quarter-to-date|quarter to date|for the quarter|adjusted for)", seg, flags=re.I)[0]
         for rx, key in MONTHLY_METRICS:
             v = None
             # "<metric> increased 3.7%"   or   "<metric> was down 2%"
@@ -275,8 +285,8 @@ def parse_monthly_tables(path: pathlib.Path):
             if not header or not r:
                 continue
             lab = r[0].lower()
-            if re.search(r"asset-light|purchased transportation|\(year-over-year\)", lab):
-                continue  # ArcBest Asset-Light rows (labelled '(Year-over-Year)')
+            if re.search(r"asset-light|purchased transportation|year-over-year", lab):
+                continue  # ArcBest Asset-Light rows (labelled '... (Year-over-Year)' / '... year-over-year change')
             key = next((k for rx, k in MONTHLY_METRICS if re.search(rx, lab)), None)
             if key is None:
                 continue
@@ -317,8 +327,10 @@ for tdir in sorted(p for p in SRC.iterdir() if p.is_dir()):
                                    filed=filed.date(), basis="as_reported", source_row=" | ".join(cells)[:200]))
         # monthly updates
         months = parse_monthly_tables(f)
-        if ticker in ("ODFL", "XPO"):  # prose-style updates; SAIA and ARCB publish tables
-            months += parse_monthly_text(doc_text(f))
+        if ticker in ("ODFL", "XPO"):  # prose-style updates
+            months += parse_monthly_text(doc_text(f), "for")
+        elif ticker == "SAIA":  # prose before mid-2023, prose + table after
+            months += parse_monthly_text(doc_text(f), "in")
         for mo, key, v in months:
             m_rows.append(dict(ticker=ticker, month=str(mo), metric=key, value=v, unit="yoy_pct",
                                source_file=f.name, filed=filed.date()))

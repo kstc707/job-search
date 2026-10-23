@@ -953,6 +953,7 @@ ODFL,2026Q2,2026-06-30,tons_per_day,31804.0,tons,33178.0,2026-07-29_odfl-ex99_1.
 ODFL,2026Q2,2026-06-30,tons_total,2035000.0,tons,2123000.0,2026-07-29_odfl-ex99_1.htm,2026-07-29,as_reported,"LTL tons (1) | 2,035 | 2,123 | (4.1 | 3,962 | 4,211 | (5.9"
 ODFL,2026Q2,2026-06-30,weight_per_shipment_lbs,1503.0,lbs,1478.0,2026-07-29_odfl-ex99_1.htm,2026-07-29,as_reported,"LTL weight per shipment (lbs.) | 1,503 | 1,478 | 1.7 | 1,497 | 1,482 | 1.0"
 ODFL,2026Q2,2026-06-30,workdays,64.0,days,64.0,2026-07-29_odfl-ex99_1.htm,2026-07-29,as_reported,Work days | 64 | 64 | — | 127 | 127 | —
+SAIA,2017Q1,2017-03-31,length_of_haul_miles,797.0,miles,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,LTL length of haul (3) | 837 | 797 | 5.0
 SAIA,2017Q1,2017-03-31,operating_income_musd,17.527,usd_m,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,"OPERATING INCOME | 27,579 | 17,527"
 SAIA,2017Q1,2017-03-31,operating_ratio_pct,94.6,pct,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,Operating ratio (1) | 93.0 | 94.6
 SAIA,2017Q1,2017-03-31,revenue_musd,323.09000000000003,usd_m,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,"OPERATING REVENUE | 392,805 | 323,090"
@@ -964,6 +965,7 @@ SAIA,2017Q1,2017-03-31,tons_per_day,16690.0,tons,,2018-04-27_saia-ex991_6.htm,20
 SAIA,2017Q1,2017-03-31,tons_total,1068000.0,tons,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,"LTL tonnage (2) | 1,199 | 1,068 | 12.2 | 18.73 | 16.69 | 12.2"
 SAIA,2017Q1,2017-03-31,weight_per_shipment_lbs,1308.0,lbs,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,"LTL pounds/shipment | 1,355 | 1,308 | 3.6"
 SAIA,2017Q1,2017-03-31,workdays,64.0,days,,2018-04-27_saia-ex991_6.htm,2018-04-27,restated: prior-year column of the following year's release,Workdays | 64 | 64
+SAIA,2017Q2,2017-06-30,length_of_haul_miles,806.0,miles,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,LTL length of haul (3) | 837 | 806 | 3.8
 SAIA,2017Q2,2017-06-30,operating_income_musd,29.686,usd_m,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,"OPERATING INCOME | 41,565 | 29,686 | 69,144 | 47,213"
 SAIA,2017Q2,2017-06-30,operating_ratio_pct,91.9,pct,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,Operating ratio (1) | 90.3 | 91.9
 SAIA,2017Q2,2017-06-30,revenue_musd,364.404,usd_m,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,"OPERATING REVENUE | 428,732 | 364,404 | 821,537 | 687,494"
@@ -975,6 +977,7 @@ SAIA,2017Q2,2017-06-30,tons_per_day,18540.0,tons,,2018-08-01_saia-ex991_6.htm,20
 SAIA,2017Q2,2017-06-30,tons_total,1187000.0,tons,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,"LTL tonnage (2) | 1,278 | 1,187 | 7.7 | 19.97 | 18.54 | 7.7"
 SAIA,2017Q2,2017-06-30,weight_per_shipment_lbs,1327.0,lbs,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,"LTL pounds/shipment | 1,370 | 1,327 | 3.2"
 SAIA,2017Q2,2017-06-30,workdays,64.0,days,,2018-08-01_saia-ex991_6.htm,2018-08-01,restated: prior-year column of the following year's release,Workdays | 64 | 64
+SAIA,2017Q3,2017-09-30,length_of_haul_miles,813.0,miles,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,LTL length of haul (3) | 835 | 813 | 2.7
 SAIA,2017Q3,2017-09-30,operating_income_musd,24.568,usd_m,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,"OPERATING INCOME | 38,697 | 24,568 | 107,841 | 71,781"
 SAIA,2017Q3,2017-09-30,operating_ratio_pct,93.1,pct,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,Operating ratio (1) | 90.9 | 93.1
 SAIA,2017Q3,2017-09-30,revenue_musd,357.01,usd_m,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,"OPERATING REVENUE | 425,562 | 357,010 | 1,247,099 | 1,044,505"
@@ -986,6 +989,7 @@ SAIA,2017Q3,2017-09-30,tons_per_day,17870.0,tons,,2018-10-31_saia-ex991_6.htm,20
 SAIA,2017Q3,2017-09-30,tons_total,1126000.0,tons,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,"LTL tonnage (2) | 1,208 | 1,126 | 7.3 | 19.17 | 17.87 | 7.3"
 SAIA,2017Q3,2017-09-30,weight_per_shipment_lbs,1332.0,lbs,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,"LTL pounds/shipment | 1,357 | 1,332 | 1.8"
 SAIA,2017Q3,2017-09-30,workdays,63.0,days,,2018-10-31_saia-ex991_6.htm,2018-10-31,restated: prior-year column of the following year's release,Workdays | 63 | 63
+SAIA,2017Q4,2017-12-31,length_of_haul_miles,828.0,miles,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,LTL length of haul (3) | 837 | 828 | 1.1
 SAIA,2017Q4,2017-12-31,operating_income_musd,22.928,usd_m,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,"OPERATING INCOME | 33,336 | 22,928 | 141,177 | 94,710"
 SAIA,2017Q4,2017-12-31,operating_ratio_pct,93.6,pct,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,Operating ratio (1) | 91.8 | 93.6
 SAIA,2017Q4,2017-12-31,revenue_musd,360.196,usd_m,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,"OPERATING REVENUE | 406,750 | 360,196 | 1,653,849 | 1,404,703"
@@ -997,6 +1001,7 @@ SAIA,2017Q4,2017-12-31,tons_per_day,18100.0,tons,,2019-02-04_saia-ex991_6.htm,20
 SAIA,2017Q4,2017-12-31,tons_total,1104000.0,tons,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,"LTL tonnage (2) | 1,115 | 1,104 | 1.0 | 17.99 | 18.10 | (0.6"
 SAIA,2017Q4,2017-12-31,weight_per_shipment_lbs,1327.0,lbs,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,"LTL pounds/shipment | 1,322 | 1,327 | (0.4"
 SAIA,2017Q4,2017-12-31,workdays,61.0,days,,2019-02-04_saia-ex991_6.htm,2019-02-04,restated: prior-year column of the following year's release,Workdays | 62 | 61
+SAIA,2018Q1,2018-03-31,length_of_haul_miles,837.0,miles,797.0,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,LTL length of haul (3) | 837 | 797 | 5.0
 SAIA,2018Q1,2018-03-31,operating_income_musd,27.579,usd_m,17.527,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,"OPERATING INCOME | 27,579 | 17,527"
 SAIA,2018Q1,2018-03-31,operating_ratio_pct,93.0,pct,94.6,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,Operating ratio (1) | 93.0 | 94.6
 SAIA,2018Q1,2018-03-31,revenue_musd,392.805,usd_m,323.09000000000003,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,"OPERATING REVENUE | 392,805 | 323,090"
@@ -1008,6 +1013,7 @@ SAIA,2018Q1,2018-03-31,tons_per_day,18730.0,tons,16690.0,2018-04-27_saia-ex991_6
 SAIA,2018Q1,2018-03-31,tons_total,1199000.0,tons,1068000.0,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,"LTL tonnage (2) | 1,199 | 1,068 | 12.2 | 18.73 | 16.69 | 12.2"
 SAIA,2018Q1,2018-03-31,weight_per_shipment_lbs,1355.0,lbs,1308.0,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,"LTL pounds/shipment | 1,355 | 1,308 | 3.6"
 SAIA,2018Q1,2018-03-31,workdays,64.0,days,64.0,2018-04-27_saia-ex991_6.htm,2018-04-27,as_reported,Workdays | 64 | 64
+SAIA,2018Q2,2018-06-30,length_of_haul_miles,837.0,miles,806.0,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,LTL length of haul (3) | 837 | 806 | 3.8
 SAIA,2018Q2,2018-06-30,operating_income_musd,41.565,usd_m,29.686,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,"OPERATING INCOME | 41,565 | 29,686 | 69,144 | 47,213"
 SAIA,2018Q2,2018-06-30,operating_ratio_pct,90.3,pct,91.9,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,Operating ratio (1) | 90.3 | 91.9
 SAIA,2018Q2,2018-06-30,revenue_musd,428.732,usd_m,364.404,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,"OPERATING REVENUE | 428,732 | 364,404 | 821,537 | 687,494"
@@ -1019,6 +1025,7 @@ SAIA,2018Q2,2018-06-30,tons_per_day,19970.0,tons,18540.0,2018-08-01_saia-ex991_6
 SAIA,2018Q2,2018-06-30,tons_total,1278000.0,tons,1187000.0,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,"LTL tonnage (2) | 1,278 | 1,187 | 7.7 | 19.97 | 18.54 | 7.7"
 SAIA,2018Q2,2018-06-30,weight_per_shipment_lbs,1370.0,lbs,1327.0,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,"LTL pounds/shipment | 1,370 | 1,327 | 3.2"
 SAIA,2018Q2,2018-06-30,workdays,64.0,days,64.0,2018-08-01_saia-ex991_6.htm,2018-08-01,as_reported,Workdays | 64 | 64
+SAIA,2018Q3,2018-09-30,length_of_haul_miles,835.0,miles,813.0,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,LTL length of haul (3) | 835 | 813 | 2.7
 SAIA,2018Q3,2018-09-30,operating_income_musd,38.697,usd_m,24.568,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,"OPERATING INCOME | 38,697 | 24,568 | 107,841 | 71,781"
 SAIA,2018Q3,2018-09-30,operating_ratio_pct,90.9,pct,93.1,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,Operating ratio (1) | 90.9 | 93.1
 SAIA,2018Q3,2018-09-30,revenue_musd,425.562,usd_m,357.01,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,"OPERATING REVENUE | 425,562 | 357,010 | 1,247,099 | 1,044,505"
@@ -1030,6 +1037,7 @@ SAIA,2018Q3,2018-09-30,tons_per_day,19170.0,tons,17870.0,2018-10-31_saia-ex991_6
 SAIA,2018Q3,2018-09-30,tons_total,1208000.0,tons,1126000.0,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,"LTL tonnage (2) | 1,208 | 1,126 | 7.3 | 19.17 | 17.87 | 7.3"
 SAIA,2018Q3,2018-09-30,weight_per_shipment_lbs,1357.0,lbs,1332.0,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,"LTL pounds/shipment | 1,357 | 1,332 | 1.8"
 SAIA,2018Q3,2018-09-30,workdays,63.0,days,63.0,2018-10-31_saia-ex991_6.htm,2018-10-31,as_reported,Workdays | 63 | 63
+SAIA,2018Q4,2018-12-31,length_of_haul_miles,837.0,miles,828.0,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,LTL length of haul (3) | 837 | 828 | 1.1
 SAIA,2018Q4,2018-12-31,operating_income_musd,33.336,usd_m,22.928,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,"OPERATING INCOME | 33,336 | 22,928 | 141,177 | 94,710"
 SAIA,2018Q4,2018-12-31,operating_ratio_pct,91.8,pct,93.6,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,Operating ratio (1) | 91.8 | 93.6
 SAIA,2018Q4,2018-12-31,revenue_musd,406.75,usd_m,360.196,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,"OPERATING REVENUE | 406,750 | 360,196 | 1,653,849 | 1,404,703"
@@ -1041,6 +1049,7 @@ SAIA,2018Q4,2018-12-31,tons_per_day,17990.0,tons,18100.0,2019-02-04_saia-ex991_6
 SAIA,2018Q4,2018-12-31,tons_total,1115000.0,tons,1104000.0,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,"LTL tonnage (2) | 1,115 | 1,104 | 1.0 | 17.99 | 18.10 | (0.6"
 SAIA,2018Q4,2018-12-31,weight_per_shipment_lbs,1322.0,lbs,1327.0,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,"LTL pounds/shipment | 1,322 | 1,327 | (0.4"
 SAIA,2018Q4,2018-12-31,workdays,62.0,days,61.0,2019-02-04_saia-ex991_6.htm,2019-02-04,as_reported,Workdays | 62 | 61
+SAIA,2019Q1,2019-03-31,length_of_haul_miles,831.0,miles,837.0,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,LTL length of haul (2) | 831 | 837 | (0.7
 SAIA,2019Q1,2019-03-31,operating_income_musd,28.631,usd_m,27.579,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,"OPERATING INCOME | 28,631 | 27,579"
 SAIA,2019Q1,2019-03-31,operating_ratio_pct,93.0,pct,93.0,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,Operating ratio | 93.0 | 93.0
 SAIA,2019Q1,2019-03-31,revenue_musd,410.584,usd_m,392.805,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,"OPERATING REVENUE | 410,584 | 392,805"
@@ -1052,6 +1061,7 @@ SAIA,2019Q1,2019-03-31,tons_per_day,18070.0,tons,18730.0,2019-05-01_saia-ex991_6
 SAIA,2019Q1,2019-03-31,tons_total,1139000.0,tons,1199000.0,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,"LTL tonnage (1) | 1,139 | 1,199 | (5.0 | 18.07 | 18.73 | (3.5"
 SAIA,2019Q1,2019-03-31,weight_per_shipment_lbs,1308.0,lbs,1355.0,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,"LTL pounds/shipment | 1,308 | 1,355 | (3.5"
 SAIA,2019Q1,2019-03-31,workdays,63.0,days,64.0,2019-05-01_saia-ex991_6.htm,2019-05-01,as_reported,Workdays | 63 | 64
+SAIA,2019Q2,2019-06-30,length_of_haul_miles,841.0,miles,837.0,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,LTL length of haul (2) | 841 | 837 | 0.5
 SAIA,2019Q2,2019-06-30,operating_income_musd,51.166000000000004,usd_m,41.565,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,"OPERATING INCOME | 51,166 | 41,565"
 SAIA,2019Q2,2019-06-30,operating_ratio_pct,89.0,pct,90.3,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,Operating ratio | 89.0 | 90.3
 SAIA,2019Q2,2019-06-30,revenue_musd,464.195,usd_m,428.732,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,"OPERATING REVENUE | 464,195 | 428,732"
@@ -1063,6 +1073,7 @@ SAIA,2019Q2,2019-06-30,tons_per_day,19600.0,tons,19970.0,2019-07-31_saia-ex991_6
 SAIA,2019Q2,2019-06-30,tons_total,1254000.0,tons,1278000.0,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,"LTL tonnage (1) | 1,254 | 1,278 | (1.9 | 19.60 | 19.97 | (1.9"
 SAIA,2019Q2,2019-06-30,weight_per_shipment_lbs,1298.0,lbs,1370.0,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,"LTL pounds/shipment | 1,298 | 1,370 | (5.3"
 SAIA,2019Q2,2019-06-30,workdays,64.0,days,64.0,2019-07-31_saia-ex991_6.htm,2019-07-31,as_reported,Workdays | 64 | 64
+SAIA,2019Q3,2019-09-30,length_of_haul_miles,842.0,miles,835.0,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,LTL length of haul (2) | 842 | 835 | 0.8
 SAIA,2019Q3,2019-09-30,operating_income_musd,45.359,usd_m,38.697,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,"OPERATING INCOME | 45,359 | 38,697"
 SAIA,2019Q3,2019-09-30,operating_ratio_pct,90.3,pct,90.9,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,Operating ratio | 90.3 | 90.9
 SAIA,2019Q3,2019-09-30,revenue_musd,468.891,usd_m,425.562,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,"OPERATING REVENUE | 468,891 | 425,562"
@@ -1074,6 +1085,7 @@ SAIA,2019Q3,2019-09-30,tons_per_day,19740.0,tons,19170.0,2019-10-30_saia-ex991_6
 SAIA,2019Q3,2019-09-30,tons_total,1263000.0,tons,1208000.0,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,"LTL tonnage (1) | 1,263 | 1,208 | 4.6 | 19.74 | 19.17 | 3.0"
 SAIA,2019Q3,2019-09-30,weight_per_shipment_lbs,1302.0,lbs,1357.0,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,"LTL pounds/shipment | 1,302 | 1,357 | (4.1"
 SAIA,2019Q3,2019-09-30,workdays,64.0,days,63.0,2019-10-30_saia-ex991_6.htm,2019-10-30,as_reported,Workdays | 64 | 63
+SAIA,2019Q4,2019-12-31,length_of_haul_miles,846.0,miles,837.0,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,LTL length of haul (2) | 846 | 837 | 1.1
 SAIA,2019Q4,2019-12-31,operating_income_musd,27.43,usd_m,33.336,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,"OPERATING INCOME | 27,430 | 33,336 | 152,586 | 141,177"
 SAIA,2019Q4,2019-12-31,operating_ratio_pct,93.8,pct,91.8,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,Operating ratio | 93.8 | 91.8
 SAIA,2019Q4,2019-12-31,revenue_musd,443.065,usd_m,406.75,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,"OPERATING REVENUE | 443,065 | 406,750 | 1,786,735 | 1,653,849"
@@ -1085,6 +1097,7 @@ SAIA,2019Q4,2019-12-31,tons_per_day,18770.0,tons,17990.0,2020-02-03_saia-ex991_6
 SAIA,2019Q4,2019-12-31,tons_total,1164000.0,tons,1115000.0,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,"LTL tonnage (1) | 1,164 | 1,115 | 4.3 | 18.77 | 17.99 | 4.3"
 SAIA,2019Q4,2019-12-31,weight_per_shipment_lbs,1297.0,lbs,1322.0,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,"LTL pounds/shipment | 1,297 | 1,322 | (1.9"
 SAIA,2019Q4,2019-12-31,workdays,62.0,days,62.0,2020-02-03_saia-ex991_6.htm,2020-02-03,as_reported,Workdays | 62 | 62
+SAIA,2020Q1,2020-03-31,length_of_haul_miles,848.0,miles,831.0,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,LTL length of haul (2) | 848 | 831 | 2.0
 SAIA,2020Q1,2020-03-31,operating_income_musd,38.776,usd_m,28.631,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,"OPERATING INCOME | 38,776 | 28,631"
 SAIA,2020Q1,2020-03-31,operating_ratio_pct,91.3,pct,93.0,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,Operating ratio | 91.3 | 93.0
 SAIA,2020Q1,2020-03-31,revenue_musd,446.396,usd_m,410.584,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,"OPERATING REVENUE | 446,396 | 410,584"
@@ -1098,6 +1111,7 @@ SAIA,2020Q1,2020-03-31,tons_per_day,18800.0,tons,18070.0,2020-04-29_saia-ex991_6
 SAIA,2020Q1,2020-03-31,tons_total,1203000.0,tons,1139000.0,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,"LTL tonnage (1) | 1,203 | 1,139 | 5.7 | 18.80 | 18.07 | 4.0"
 SAIA,2020Q1,2020-03-31,weight_per_shipment_lbs,1331.0,lbs,1308.0,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,"LTL pounds/shipment | 1,331 | 1,308 | 1.7"
 SAIA,2020Q1,2020-03-31,workdays,64.0,days,63.0,2020-04-29_saia-ex991_6.htm,2020-04-29,as_reported,Workdays | 64 | 63
+SAIA,2020Q2,2020-06-30,length_of_haul_miles,876.0,miles,841.0,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,LTL length of haul (2) | 876 | 841 | 4.2
 SAIA,2020Q2,2020-06-30,operating_income_musd,35.681,usd_m,51.166000000000004,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,"OPERATING INCOME | 35,681 | 51,166 | 74,457 | 79,797"
 SAIA,2020Q2,2020-06-30,operating_ratio_pct,91.5,pct,89.0,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,Operating ratio | 91.5 | 89.0
 SAIA,2020Q2,2020-06-30,revenue_musd,418.11400000000003,usd_m,464.195,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,"OPERATING REVENUE | 418,114 | 464,195 | 864,510 | 874,779"
@@ -1111,6 +1125,7 @@ SAIA,2020Q2,2020-06-30,tons_per_day,17850.0,tons,19600.0,2020-07-29_saia-ex991_6
 SAIA,2020Q2,2020-06-30,tons_total,1142000.0,tons,1254000.0,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,"LTL tonnage (1) | 1,142 | 1,254 | (8.9 | 17.85 | 19.60 | (8.9"
 SAIA,2020Q2,2020-06-30,weight_per_shipment_lbs,1309.0,lbs,1298.0,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,"LTL pounds/shipment | 1,309 | 1,298 | 0.8"
 SAIA,2020Q2,2020-06-30,workdays,64.0,days,64.0,2020-07-29_saia-ex991_6.htm,2020-07-29,as_reported,Workdays | 64 | 64
+SAIA,2020Q3,2020-09-30,length_of_haul_miles,893.0,miles,842.0,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,LTL length of haul (2) | 893 | 842 | 6.1
 SAIA,2020Q3,2020-09-30,operating_income_musd,55.216,usd_m,45.359,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,"OPERATING INCOME | 55,216 | 45,359 | 129,673 | 125,156"
 SAIA,2020Q3,2020-09-30,operating_ratio_pct,88.5,pct,90.3,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,Operating ratio | 88.5 | 90.3
 SAIA,2020Q3,2020-09-30,revenue_musd,481.374,usd_m,468.891,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,"OPERATING REVENUE | 481,374 | 468,891 | 1,345,884 | 1,343,670"
@@ -1124,6 +1139,7 @@ SAIA,2020Q3,2020-09-30,tons_per_day,19730.0,tons,19740.0,2020-10-29_saia-ex991_6
 SAIA,2020Q3,2020-09-30,tons_total,1263000.0,tons,1263000.0,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,"LTL tonnage (1) | 1,263 | 1,263 | (0.0 | 19.73 | 19.74 | (0.0"
 SAIA,2020Q3,2020-09-30,weight_per_shipment_lbs,1289.0,lbs,1302.0,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,"LTL pounds/shipment | 1,289 | 1,302 | (1.0"
 SAIA,2020Q3,2020-09-30,workdays,64.0,days,64.0,2020-10-29_saia-ex991_6.htm,2020-10-29,as_reported,Workdays | 64 | 64
+SAIA,2020Q4,2020-12-31,length_of_haul_miles,898.0,miles,846.0,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,LTL length of haul (2) | 898 | 846 | 6.1
 SAIA,2020Q4,2020-12-31,operating_income_musd,50.648,usd_m,27.43,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,"OPERATING INCOME | 50,648 | 27,430 | 180,321 | 152,586"
 SAIA,2020Q4,2020-12-31,operating_ratio_pct,89.4,pct,93.8,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,Operating ratio | 89.4 | 93.8
 SAIA,2020Q4,2020-12-31,revenue_musd,476.482,usd_m,443.065,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,"OPERATING REVENUE | 476,482 | 443,065 | 1,822,366 | 1,786,735"
@@ -1137,6 +1153,7 @@ SAIA,2020Q4,2020-12-31,tons_per_day,19890.0,tons,18770.0,2021-02-08_saia-ex991_6
 SAIA,2020Q4,2020-12-31,tons_total,1233000.0,tons,1164000.0,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,"LTL tonnage (1) | 1,233 | 1,164 | 5.9 | 19.89 | 18.77 | 6.0"
 SAIA,2020Q4,2020-12-31,weight_per_shipment_lbs,1327.0,lbs,1297.0,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,"LTL pounds/shipment | 1,327 | 1,297 | 2.3"
 SAIA,2020Q4,2020-12-31,workdays,62.0,days,62.0,2021-02-08_saia-ex991_6.htm,2021-02-08,as_reported,Workdays | 62 | 62
+SAIA,2021Q1,2021-03-31,length_of_haul_miles,904.0,miles,848.0,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,LTL length of haul (2) | 904 | 848 | 6.6
 SAIA,2021Q1,2021-03-31,operating_income_musd,48.714,usd_m,38.776,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,"OPERATING INCOME | 48,714 | 38,776"
 SAIA,2021Q1,2021-03-31,operating_ratio_pct,89.9,pct,91.3,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,Operating ratio | 89.9 | 91.3
 SAIA,2021Q1,2021-03-31,revenue_musd,484.074,usd_m,446.396,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,"OPERATING REVENUE | 484,074 | 446,396"
@@ -1150,6 +1167,7 @@ SAIA,2021Q1,2021-03-31,tons_per_day,19790.0,tons,18800.0,2021-04-28_saia-ex991_6
 SAIA,2021Q1,2021-03-31,tons_total,1247000.0,tons,1203000.0,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,"LTL tonnage (1) | 1,247 | 1,203 | 3.7 | 19.79 | 18.80 | 5.3"
 SAIA,2021Q1,2021-03-31,weight_per_shipment_lbs,1366.0,lbs,1331.0,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,"LTL pounds/shipment | 1,366 | 1,331 | 2.6"
 SAIA,2021Q1,2021-03-31,workdays,63.0,days,64.0,2021-04-28_saia-ex991_6.htm,2021-04-28,as_reported,Workdays | 63 | 64
+SAIA,2021Q2,2021-06-30,length_of_haul_miles,911.0,miles,876.0,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,LTL length of haul (2) | 911 | 876 | 4.0
 SAIA,2021Q2,2021-06-30,operating_income_musd,82.925,usd_m,35.681,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,"OPERATING INCOME | 82,925 | 35,681 | 131,639 | 74,457"
 SAIA,2021Q2,2021-06-30,operating_ratio_pct,85.5,pct,91.5,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,Operating ratio | 85.5 | 91.5
 SAIA,2021Q2,2021-06-30,revenue_musd,571.333,usd_m,418.11400000000003,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,"OPERATING REVENUE | 571,333 | 418,114 | 1,055,407 | 864,510"
@@ -1163,6 +1181,7 @@ SAIA,2021Q2,2021-06-30,tons_per_day,21970.0,tons,17850.0,2021-07-29_saia-ex991_6
 SAIA,2021Q2,2021-06-30,tons_total,1406000.0,tons,1142000.0,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,"LTL tonnage (1) | 1,406 | 1,142 | 23.1 | 21.97 | 17.85 | 23.1"
 SAIA,2021Q2,2021-06-30,weight_per_shipment_lbs,1397.0,lbs,1309.0,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,"LTL pounds/shipment | 1,397 | 1,309 | 6.7"
 SAIA,2021Q2,2021-06-30,workdays,64.0,days,64.0,2021-07-29_saia-ex991_6.htm,2021-07-29,as_reported,Workdays | 64 | 64
+SAIA,2021Q3,2021-09-30,length_of_haul_miles,915.0,miles,893.0,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,LTL length of haul (2) | 915 | 893 | 2.5
 SAIA,2021Q3,2021-09-30,operating_income_musd,106.117,usd_m,55.216,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,"OPERATING INCOME | 106,117 | 55,216 | 237,756 | 129,673"
 SAIA,2021Q3,2021-09-30,operating_ratio_pct,82.8,pct,88.5,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,Operating ratio | 82.8 | 88.5
 SAIA,2021Q3,2021-09-30,revenue_musd,616.216,usd_m,481.374,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,"OPERATING REVENUE | 616,216 | 481,374 | 1,671,623 | 1,345,884"
@@ -1176,6 +1195,7 @@ SAIA,2021Q3,2021-09-30,tons_per_day,21910.0,tons,19730.0,2021-10-28_saia-ex991_6
 SAIA,2021Q3,2021-09-30,tons_total,1402000.0,tons,1263000.0,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,"LTL tonnage (1) | 1,402 | 1,263 | 11.0 | 21.91 | 19.73 | 11.0"
 SAIA,2021Q3,2021-09-30,weight_per_shipment_lbs,1400.0,lbs,1289.0,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,"LTL pounds/shipment | 1,400 | 1,289 | 8.6"
 SAIA,2021Q3,2021-09-30,workdays,64.0,days,64.0,2021-10-28_saia-ex991_6.htm,2021-10-28,as_reported,Workdays | 64 | 64
+SAIA,2021Q4,2021-12-31,length_of_haul_miles,924.0,miles,898.0,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,LTL length of haul (2) | 924 | 898 | 2.9
 SAIA,2021Q4,2021-12-31,operating_income_musd,97.385,usd_m,50.648,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,"OPERATING INCOME | 97,385 | 50,648 | 335,141 | 180,321"
 SAIA,2021Q4,2021-12-31,operating_ratio_pct,84.2,pct,89.4,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,Operating ratio | 84.2 | 89.4
 SAIA,2021Q4,2021-12-31,revenue_musd,617.081,usd_m,476.482,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,"OPERATING REVENUE | 617,081 | 476,482 | 2,288,704 | 1,822,366"
@@ -1189,6 +1209,7 @@ SAIA,2021Q4,2021-12-31,tons_per_day,22070.0,tons,19890.0,2022-02-02_saia-ex991_6
 SAIA,2021Q4,2021-12-31,tons_total,1346000.0,tons,1233000.0,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,"LTL tonnage (1) | 1,346 | 1,233 | 9.2 | 22.07 | 19.89 | 11.0"
 SAIA,2021Q4,2021-12-31,weight_per_shipment_lbs,1426.0,lbs,1327.0,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,"LTL pounds/shipment | 1,426 | 1,327 | 7.5"
 SAIA,2021Q4,2021-12-31,workdays,61.0,days,62.0,2022-02-02_saia-ex991_6.htm,2022-02-02,as_reported,Workdays | 61 | 62
+SAIA,2022Q1,2022-03-31,length_of_haul_miles,915.0,miles,904.0,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,LTL length of haul (2) | 915 | 904 | 1.2
 SAIA,2022Q1,2022-03-31,operating_income_musd,103.449,usd_m,48.714,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,"OPERATING INCOME | 103,449 | 48,714"
 SAIA,2022Q1,2022-03-31,operating_ratio_pct,84.4,pct,89.9,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,Operating ratio | 84.4 | 89.9
 SAIA,2022Q1,2022-03-31,revenue_musd,661.216,usd_m,484.074,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,"OPERATING REVENUE | 661,216 | 484,074"
@@ -1202,6 +1223,7 @@ SAIA,2022Q1,2022-03-31,tons_per_day,21670.0,tons,19790.0,2022-05-02_saia-ex991_6
 SAIA,2022Q1,2022-03-31,tons_total,1387000.0,tons,1247000.0,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,"LTL tonnage (1) | 1,387 | 1,247 | 11.2 | 21.67 | 19.79 | 9.5"
 SAIA,2022Q1,2022-03-31,weight_per_shipment_lbs,1414.0,lbs,1366.0,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,"LTL pounds/shipment | 1,414 | 1,366 | 3.5"
 SAIA,2022Q1,2022-03-31,workdays,64.0,days,63.0,2022-05-02_saia-ex991_6.htm,2022-05-02,as_reported,Workdays | 64 | 63
+SAIA,2022Q2,2022-06-30,length_of_haul_miles,910.0,miles,911.0,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,LTL length of haul (2) | 910 | 911 | (0.1
 SAIA,2022Q2,2022-06-30,operating_income_musd,145.993,usd_m,82.925,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,"OPERATING INCOME | 145,993 | 82,925 | 249,442 | 131,639"
 SAIA,2022Q2,2022-06-30,operating_ratio_pct,80.4,pct,85.5,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,Operating ratio | 80.4 | 85.5
 SAIA,2022Q2,2022-06-30,revenue_musd,745.554,usd_m,571.333,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,"OPERATING REVENUE | $745,554 | $571,333 | $1,406,770 | $1,055,407"
@@ -1215,6 +1237,7 @@ SAIA,2022Q2,2022-06-30,tons_per_day,22600.0,tons,21970.0,2022-07-27_saia-ex99_1.
 SAIA,2022Q2,2022-06-30,tons_total,1446000.0,tons,1406000.0,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,"LTL tonnage (1) | 1,446 | 1,406 | 2.8 | 22.60 | 21.97 | 2.8"
 SAIA,2022Q2,2022-06-30,weight_per_shipment_lbs,1412.0,lbs,1397.0,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,"LTL pounds/shipment | 1,412 | 1,397 | 1.1"
 SAIA,2022Q2,2022-06-30,workdays,64.0,days,64.0,2022-07-27_saia-ex99_1.htm,2022-07-27,as_reported,Workdays | 64 | 64
+SAIA,2022Q3,2022-09-30,length_of_haul_miles,897.0,miles,915.0,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,LTL length of haul (2) | 897 | 915 | (2.0
 SAIA,2022Q3,2022-09-30,operating_income_musd,128.355,usd_m,106.117,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,"OPERATING INCOME | 128,355 | 106,117 | 377,797 | 237,756"
 SAIA,2022Q3,2022-09-30,operating_ratio_pct,82.4,pct,82.8,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,Operating ratio | 82.4 | 82.8
 SAIA,2022Q3,2022-09-30,revenue_musd,729.561,usd_m,616.216,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,"OPERATING REVENUE | $729,561 | $616,216 | $2,136,331 | $1,671,623"
@@ -1228,6 +1251,7 @@ SAIA,2022Q3,2022-09-30,tons_per_day,21830.0,tons,21910.0,2022-10-31_saia-ex99_1.
 SAIA,2022Q3,2022-09-30,tons_total,1397000.0,tons,1402000.0,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,"LTL tonnage (1) | 1,397 | 1,402 | (0.4 | 21.83 | 21.91 | (0.4"
 SAIA,2022Q3,2022-09-30,weight_per_shipment_lbs,1431.0,lbs,1400.0,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,"LTL pounds/shipment | 1,431 | 1,400 | 2.2"
 SAIA,2022Q3,2022-09-30,workdays,64.0,days,64.0,2022-10-31_saia-ex99_1.htm,2022-10-31,as_reported,Workdays | 64 | 64
+SAIA,2022Q4,2022-12-31,length_of_haul_miles,892.0,miles,924.0,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,LTL length of haul (2) | 892 | 924 | (3.5)
 SAIA,2022Q4,2022-12-31,operating_income_musd,92.691,usd_m,97.385,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,"OPERATING INCOME | 92,691 | 97,385 | 470,488 | 335,141"
 SAIA,2022Q4,2022-12-31,operating_ratio_pct,85.9,pct,84.2,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,Operating ratio | 85.9% | 84.2%
 SAIA,2022Q4,2022-12-31,revenue_musd,655.726,usd_m,617.081,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,"OPERATING REVENUE | $655,726 | $617,081 | $2,792,057 | $2,288,704"
@@ -1241,6 +1265,7 @@ SAIA,2022Q4,2022-12-31,tons_per_day,20370.0,tons,22070.0,2023-02-03_saia-ex99_1.
 SAIA,2022Q4,2022-12-31,tons_total,1243000.0,tons,1346000.0,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,"LTL tonnage (1) | 1,243 | 1,346 | (7.7) | 20.37 | 22.07 | (7.7)"
 SAIA,2022Q4,2022-12-31,weight_per_shipment_lbs,1433.0,lbs,1426.0,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,"LTL pounds/shipment | 1,433 | 1,426 | 0.5"
 SAIA,2022Q4,2022-12-31,workdays,61.0,days,61.0,2023-02-03_saia-ex99_1.htm,2023-02-03,as_reported,Workdays | 61 | 61
+SAIA,2023Q1,2023-03-31,length_of_haul_miles,892.0,miles,915.0,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,LTL length of haul (2) | 892 | 915 | (2.5)
 SAIA,2023Q1,2023-03-31,operating_income_musd,99.143,usd_m,103.449,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,"OPERATING INCOME | 99,143 | 103,449"
 SAIA,2023Q1,2023-03-31,operating_ratio_pct,85.0,pct,84.4,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,Operating ratio | 85.0% | 84.4%
 SAIA,2023Q1,2023-03-31,revenue_musd,660.535,usd_m,661.216,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,"OPERATING REVENUE | $660,535 | $661,216"
@@ -1254,6 +1279,7 @@ SAIA,2023Q1,2023-03-31,tons_per_day,20480.0,tons,21670.0,2023-04-28_saia-ex99_1.
 SAIA,2023Q1,2023-03-31,tons_total,1311000.0,tons,1387000.0,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,"LTL tonnage (1) | 1,311 | 1,387 | (5.5) | 20.48 | 21.67 | (5.5)"
 SAIA,2023Q1,2023-03-31,weight_per_shipment_lbs,1439.0,lbs,1414.0,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,"LTL pounds/shipment | 1,439 | 1,414 | 1.8"
 SAIA,2023Q1,2023-03-31,workdays,64.0,days,64.0,2023-04-28_saia-ex99_1.htm,2023-04-28,as_reported,Workdays | 64 | 64
+SAIA,2023Q2,2023-06-30,length_of_haul_miles,892.0,miles,910.0,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,LTL length of haul (2) | 892 | 910 | (2.0)
 SAIA,2023Q2,2023-06-30,operating_income_musd,120.255,usd_m,145.993,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,"Operating Income | 120,255 | 145,993 | 219,398 | 249,442"
 SAIA,2023Q2,2023-06-30,operating_ratio_pct,82.7,pct,80.4,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,Operating ratio | 82.7% | 80.4%
 SAIA,2023Q2,2023-06-30,revenue_musd,694.6220000000001,usd_m,745.554,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,"Operating Revenue | $694,622 | $745,554 | $1,355,157 | $1,406,770"
@@ -1267,6 +1293,7 @@ SAIA,2023Q2,2023-06-30,tons_per_day,22200.0,tons,22600.0,2023-07-28_saia-ex99_1.
 SAIA,2023Q2,2023-06-30,tons_total,1421000.0,tons,1446000.0,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,"LTL tonnage (1) | 1,421 | 1,446 | (1.7) | 22.20 | 22.60 | (1.7)"
 SAIA,2023Q2,2023-06-30,weight_per_shipment_lbs,1443.0,lbs,1412.0,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,"LTL pounds/shipment | 1,443 | 1,412 | 2.2"
 SAIA,2023Q2,2023-06-30,workdays,64.0,days,64.0,2023-07-28_saia-ex99_1.htm,2023-07-28,as_reported,Workdays | 64 | 64
+SAIA,2023Q3,2023-09-30,length_of_haul_miles,896.0,miles,897.0,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,LTL length of haul (2) | 896 | 897 | (0.1)
 SAIA,2023Q3,2023-09-30,operating_income_musd,128.435,usd_m,128.355,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,"Operating Income | 128,435 | 128,355 | 347,833 | 377,797"
 SAIA,2023Q3,2023-09-30,operating_ratio_pct,83.4,pct,82.4,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,Operating ratio | 83.4% | 82.4%
 SAIA,2023Q3,2023-09-30,revenue_musd,775.144,usd_m,729.561,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,"Operating Revenue | $775,144 | $729,561 | $2,130,301 | $2,136,331"
@@ -1280,6 +1307,7 @@ SAIA,2023Q3,2023-09-30,tons_per_day,23290.0,tons,21830.0,2023-10-27_saia-ex99_1.
 SAIA,2023Q3,2023-09-30,tons_total,1467000.0,tons,1397000.0,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,"LTL tonnage (1) | 1,467 | 1,397 | 5.0 | 23.29 | 21.83 | 6.7"
 SAIA,2023Q3,2023-09-30,weight_per_shipment_lbs,1360.0,lbs,1431.0,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,"LTL pounds/shipment | 1,360 | 1,431 | (5.0)"
 SAIA,2023Q3,2023-09-30,workdays,63.0,days,64.0,2023-10-27_saia-ex99_1.htm,2023-10-27,as_reported,Workdays | 63 | 64
+SAIA,2023Q4,2023-12-31,length_of_haul_miles,895.0,miles,892.0,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,LTL length of haul (2) | 895 | 892 | 0.3
 SAIA,2023Q4,2023-12-31,operating_income_musd,112.663,usd_m,92.691,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,"Operating Income | 112,663 | 92,691 | 460,496 | 470,488"
 SAIA,2023Q4,2023-12-31,operating_ratio_pct,85.0,pct,85.9,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,Operating ratio | 85.0% | 85.9%
 SAIA,2023Q4,2023-12-31,revenue_musd,751.1320000000001,usd_m,655.726,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,"Operating Revenue | $751,132 | $655,726 | $2,881,433 | $2,792,057"
@@ -1293,6 +1321,7 @@ SAIA,2023Q4,2023-12-31,tons_per_day,22050.0,tons,20370.0,2024-02-02_saia-ex99_1.
 SAIA,2023Q4,2023-12-31,tons_total,1345000.0,tons,1243000.0,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,"LTL tonnage (1) | 1,345 | 1,243 | 8.2 | 22.05 | 20.37 | 8.2"
 SAIA,2023Q4,2023-12-31,weight_per_shipment_lbs,1314.0,lbs,1433.0,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,"LTL pounds/shipment | 1,314 | 1,433 | (8.3)"
 SAIA,2023Q4,2023-12-31,workdays,61.0,days,61.0,2024-02-02_saia-ex99_1.htm,2024-02-02,as_reported,Workdays | 61 | 61
+SAIA,2024Q1,2024-03-31,length_of_haul_miles,888.0,miles,892.0,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,LTL length of haul (2) | 888 | 892 | (0.4)
 SAIA,2024Q1,2024-03-31,operating_income_musd,117.912,usd_m,99.143,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,"Operating Income | 117,912 | 99,143"
 SAIA,2024Q1,2024-03-31,operating_ratio_pct,84.4,pct,85.0,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,Operating ratio | 84.4% | 85.0%
 SAIA,2024Q1,2024-03-31,revenue_musd,754.775,usd_m,660.535,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,"Operating Revenue | $754,775 | $660,535"
@@ -1306,6 +1335,7 @@ SAIA,2024Q1,2024-03-31,tons_per_day,21750.0,tons,20480.0,2024-04-26_saia-ex99_1.
 SAIA,2024Q1,2024-03-31,tons_total,1392000.0,tons,1311000.0,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,"LTL tonnage (1) | 1,392 | 1,311 | 6.2 | 21.75 | 20.48 | 6.2"
 SAIA,2024Q1,2024-03-31,weight_per_shipment_lbs,1321.0,lbs,1439.0,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,"LTL pounds/shipment | 1,321 | 1,439 | (8.2)"
 SAIA,2024Q1,2024-03-31,workdays,64.0,days,64.0,2024-04-26_saia-ex99_1.htm,2024-04-26,as_reported,Workdays | 64 | 64
+SAIA,2024Q2,2024-06-30,length_of_haul_miles,888.0,miles,892.0,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,LTL length of haul (2) | 888 | 892 | (0.4)
 SAIA,2024Q2,2024-06-30,operating_income_musd,137.593,usd_m,120.255,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,"Operating Income | 137,593 | 120,255 | 255,505 | 219,398"
 SAIA,2024Q2,2024-06-30,operating_ratio_pct,83.3,pct,82.7,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,Operating ratio | 83.3% | 82.7%
 SAIA,2024Q2,2024-06-30,revenue_musd,823.244,usd_m,694.6220000000001,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,"Operating Revenue | $823,244 | $694,622 | $1,578,019 | $1,355,157"
@@ -1319,6 +1349,7 @@ SAIA,2024Q2,2024-06-30,tons_per_day,24360.0,tons,22200.0,2024-07-26_saia-ex99_1.
 SAIA,2024Q2,2024-06-30,tons_total,1559000.0,tons,1421000.0,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,"LTL tonnage (1) | 1,559 | 1,421 | 9.7 | 24.36 | 22.20 | 9.7"
 SAIA,2024Q2,2024-06-30,weight_per_shipment_lbs,1340.0,lbs,1443.0,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,"LTL pounds/shipment | 1,340 | 1,443 | (7.1)"
 SAIA,2024Q2,2024-06-30,workdays,64.0,days,64.0,2024-07-26_saia-ex99_1.htm,2024-07-26,as_reported,Workdays | 64 | 64
+SAIA,2024Q3,2024-09-30,length_of_haul_miles,890.0,miles,896.0,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,LTL length of haul (2) | 890 | 896 | (0.7)
 SAIA,2024Q3,2024-09-30,operating_income_musd,125.171,usd_m,128.435,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,"Operating Income | 125,171 | 128,435 | 380,676 | 347,833"
 SAIA,2024Q3,2024-09-30,operating_ratio_pct,85.1,pct,83.4,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,Operating ratio | 85.1% | 83.4%
 SAIA,2024Q3,2024-09-30,revenue_musd,842.1030000000001,usd_m,775.144,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,"Operating Revenue | $842,103 | $775,144 | $2,420,122 | $2,130,301"
@@ -1332,6 +1363,7 @@ SAIA,2024Q3,2024-09-30,tons_per_day,25080.0,tons,23290.0,2024-10-25_saia-ex99_1.
 SAIA,2024Q3,2024-09-30,tons_total,1605000.0,tons,1467000.0,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,"LTL tonnage (1) | 1,605 | 1,467 | 9.4 | 25.08 | 23.29 | 7.7"
 SAIA,2024Q3,2024-09-30,weight_per_shipment_lbs,1349.0,lbs,1360.0,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,"LTL pounds/shipment | 1,349 | 1,360 | (0.8)"
 SAIA,2024Q3,2024-09-30,workdays,64.0,days,63.0,2024-10-25_saia-ex99_1.htm,2024-10-25,as_reported,Workdays | 64 | 63
+SAIA,2024Q4,2024-12-31,length_of_haul_miles,898.0,miles,895.0,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,LTL length of haul (2) | 898 | 895 | 0.3
 SAIA,2024Q4,2024-12-31,operating_income_musd,101.48400000000001,usd_m,112.663,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,"Operating Income | 101,484 | 112,663 | 482,160 | 460,496"
 SAIA,2024Q4,2024-12-31,operating_ratio_pct,87.1,pct,85.0,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,Operating ratio | 87.1% | 85.0%
 SAIA,2024Q4,2024-12-31,revenue_musd,788.952,usd_m,751.1320000000001,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,"Operating Revenue | $788,952 | $751,132 | $3,209,074 | $2,881,433"
@@ -1345,7 +1377,7 @@ SAIA,2024Q4,2024-12-31,tons_per_day,23890.0,tons,22050.0,2025-02-03_saia-ex99_1.
 SAIA,2024Q4,2024-12-31,tons_total,1481000.0,tons,1345000.0,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,"LTL tonnage (1) | 1,481 | 1,345 | 10.1 | 23.89 | 22.05 | 8.3"
 SAIA,2024Q4,2024-12-31,weight_per_shipment_lbs,1362.0,lbs,1314.0,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,"LTL pounds/shipment | 1,362 | 1,314 | 3.7"
 SAIA,2024Q4,2024-12-31,workdays,62.0,days,61.0,2025-02-03_saia-ex99_1.htm,2025-02-03,as_reported,Workdays | 62 | 61
-SAIA,2025Q1,2025-03-31,length_of_haul_miles,905.0,miles,,2026-04-30_saia-ex99_1.htm,2026-04-30,restated: prior-year column of the following year's release,LTL average length of haul (2) | 890 | 905 | (1.7)
+SAIA,2025Q1,2025-03-31,length_of_haul_miles,905.0,miles,888.0,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,LTL length of haul (2) | 905 | 888 | 1.9
 SAIA,2025Q1,2025-03-31,operating_income_musd,70.168,usd_m,117.912,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,"Operating Income | 70,168 | 117,912"
 SAIA,2025Q1,2025-03-31,operating_ratio_pct,91.1,pct,84.4,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,Operating ratio | 91.1% | 84.4%
 SAIA,2025Q1,2025-03-31,revenue_musd,787.575,usd_m,754.775,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,"Operating Revenue | $787,575 | $754,775"
@@ -1359,7 +1391,7 @@ SAIA,2025Q1,2025-03-31,tons_per_day,24520.0,tons,21750.0,2025-04-25_saia-ex99_1.
 SAIA,2025Q1,2025-03-31,tons_total,1545000.0,tons,1392000.0,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,"LTL tonnage (1) | 1,545 | 1,392 | 11.0 | 24.52 | 21.75 | 12.7"
 SAIA,2025Q1,2025-03-31,weight_per_shipment_lbs,1424.0,lbs,1321.0,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,"LTL pounds/shipment | 1,424 | 1,321 | 7.8"
 SAIA,2025Q1,2025-03-31,workdays,63.0,days,64.0,2025-04-25_saia-ex99_1.htm,2025-04-25,as_reported,Workdays | 63 | 64
-SAIA,2025Q2,2025-06-30,length_of_haul_miles,893.0,miles,,2026-07-30_saia-ex99_1.htm,2026-07-30,restated: prior-year column of the following year's release,LTL average length of haul (2) | 888 | 893 | (0.6)
+SAIA,2025Q2,2025-06-30,length_of_haul_miles,893.0,miles,888.0,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,LTL length of haul (2) | 893 | 888 | 0.6
 SAIA,2025Q2,2025-06-30,operating_income_musd,99.399,usd_m,137.593,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,"Operating Income | 99,399 | 137,593 | 169,567 | 255,505"
 SAIA,2025Q2,2025-06-30,operating_ratio_pct,87.8,pct,83.3,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,Operating ratio | 87.8% | 83.3%
 SAIA,2025Q2,2025-06-30,revenue_musd,817.115,usd_m,823.244,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,"Operating Revenue | $817,115 | $823,244 | $1,604,690 | $1,578,019"
@@ -1373,6 +1405,7 @@ SAIA,2025Q2,2025-06-30,tons_per_day,24630.0,tons,24360.0,2025-07-25_saia-ex99_1.
 SAIA,2025Q2,2025-06-30,tons_total,1576000.0,tons,1559000.0,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,"LTL tonnage (1) | 1,576 | 1,559 | 1.1 | 24.63 | 24.36 | 1.1"
 SAIA,2025Q2,2025-06-30,weight_per_shipment_lbs,1394.0,lbs,1340.0,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,"LTL pounds/shipment | 1,394 | 1,340 | 4.0"
 SAIA,2025Q2,2025-06-30,workdays,64.0,days,64.0,2025-07-25_saia-ex99_1.htm,2025-07-25,as_reported,Workdays | 64 | 64
+SAIA,2025Q3,2025-09-30,length_of_haul_miles,894.0,miles,890.0,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,LTL length of haul (2) | 894 | 890 | 0.4
 SAIA,2025Q3,2025-09-30,operating_income_musd,118.61,usd_m,125.171,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,"Operating Income | 118,610 | 125,171 | 288,177 | 380,676"
 SAIA,2025Q3,2025-09-30,operating_ratio_pct,85.9,pct,85.1,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,Operating ratio | 85.9% | 85.1%
 SAIA,2025Q3,2025-09-30,revenue_musd,839.644,usd_m,842.1030000000001,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,"Operating Revenue | $839,644 | $842,103 | $2,444,334 | $2,420,122"
@@ -1386,6 +1419,7 @@ SAIA,2025Q3,2025-09-30,tons_per_day,24700.0,tons,25080.0,2025-10-30_saia-ex99_1.
 SAIA,2025Q3,2025-09-30,tons_total,1581000.0,tons,1605000.0,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,"LTL tonnage (1) | 1,581 | 1,605 | (1.5) | 24.70 | 25.08 | (1.5)"
 SAIA,2025Q3,2025-09-30,weight_per_shipment_lbs,1355.0,lbs,1349.0,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,"LTL pounds/shipment | 1,355 | 1,349 | 0.4"
 SAIA,2025Q3,2025-09-30,workdays,64.0,days,64.0,2025-10-30_saia-ex99_1.htm,2025-10-30,as_reported,Workdays | 64 | 64
+SAIA,2025Q4,2025-12-31,length_of_haul_miles,897.0,miles,898.0,2026-02-10_saia-ex99_1.htm,2026-02-10,as_reported,LTL length of haul (2) | 897 | 898 | (0.1)
 SAIA,2025Q4,2025-12-31,operating_income_musd,64.023,usd_m,101.48400000000001,2026-02-10_saia-ex99_1.htm,2026-02-10,as_reported,"Operating Income | 64,023 | 101,484 | 352,200 | 482,160"
 SAIA,2025Q4,2025-12-31,operating_ratio_pct,91.9,pct,87.1,2026-02-10_saia-ex99_1.htm,2026-02-10,as_reported,Operating ratio | 91.9% | 87.1%
 SAIA,2025Q4,2025-12-31,revenue_musd,789.952,usd_m,788.952,2026-02-10_saia-ex99_1.htm,2026-02-10,as_reported,"Operating Revenue | $789,952 | $788,952 | $3,234,286 | $3,209,074"

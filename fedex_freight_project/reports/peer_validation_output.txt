@@ -1,0 +1,38 @@
+1. totals / workdays vs reported per-day values
+   PASS shipments_total: n=92 max |diff| = 0.038%  tickers=['ARCB', 'ODFL', 'SAIA']
+   PASS tons_total: n=69 max |diff| = 0.052%  tickers=['ODFL', 'SAIA']
+2. weight identity: tons/day x 2000 / shipments/day vs weight per shipment
+   PASS n=155 max |diff| = 0.06%
+3. operating ratio vs 1 - operating income / revenue
+   PASS n=155 max |diff| = 0.12 pp; >0.25pp: 0
+4. sum of quarters vs full-year column of the Q4 release
+   PASS n=70 ticker-years; max |diff| = $4.0M (XPO rounds to whole $M: 2018 ±0.2, 2022 -4, 2024 +1)
+5. restatements (prior-year column vs originally reported value)
+   1524 comparisons; 20 differ by >1%:
+ticker  metric                      
+ARCB    operating_income_musd           4
+XPO     adjusted_operating_ratio_pct    4
+        operating_income_musd           8
+        operating_ratio_pct             4
+   PASS volume metrics restated by >1%: 0
+6. monthly YoY (mean of reported months) vs quarterly YoY from per-day values
+   n=303 quarter-metrics; median |diff| = 0.50 pp; >3pp: 12 (single-month vs weather-hit quarter cases expected)
+ticker
+ARCB    0.07
+ODFL    0.54
+SAIA    0.96
+XPO     0.63
+    ticker quarter                   metric  n_months  monthly_mean  quarterly_yoy  diff_pp
+36    ODFL  2021Q1        shipments_per_day       1.0           1.8            8.6     -6.8
+40    ODFL  2022Q1        shipments_per_day       1.0          19.8           13.2      6.6
+70    SAIA  2021Q1        shipments_per_day       2.0          -2.7            2.6     -5.2
+71    SAIA  2021Q2        shipments_per_day       2.0          20.2           15.3      4.9
+77    SAIA  2022Q4        shipments_per_day       1.0          -4.4           -8.2      3.8
+142   ODFL  2021Q1             tons_per_day       1.0           5.9           10.0     -4.1
+146   ODFL  2022Q1             tons_per_day       1.0          18.3           12.0      6.3
+176   SAIA  2021Q1             tons_per_day       2.0           1.6            5.3     -3.7
+177   SAIA  2021Q2             tons_per_day       2.0          26.5           23.1      3.4
+180   SAIA  2022Q1             tons_per_day       2.0          13.4            9.5      3.9
+183   SAIA  2022Q4             tons_per_day       1.0          -3.0           -7.7      4.7
+213   ARCB  2022Q3  weight_per_shipment_lbs       2.0           4.6            1.5      3.1
+

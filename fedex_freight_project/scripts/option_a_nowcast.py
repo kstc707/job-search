@@ -169,6 +169,9 @@ def features(start, end):
     f["isratio"] = window_yoy("isratio", start, end, diff=True)[0]
     f["diesel"] = window_yoy("diesel", start, end)[0]
     f["ltl_tl_spread"] = f["ppi_ltl"] - f["ppi_tl"]  # LTL pricing relative to truckload: mode-shift pressure
+    # Yellow Corp. shut down 2023-07-30; peers absorbed its freight for about a year. Ex-post event dummy, used only
+    # in a labeled sensitivity model (not in the pre-specified combination).
+    f["yellow"] = float(pd.Timestamp(end) >= pd.Timestamp("2023-08-01") and pd.Timestamp(start) <= pd.Timestamp("2024-07-31"))
     if PEER_COL:
         f[PEER_COL] = peer_window(start, end)
     return f
@@ -192,6 +195,7 @@ if PEER_COL:
     MODELS["peer"] = [PEER_COL]
     MODELS["peer_ar"] = [PEER_COL, "y_lag1"]
     MODELS["peer_macro_ar"] = [PEER_COL, "ipman", "cass", "y_lag1"]
+    MODELS["peer_ar_yellow"] = [PEER_COL, "y_lag1", "yellow"]  # sensitivity: ex-post Yellow dummy
 
 
 def fit_predict(name, train, xrow):
