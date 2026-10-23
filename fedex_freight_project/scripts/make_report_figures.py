@@ -132,7 +132,7 @@ def fig_lanes():
     for i, (a, c) in enumerate(zip(top["add_ktons"], top["cagr_pct"])):
         ax.text(a / 1e3 + 0.04, i, f"{c:.1f}%/yr", va="center", fontsize=8.5, color=S.INK_2)
     ax.set_xlabel("added tons by 2035 vs 2024 (millions)"); ax.grid(axis="x"); ax.grid(axis="y", visible=False)
-    ax.set_title("Where addressable freight grows: Southeast, Texas and Midwest-Texas lanes", pad=20)
+    ax.set_title("Biggest growth lanes to 2035: Georgia-Florida, the Midwest, into Texas", pad=20)
     S.subtitle(ax, f"Interstate lanes, 250+ miles, packaged/finished goods. All such lanes: {oc['lanes']['cagr_2024_2035_pct']:.1f}%/yr (FAF5 mid-range forecast)")
     S.source(fig, "BTS/ORNL Freight Analysis Framework 5.7.1 (2024 estimate, 2035 forecast), truck mode.")
     S.save(fig, OUT / "f5_lanes.png")

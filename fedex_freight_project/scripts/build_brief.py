@@ -30,17 +30,21 @@ def e(k):
 
 
 has_peers = "rel_mean" in H
-peer_line = (f"<li><b>Relative to its four public LTL peers</b>, FedEx Freight's shipments per day have grown "
-             f"{e('rel_mean')} points a year since FY2023; the last four quarters: {e('rel_last4')} points.</li>") if has_peers else ""
+peer_line = (f"<li><b>FedEx Freight's shipments per day have run {e('rel_mean_abs')} points a year behind its four public LTL peers</b> "
+             f"since FY2023 (last four quarters: {e('rel_last4')} points). The peer index was flat ({e('peer_junsep')}%) over Jun-Aug 2026.</li>"
+             f"<li><b>Price doesn't explain it.</b> Weight-adjusted, FedEx's price rose {e('wadj_lo')}% to {e('wadj_hi')}% vs Old Dominion "
+             f"{e('odfl_adj')}% and XPO {e('xpo_adj')}%, and XPO still grew shipments. That points to sales coverage, bundle unwinding and service.</li>") if has_peers else ""
 peer_fig = img("f0_fedex_vs_peers.png") if (FIG / "f0_fedex_vs_peers.png").exists() else img("f1_tonnage_vs_market.png")
 second_fig = img("f1_tonnage_vs_market.png") if (FIG / "f0_fedex_vs_peers.png").exists() else ""
-peer_bt = (f" Adding same-month peer data: MAE {e('peer_ar_mae')} pp." if "peer_ar_mae" in H else "")
+peer_bt = ((f" Same-month peer data didn't beat it either ({e('peer_ar_mae')} pp): FedEx's volume follows its own trajectory, "
+            f"which is what a share problem looks like. The headline is a combination fixed in advance (persistence + peers + macro); "
+            f"backtest MAE {e('combo_mae')} pp, best of the set.") if "peer_ar_mae" in H else "")
 nowcast_fig = img("f6_nowcast.png") if (FIG / "f6_nowcast.png").exists() else ""
 
 doc = f"""<!doctype html><html><head><meta charset="utf-8"><title>Market or Share? FedEx Freight brief</title>
 <style>
-@page {{ size: Letter; margin: 0.5in 0.55in; }}
-body {{ font: 9.6pt/1.42 "DejaVu Serif", Georgia, serif; color: #14202b; margin: 0; }}
+@page {{ size: Letter; margin: 0.42in 0.5in; }}
+body {{ font: 9.2pt/1.38 "DejaVu Serif", Georgia, serif; color: #14202b; margin: 0; }}
 h1 {{ font: 800 22pt/1.05 "DejaVu Sans Condensed", "DejaVu Sans", Arial, sans-serif; margin: 0 0 2pt; letter-spacing: -0.2pt; }}
 h2 {{ font: 700 11.5pt/1.2 "DejaVu Sans Condensed", "DejaVu Sans", sans-serif; margin: 10pt 0 3pt; border-top: 1pt solid #14202b; padding-top: 5pt; }}
 .meta {{ font: 7.6pt/1.4 "DejaVu Sans Mono", monospace; color: #4c5864; display: flex; justify-content: space-between; gap: 10pt;
@@ -90,7 +94,8 @@ BofA published -3.0%; management guided to exit 2026 flat to slightly positive.<
  <li>FedEx collects <b>{e('rho')}x its published fuel surcharge</b> (sd {e('rho_sd')} over 8 quarters), so the tariff splits fuel from price even at record diesel.
  Out of sample, FY26 Q4 base revenue/cwt comes out at {e('oos')}%; management called it a slight decline.</li>
  <li>Heavier shipments lower revenue/cwt mechanically (elasticity {e('beta')}, 95% CI {e('beta_ci')}, from Priority vs Economy with quarter fixed effects).
- Weight-adjusted, like-for-like price was <b>{e('wadj')}%</b> in FY26 Q4.</li>
+ A cross-carrier panel gives {e('beta_x')} ({e('beta_x_ci')}). Weight-adjusted, like-for-like price was <b>{e('wadj_lo')}% to {e('wadj_hi')}%</b> in FY26 Q4;
+ weight per shipment is rising industry-wide, so FedEx's +3% is not a FedEx-specific density effect.</li>
 </ul>
 <h2>4. The exchange rate between price and volume</h2>
 <div class="two"><div>{img('f4_value_of_a_point.png')}</div><div>{img('f5_lanes.png')}</div></div>
