@@ -21,6 +21,7 @@ boundaries.
 | [llm-data-analyst](projects/llm-data-analyst) | AI Engineering + Data Science (hybrid) | Working scaffold |
 | [gemma4-paper-track](projects/gemma4-paper-track) | AI Engineering research (Kaggle paper track) | Plan + tooling |
 | [auto-apply](projects/auto-apply) | AI Engineering (agent pipeline + guardrails) | Working, tested |
+| [fedex_freight_project](fedex_freight_project) | Data Science (LTL demand, public data) | Data + EDA done, direction TBD |
 
 ## Working on a project
 

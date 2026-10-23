@@ -10,3 +10,9 @@ venv/
 
 # auto-apply: personal data (profile, resumes, ledger)
 projects/auto-apply/runs/
+
+# fedex_freight_project: large public downloads (re-fetch with scripts/download_data.sh)
+fedex_freight_project/data/raw/faf5/FAF5.7.1.zip
+fedex_freight_project/data/raw/faf5/FAF5.7.1/
+fedex_freight_project/data/processed/faf5_7_1.parquet
+fedex_freight_project/data/raw/sec_edgar/fedex_corp_earnings/*.htm

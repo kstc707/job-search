@@ -1,0 +1,8 @@
+pandas>=2.2
+pyarrow
+lxml
+html5lib
+beautifulsoup4
+openpyxl
+matplotlib
+statsmodels
