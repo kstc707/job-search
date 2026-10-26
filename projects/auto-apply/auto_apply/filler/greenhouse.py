@@ -31,6 +31,7 @@ class FillReport:
     screenshot: str = ""
     submitted: bool = False
     confirmation: str = ""
+    code_requested: bool = False  # Greenhouse emailed a security code before accepting the submit
 
 
 def _settle(page) -> None:
@@ -123,8 +124,38 @@ def _fill_one(page, r: Resolution) -> str | None:
     return f"unsupported field type {f.type} ({label})"
 
 
+CONFIRMED = "text=/thank you|application (has been )?(received|submitted)/i"
+CODE_PROMPT = re.compile(r"verification code was sent", re.I)
+
+
+def wait_for_code(path: str, timeout: float, poll: float = 3.0) -> str:
+    """The security code Greenhouse emails before it accepts a submission. The caller (an
+    agent reading the inbox) writes it to `path`; return it, or "" when `timeout` passes."""
+    import time
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        p = Path(path)
+        if p.exists():
+            code = re.sub(r"\s", "", p.read_text())
+            if code:
+                return code
+        time.sleep(poll)
+    return ""
+
+
+def _enter_code(page, code: str) -> None:
+    boxes = page.locator("input[id^='security-input']")
+    if boxes.count() >= len(code):
+        for i, ch in enumerate(code):
+            boxes.nth(i).fill(ch)
+        return
+    # Fallback: focus the first one-character box after the prompt and type; the boxes advance.
+    page.locator("input[maxlength='1']").first.click()
+    page.keyboard.type(code, delay=80)
+
+
 def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool = False,
-              headless: bool = True) -> FillReport:
+              headless: bool = True, code_file: str | None = None, code_wait: float = 600) -> FillReport:
     from playwright.sync_api import sync_playwright
 
     report = FillReport(screenshot=screenshot)
@@ -155,13 +186,30 @@ def fill_form(url: str, plan: list[Resolution], screenshot: str, *, submit: bool
         if submit:
             if report.failed:
                 raise RuntimeError("refusing to submit: some fields failed to fill")
+            if code_file:
+                Path(code_file).unlink(missing_ok=True)  # never reuse a code from an earlier attempt
             page.get_by_role("button", name="Submit application").click()
             try:
-                page.wait_for_selector("text=/thank you|application (has been )?(received|submitted)/i", timeout=45000)
+                page.wait_for_selector(CONFIRMED, timeout=20000 if code_file else 45000)
                 report.submitted = True
                 report.confirmation = page.locator("body").inner_text()[:300]
             except Exception:
                 report.confirmation = "no confirmation page (captcha challenge or validation error?)"
+                if code_file and page.get_by_text(CODE_PROMPT).count():
+                    report.code_requested = True
+                    print(f"WAITING FOR SECURITY CODE: write the emailed code to {code_file}", flush=True)
+                    code = wait_for_code(code_file, code_wait)
+                    if not code:
+                        report.confirmation = f"security code not supplied within {code_wait:.0f}s"
+                    else:
+                        _enter_code(page, code)
+                        page.get_by_role("button", name="Submit application").click()
+                        try:
+                            page.wait_for_selector(CONFIRMED, timeout=45000)
+                            report.submitted = True
+                            report.confirmation = page.locator("body").inner_text()[:300]
+                        except Exception:
+                            report.confirmation = "security code entered, but no confirmation page"
             page.screenshot(path=screenshot.replace(".png", "-after-submit.png"), full_page=True)
         browser.close()
     return report

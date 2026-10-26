@@ -82,6 +82,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--job-answers", help="per-job answers JSON (default: <pdf dir>/answers.json)")
     p.add_argument("--runs", default=str(RUNS))
     p.add_argument("--submit", action="store_true")
+    p.add_argument("--code-file", help="Greenhouse: when the form asks for the emailed security code, wait for "
+                                        "it to be written to this file, enter it and submit again")
+    p.add_argument("--code-wait", type=float, default=600, help="seconds to wait for --code-file")
     p.add_argument("--test-fill", action="store_true",
                    help="testing only: fill even when blocked (never submits), to check the filling itself")
     a = p.parse_args(argv)
@@ -121,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         code = _gate(plan, a.cmd, a.test_fill, questions_file)
         if code is not None:
             return code
-        rep = fill_form(a.url, plan, shot, submit=a.submit)
+        rep = fill_form(a.url, plan, shot, submit=a.submit, code_file=a.code_file, code_wait=a.code_wait)
     print(f"\nfilled {len(rep.filled)} fields; failed {len(rep.failed)}; not shown by the form {len(rep.hidden)}; "
           f"captcha on page: {rep.captcha}")
     for f in rep.failed:

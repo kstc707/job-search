@@ -151,3 +151,11 @@ def test_split_address_lines_and_list_answer_in_text_box():
     assert values[1][0] == "skip"
     assert values[2] == ("fill", "12 Elm Street, Springfield, Illinois 62701")
     assert values[3] == ("fill", "4")
+
+
+def test_wait_for_code_reads_the_file_and_times_out(tmp_path):
+    from auto_apply.filler.greenhouse import wait_for_code
+    f = tmp_path / "code.txt"
+    assert wait_for_code(str(f), timeout=0.2, poll=0.05) == ""
+    f.write_text(" AB12 cd34 \n")
+    assert wait_for_code(str(f), timeout=1, poll=0.05) == "AB12cd34"
