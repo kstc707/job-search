@@ -8,8 +8,14 @@ against every tracker row (any Status) and against the jobs before it in the sam
     same posting   normalized Apply/Source URL matches (tracking parameters stripped)
     same req id    same company and the same requisition id parsed from the URL
     repost         same company and a similar title (another board, or re-listed)
-    cooldown       any row at the same company dated within `cooldown_days`
+    cooldown       any tracker row at the same company dated within `cooldown_days`
                    (several roles at one company in a short time reads as spam)
+
+The cooldown counts tracker rows only. Earlier jobs in the same batch do not start it: this
+step runs before targeting, so a company's first listing (often an irrelevant one, such as a
+sales role) used to block every later listing from that company, including the ones that
+would have passed. One role per company per run is enforced after targeting instead
+(target.rank keeps the best-ranked one).
 
 Input (JSON the agent fetched):
 - jobs:    [{"title", "company", "location", "url", "req_id"?}...]
@@ -25,7 +31,7 @@ from dataclasses import asdict, dataclass
 from datetime import date, timedelta
 
 from auto_apply.ledger import normalize_url
-from auto_apply.v2.outcomes import company_match, title_score
+from auto_apply.v2.outcomes import company_match, norm_company, title_score
 
 TITLE_SAME = 0.85
 # Requisition ids in common ATS links: Greenhouse /jobs/123456, Workday ..._R12345 or
@@ -100,38 +106,68 @@ class Verdict:
     match: str = ""
 
 
-def check(job: dict, seen: list[Record], *, today: date, cooldown_days: int) -> Verdict:
+class Seen:
+    """Records indexed by normalized URL and by company, so each job is compared only with
+    records that could match it (a batch holds 10,000+ board jobs; comparing every pair
+    with fuzzy matching takes minutes). Companies are bucketed by the first two letters of
+    their normalized name: company_match needs a shared prefix or a 0.88 similarity, which
+    in practice shares the start of the name."""
+
+    def __init__(self) -> None:
+        self.by_url: dict[str, Record] = {}
+        self.by_bucket: dict[str, list[Record]] = {}
+
+    @staticmethod
+    def _bucket(company: str) -> str:
+        return norm_company(company)[:2]
+
+    def add(self, rec: Record) -> None:
+        for u in rec.urls:
+            self.by_url.setdefault(normalize_url(u), rec)
+        self.by_bucket.setdefault(self._bucket(rec.company), []).append(rec)
+
+    def same_url(self, urls: tuple[str, ...]) -> Record | None:
+        return next((self.by_url[k] for k in map(normalize_url, urls) if k in self.by_url), None)
+
+    def same_company(self, company: str) -> list[Record]:
+        return [r for r in self.by_bucket.get(self._bucket(company), []) if company_match(company, r.company)]
+
+
+def check(job: dict, seen: Seen | list[Record], *, today: date, cooldown_days: int) -> Verdict:
+    if not isinstance(seen, Seen):
+        index = Seen()
+        for rec in seen:
+            index.add(rec)
+        seen = index
     mine = _from_job(job)
-    keys = {normalize_url(u) for u in mine.urls}
-    for rec in seen:
-        if keys & {normalize_url(u) for u in rec.urls}:
-            return Verdict(False, "same posting", rec.label)
-    for rec in seen:
-        if not company_match(mine.company, rec.company):
-            continue
+    rec = seen.same_url(mine.urls)
+    if rec:
+        return Verdict(False, "same posting", rec.label)
+    company_recs = seen.same_company(mine.company)
+    for rec in company_recs:
         if mine.req and mine.req == rec.req:
             return Verdict(False, f"same requisition id {mine.req}", rec.label)
         if title_score(mine.title, rec.title) >= TITLE_SAME:
             return Verdict(False, "same company and title (repost or another board)", rec.label)
     if cooldown_days > 0:
         since = today - timedelta(days=cooldown_days)
-        for rec in seen:
-            if rec.day and rec.day >= since and rec.status != "Skipped" and company_match(mine.company, rec.company):
+        for rec in company_recs:
+            if rec.day and rec.day >= since and rec.status != "Skipped":
                 return Verdict(False, f"company cooldown: row dated {rec.day} (< {cooldown_days} days)", rec.label)
     return Verdict(True, "new")
 
 
 def dedupe(jobs: list[dict], tracker: list[dict], *, today: date,
            cooldown_days: int = 60) -> list[tuple[dict, Verdict]]:
-    seen = [_from_row(r) for r in tracker]
+    seen = Seen()
+    for row in tracker:
+        seen.add(_from_row(row))
     out = []
     for job in jobs:
         v = check(job, seen, today=today, cooldown_days=cooldown_days)
         out.append((job, v))
         if v.keep:
-            rec = _from_job(job)
-            rec.day = today  # a kept job counts as today's touch on that company
-            seen.append(rec)
+            seen.add(_from_job(job))  # no date: batch jobs dedupe postings, not the cooldown
     return out
 
 

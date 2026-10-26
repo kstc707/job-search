@@ -18,6 +18,7 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from auto_apply.v2.outcomes import company_match
 
 OFF_TARGET = re.compile(
     r"\b(architect|senior|sr|lead|manager|principal|staff|director|head|vp|intern|internship|co-?op|"
@@ -98,12 +99,24 @@ def judge(job: dict, *, now: datetime, max_age_hours: float = 72) -> Verdict:
 
 
 def rank(jobs: list[dict], *, now: datetime, max_age_hours: float = 72) -> list[tuple[dict, Verdict]]:
-    """Kept jobs first in preference order, then the rejects with their reasons."""
+    """Kept jobs first in preference order, then the rejects with their reasons.
+
+    At most one role per company per run: the best-ranked in-target role is kept, later ones
+    from the same company are rejected (several roles at one company at once reads as spam).
+    """
     judged = [(j, judge(j, now=now, max_age_hours=max_age_hours)) for j in jobs]
     kept = [x for x in judged if x[1].keep]
+    rejected = [x for x in judged if not x[1].keep]
     kept.sort(key=lambda x: (x[1].tier, -(x[0].get("score") or 0),
                              x[1].age_hours if x[1].age_hours is not None else 1e9))
-    return kept + [x for x in judged if not x[1].keep]
+    first, later = [], []
+    for job, v in kept:
+        if any(company_match(job.get("company") or "", j.get("company") or "") for j, _ in first):
+            v.keep, v.reason = False, "another role at this company ranks higher this run"
+            later.append((job, v))
+        else:
+            first.append((job, v))
+    return first + later + rejected
 
 
 def main(argv: list[str] | None = None) -> int:

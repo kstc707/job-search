@@ -64,5 +64,12 @@ def test_duplicates_inside_one_batch():
             {"title": "Data Analyst", "company": "Hooli Inc", "url": "https://hooli.com/careers/77"},
             {"title": "Supply Chain Analyst", "company": "Hooli", "url": "https://hooli.com/careers/78"}]
     out = run(jobs)
-    assert [k for _, k, _ in out] == [True, False, False]
-    assert "cooldown" in out[2][2]
+    assert [k for _, k, _ in out] == [True, False, True]  # a repost is dropped; another role is not
+
+
+def test_batch_does_not_start_the_company_cooldown():
+    # A company's first listing in a batch (here an off-target sales role) must not block its
+    # later listings: targeting runs after dedupe and keeps one role per company itself.
+    jobs = [{"title": "Account Executive", "company": "Hooli", "url": "https://hooli.com/careers/1"},
+            {"title": "Data Analyst", "company": "Hooli", "url": "https://hooli.com/careers/2"}]
+    assert [k for _, k, _ in run(jobs)] == [True, True]

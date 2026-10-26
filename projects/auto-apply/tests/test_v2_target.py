@@ -40,3 +40,14 @@ def test_freshness_and_ranking():
         ("Memphis, TN", True), ("Remote", True), ("Austin, TX", True), ("Memphis, TN", False), ("Memphis, TN", False)]
     assert "days ago" in out[3][1].reason and "off-target" in out[4][1].reason
     assert judge({"title": "Data Analyst", "location": "Remote"}, now=NOW).keep  # unknown date: kept
+
+
+def test_one_role_per_company_keeps_the_best_ranked():
+    jobs = [{"title": "Data Analyst", "company": "Hooli", "location": "Austin, TX", "posted": "2026-10-19T08:00:00Z"},
+            {"title": "Data Scientist", "company": "Hooli Inc", "location": "Memphis, TN", "posted": "2026-10-19T08:00:00Z"},
+            {"title": "Data Analyst", "company": "Initech", "location": "Remote", "posted": "2026-10-19T08:00:00Z"}]
+    out = rank(jobs, now=NOW)
+    kept = [(j["company"], j["location"]) for j, v in out if v.keep]
+    assert kept == [("Hooli Inc", "Memphis, TN"), ("Initech", "Remote")]
+    dropped = [v.reason for j, v in out if not v.keep]
+    assert dropped == ["another role at this company ranks higher this run"]
