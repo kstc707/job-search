@@ -1,6 +1,6 @@
 # FedEx Freight project: what I did, and why
 
-Sai Teja Koppolu · Memphis, TN · skppolu1@memphis.edu · +1 901-343-7273 · github.com/kstc707
+Sai Teja Koppolu · Memphis, TN · skoppolu388@gmail.com · +1 901-654-6846 · github.com/kstc707
 
 
 ## What I did

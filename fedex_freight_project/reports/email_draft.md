@@ -10,4 +10,4 @@ Could you forward it to the team lead or hiring manager? I'd love a quick call t
 
 Thank you,
 Sai Teja Koppolu
-+1 901-343-7273
+skoppolu388@gmail.com | +1 901-654-6846

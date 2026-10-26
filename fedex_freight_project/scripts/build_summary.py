@@ -22,7 +22,7 @@ def e(k):
 
 
 TITLE = "FedEx Freight project: what I did, and why"
-CONTACT = "Sai Teja Koppolu · Memphis, TN · skppolu1@memphis.edu · +1 901-343-7273 · github.com/kstc707"
+CONTACT = "Sai Teja Koppolu · Memphis, TN · skoppolu388@gmail.com · +1 901-654-6846 · github.com/kstc707"
 BODY = f"""
 <h2>What I did</h2>
 <p>After applying for the Intern–Data Scientist role with Pricing Science &amp; Analysis, I wanted to show how I would work on a real question. I chose one I expect matters to FedEx Freight right now: from mid-2021 to mid-2026, its share of daily shipments among the
