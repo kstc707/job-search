@@ -3,6 +3,9 @@
 Goal: **a callback from a person.** Fewer, better-aimed applications: entry-level analyst roles,
 Sai's locations first, fresh postings, a checked resume, and nothing sent without Sai's approval.
 
+The saved workflow `.claude/workflows/job-search.js` runs these steps as separate agents
+(see the auto-apply README); this file stays the source of the rules.
+
 Read first, every run: the Notion memory page `3f755fb9-8924-81a1-b4c8-fe6cc3265094`
 (decisions there are Sai's and override this file), then this file.
 

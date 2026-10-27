@@ -58,6 +58,36 @@ Why two submit paths: our filler is free, shows every answer before sending and 
 answers under your control, but only covers public, login-free forms. Tsenta handles the
 login-based ATSes and costs one credit per application.
 
+## Running a whole cycle as a Workflow
+
+[`prompts/v2-cycle.md`](prompts/v2-cycle.md) is one run of the job agent. The same run is saved as a
+multi-agent workflow in [`.claude/workflows/job-search.js`](../../.claude/workflows/job-search.js).
+Ask Claude Code to "run the job-search workflow" with:
+
+```json
+{"date": "2026-10-27", "mode": "dry"}
+```
+
+`mode: "dry"` (the default) builds up to 3 resumes and sends nothing; `mode: "live"` also sends the rows
+Sai approved on the review page and builds up to 8 (`maxJobs` overrides either cap).
+
+| Stage | Agents | v2 step |
+|---|---|---|
+| Sync | 1 | setup, Tsenta inbox → tracker outcomes |
+| Apply (live only) | 1 | send approved rows (filler or `apply-with-custom-resume`) |
+| Find | 2 in parallel | Tsenta recommendations, Indeed searches |
+| Screen | 1 | dedupe vs tracker, `v2.target`, read postings, skip rules |
+| Build | 1 per job, in parallel | sai-resume-tailor + `v2.ats_check` |
+| Review | 1 for all resumes | red-team: 3 reasons to reject each |
+| File | 1 | fixes, filler plan, drafted answers, Notion rows (Submit? No) |
+| Report | 1 | Run Log entry on the memory page |
+
+The rules stay in `v2-cycle.md`; the script only fixes the order, the parallelism and what each stage
+hands to the next. The first stage copies Sai's decisions from the Notion memory page into
+`runs/v2/memory.md`, so later stages don't each re-read Notion. The token line in the report uses the
+workflow's output-token counter per stage, which is not the same measure as the `subagent_tokens`
+baseline from 2026-10-19.
+
 ## Modules
 
 - `auto_apply/guard.py`: parses Tsenta's `resumeInstructions` ("Never claim: A, B/C." and
