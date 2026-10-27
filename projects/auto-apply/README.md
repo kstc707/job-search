@@ -83,9 +83,9 @@ Without it those jobs are marked for Sai to send by hand.
   `boards find` looks a company up on the boards whose URL can be guessed from its name. That is how a
   Jobright or Indeed job becomes an employer URL the filler can open.
 - **Jobright** (`auto_apply/v2/apify.py`): Jobright has no API, so searches run through the Apify actor
-  `jobscrawler/jobright-scraper` (about $0.004 a job; `--budget-usd` refuses runs above a cap). The token is
-  read from the `APIFY_TOKEN` environment variable; add it in the cloud environment's settings (never in
-  the repo). Without it, the workflow reads Jobright's alert emails from Gmail instead.
+  `jobscrawler/jobright-scraper` (about $0.004 a job; `--budget-usd` refuses runs above a cap). Settings use the Job Search app's `.env` names, read from
+  the git-ignored repo-root `.env` or the environment: `APIFY_API_TOKEN`, `JOBRIGHT_APIFY_ACTOR`,
+  `JOBRIGHT_ENABLED` (false switches Jobright off) and `JOBRIGHT_MAX_RESULTS` (cap per run). Without it, the workflow reads Jobright's alert emails from Gmail instead.
 
 Why Tsenta became opt-in: an audit of all 471 Tsenta applications (2026-10-27) found that the 100 sent
 with `apply-with-custom-resume` reached employers as our PDF, unchanged. The 371 sent from the Tsenta app or

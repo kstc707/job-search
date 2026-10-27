@@ -132,13 +132,46 @@ def test_jobright_items_normalize_and_dedupe():
     assert ins[1]["location"] == "" and ins[1]["remoteOnly"] and ins[1]["experienceLevel"] == "entry"
 
 
-def test_apify_cli_needs_token(monkeypatch, capsys):
-    monkeypatch.delenv("APIFY_TOKEN", raising=False)
+@pytest.fixture
+def no_dotenv(monkeypatch, tmp_path):
+    for k in ("APIFY_TOKEN", "APIFY_API_TOKEN", "JOBRIGHT_ENABLED", "JOBRIGHT_MAX_RESULTS", "JOBRIGHT_APIFY_ACTOR"):
+        monkeypatch.delenv(k, raising=False)
+    monkeypatch.setattr(apify, "DOTENV", tmp_path / ".env")
+    return tmp_path / ".env"
+
+
+def test_settings_read_dotenv_and_env_wins(no_dotenv, monkeypatch):
+    no_dotenv.write_text("# comment\nAPIFY_API_TOKEN=from-file\nJOBRIGHT_ENABLED=false\n"
+                         "JOBRIGHT_APIFY_ACTOR=someone/other-actor\nJOBRIGHT_MAX_RESULTS=50\nEMPTY=\n")
+    cfg = apify.settings()
+    assert cfg == {"token": "from-file", "actor": "someone~other-actor", "enabled": False, "max_results": 50}
+    monkeypatch.setenv("JOBRIGHT_ENABLED", "true")
+    monkeypatch.setenv("APIFY_TOKEN", "")  # empty env values don't override the file
+    assert apify.settings()["enabled"] and apify.settings()["token"] == "from-file"
+
+
+def test_apify_cli_needs_token(no_dotenv, capsys):
     assert apify.main(["--search", "data analyst@Memphis, TN"]) == 2
-    assert "APIFY_TOKEN" in capsys.readouterr().out
+    assert "APIFY_API_TOKEN" in capsys.readouterr().out
 
 
-def test_apify_cli_budget_guard(monkeypatch, capsys):
+def test_apify_cli_respects_disabled_flag(no_dotenv, monkeypatch, capsys):
+    no_dotenv.write_text("APIFY_API_TOKEN=x\nJOBRIGHT_ENABLED=false\n")
+    monkeypatch.setattr(apify, "run_actor", lambda *a, **k: pytest.fail("must not run when disabled"))
+    assert apify.main(["--search", "a@b"]) == 2
+    assert "switched off" in capsys.readouterr().out
+
+
+def test_apify_cli_caps_results_per_run(no_dotenv, monkeypatch, tmp_path):
+    no_dotenv.write_text("APIFY_API_TOKEN=x\nJOBRIGHT_MAX_RESULTS=50\n")
+    seen = []
+    monkeypatch.setattr(apify, "run_actor", lambda inp, token, actor: seen.append((inp["maxItems"], token, actor)) or [])
+    out = tmp_path / "jobs.json"
+    assert apify.main(["--search", "a@b"] * 8 + ["--out", str(out)]) == 0
+    assert seen == [(6, "x", "jobscrawler~jobright-scraper")] * 8
+
+
+def test_apify_cli_budget_guard(no_dotenv, monkeypatch, capsys):
     monkeypatch.setenv("APIFY_TOKEN", "x")
     monkeypatch.setattr(apify, "run_actor", lambda *a, **k: pytest.fail("must not run over budget"))
     assert apify.main(["--search", "a@b", "--max-per-search", "500", "--budget-usd", "1"]) == 2

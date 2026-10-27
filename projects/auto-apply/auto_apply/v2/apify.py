@@ -1,8 +1,12 @@
 """Jobright jobs through Apify (v2 find).
 
 Jobright has no API, and its personalised feed needs a login, so the search runs through the
-Apify actor `jobscrawler/jobright-scraper` (pay per result, about $0.004 a job). The token
-comes from the APIFY_TOKEN environment variable and never leaves this module.
+Apify actor `jobscrawler/jobright-scraper` (pay per result, about $0.004 a job).
+
+Settings come from the environment or the repo-root `.env` (git-ignored), with the names in the
+Job Search app's `.env.example`: APIFY_API_TOKEN (APIFY_TOKEN also works), JOBRIGHT_APIFY_ACTOR,
+JOBRIGHT_ENABLED (false = refuse to run) and JOBRIGHT_MAX_RESULTS (cap per run). The token never
+leaves this module.
 
 Jobright's links point at jobright.ai, not at the employer, so each job is written with
 `ats: "jobright"`; the screen step finds the employer's own posting (boards.find, or the
@@ -17,11 +21,32 @@ import sys
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from pathlib import Path
 
 from .boards import ats_of, parse_posted
 
 ACTOR = "jobscrawler~jobright-scraper"
 PRICE_PER_ITEM = 0.00399  # USD, from the actor's pricing (2026-10-27)
+DOTENV = Path(__file__).resolve().parents[4] / ".env"  # job-search repo root
+
+
+def settings(env: dict | None = None, dotenv: Path | None = None) -> dict:
+    """Environment variables win over the .env file."""
+    dotenv = dotenv or DOTENV
+    merged = {}
+    if dotenv.is_file():
+        for line in dotenv.read_text().splitlines():
+            key, sep, value = line.strip().partition("=")
+            if sep and key and not key.startswith("#"):
+                merged[key.strip()] = value.strip().strip('"').strip("'")
+    merged.update({k: v for k, v in (os.environ if env is None else env).items() if v})
+    max_results = merged.get("JOBRIGHT_MAX_RESULTS", "")
+    return {
+        "token": merged.get("APIFY_API_TOKEN") or merged.get("APIFY_TOKEN") or "",
+        "actor": (merged.get("JOBRIGHT_APIFY_ACTOR") or ACTOR).replace("/", "~"),
+        "enabled": merged.get("JOBRIGHT_ENABLED", "true").lower() not in ("false", "0", "no"),
+        "max_results": int(max_results) if max_results.isdigit() else None,
+    }
 
 
 def run_actor(actor_input: dict, token: str, *, actor: str = ACTOR, timeout: int = 300) -> list[dict]:
@@ -84,19 +109,25 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", default="runs/v2/jobs-jobright.json")
     a = p.parse_args(argv)
 
-    token = os.environ.get("APIFY_TOKEN")
-    if not token:
-        print("APIFY_TOKEN is not set: add it in the environment settings (see the auto-apply README).")
+    cfg = settings()
+    if not cfg["enabled"]:
+        print("JOBRIGHT_ENABLED=false in .env: Jobright searches are switched off.")
         return 2
-    inputs = search_inputs(a.search, max_items=a.max_per_search, date_posted=a.date_posted)
-    estimate = len(inputs) * a.max_per_search * PRICE_PER_ITEM
+    if not cfg["token"]:
+        print("APIFY_API_TOKEN is not set: add it to the repo-root .env or the environment settings.")
+        return 2
+    per_search = a.max_per_search
+    if cfg["max_results"]:
+        per_search = max(1, min(per_search, cfg["max_results"] // len(a.search)))
+    inputs = search_inputs(a.search, max_items=per_search, date_posted=a.date_posted)
+    estimate = len(inputs) * per_search * PRICE_PER_ITEM
     if estimate > a.budget_usd:
         print(f"estimated ${estimate:.2f} is over --budget-usd {a.budget_usd:.2f}; lower --max-per-search")
         return 2
     now, jobs, failed = datetime.now(timezone.utc), [], []
     for inp in inputs:
         try:
-            jobs += [normalize(i, now) for i in run_actor(inp, token)]
+            jobs += [normalize(i, now) for i in run_actor(inp, cfg["token"], actor=cfg["actor"])]
         except Exception as e:  # one failed search shouldn't lose the others
             failed.append(f"{inp['keyword']}@{inp['location'] or 'remote'}: {type(e).__name__}: {e}")
     jobs = dedupe(jobs)

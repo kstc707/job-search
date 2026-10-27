@@ -108,7 +108,7 @@ Report boards that errored in "problem". Do not edit watchlist.json.`,
   --search "data analyst@Memphis, TN" --search "business analyst@Memphis, TN" --search "reporting analyst@Memphis, TN" \\
   --search "data analyst@remote" --search "business intelligence analyst@remote" --search "reporting analyst@remote" \\
   --search "data analyst@Atlanta, GA" --search "data analyst@Birmingham, AL"
-Exit 2 with "APIFY_TOKEN is not set": instead read Jobright alert emails from the last 3 days in Gmail
+Exit 2 (no APIFY_API_TOKEN in the repo-root .env, or JOBRIGHT_ENABLED=false): instead read Jobright alert emails from the last 3 days in Gmail
 (from:noreply@jobright.ai newer_than:3d) and write their jobs (title, company, location, posted, url = the
 jobright.ai link, source "jobright", ats "jobright") to the same file; say which you used in "problem".`,
   tsenta: `Only the Tsenta part of v2-cycle step 2 (get-job-recommendations with the filters listed there).

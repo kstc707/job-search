@@ -75,7 +75,7 @@ Default sources (run from `projects/auto-apply`):
   (public Greenhouse/Lever/Ashby/SmartRecruiters/Workday APIs) and writes analyst-title postings not seen
   before to `runs/v2/jobs-boards.json`. Add a company with `… boards add <careers url> --company … --tier …`.
 - **Jobright:** `.venv/bin/python -m auto_apply.v2.apify --search "data analyst@Memphis, TN" …` runs the Apify
-  Jobright actor (needs `APIFY_TOKEN`; ~$0.004 a job, `--budget-usd` caps a run) → `runs/v2/jobs-jobright.json`.
+  Jobright actor (needs `APIFY_API_TOKEN` and `JOBRIGHT_ENABLED=true` in the repo-root `.env`; ~$0.004 a job, `--budget-usd` caps a run) → `runs/v2/jobs-jobright.json`.
   Without a token, use Jobright alert emails from Gmail (`from:noreply@jobright.ai newer_than:3d`).
 
 Optional sources (only when the run asks for them):
