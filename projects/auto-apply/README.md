@@ -58,6 +58,56 @@ Why two submit paths: our filler is free, shows every answer before sending and 
 answers under your control, but only covers public, login-free forms. Tsenta handles the
 login-based ATSes and costs one credit per application.
 
+## Running a whole cycle as a Workflow
+
+[`prompts/v2-cycle.md`](prompts/v2-cycle.md) is one run of the job agent. The same run is saved as a
+multi-agent workflow in [`.claude/workflows/job-search.js`](../../.claude/workflows/job-search.js).
+Ask Claude Code to "run the job-search workflow" with:
+
+```json
+{"date": "2026-10-27", "mode": "dry"}
+```
+
+`mode: "dry"` (the default) builds up to 3 resumes and sends nothing; `mode: "live"` also sends the rows
+Sai approved on the review page and builds up to 8 (`maxJobs` overrides either cap).
+`sources` picks where jobs come from (default `["boards", "jobright"]`; `"tsenta"` and `"indeed"` are
+opt-in), and `tsenta: true` lets jobs outside the filler's ATSes go through `apply-with-custom-resume`.
+Without it those jobs are marked for Sai to send by hand.
+
+### Job sources
+
+- **Career pages** (`auto_apply/v2/boards.py`, list in [`watchlist.json`](watchlist.json)): most
+  employers' ATSes publish their board as public JSON, so the watcher reads it directly. No
+  scraping, and every job comes with the employer's own apply URL. It keeps analyst-type titles and
+  remembers what it has seen (`runs/v2/boards_seen.json`), so each scan returns only new postings.
+  `boards find` looks a company up on the boards whose URL can be guessed from its name. That is how a
+  Jobright or Indeed job becomes an employer URL the filler can open.
+- **Jobright** (`auto_apply/v2/apify.py`): Jobright has no API, so searches run through the Apify actor
+  `jobscrawler/jobright-scraper` (about $0.004 a job; `--budget-usd` refuses runs above a cap). Settings use the Job Search app's `.env` names, read from
+  the git-ignored repo-root `.env` or the environment: `APIFY_API_TOKEN`, `JOBRIGHT_APIFY_ACTOR`,
+  `JOBRIGHT_ENABLED` (false switches Jobright off) and `JOBRIGHT_MAX_RESULTS` (cap per run). Without it, the workflow reads Jobright's alert emails from Gmail instead.
+
+Why Tsenta became opt-in: an audit of all 471 Tsenta applications (2026-10-27) found that the 100 sent
+with `apply-with-custom-resume` reached employers as our PDF, unchanged. The 371 sent from the Tsenta app or
+`apply-to-job` were rebuilt by Tsenta's optimizer, which added tools that aren't in the profile.
+
+| Stage | Agents | v2 step |
+|---|---|---|
+| Sync | 1 | setup, Tsenta inbox → tracker outcomes |
+| Apply (live only) | 1 | send approved rows (filler or `apply-with-custom-resume`) |
+| Find | 1 per source, in parallel | career-page watcher, Jobright (Apify); Tsenta/Indeed opt-in |
+| Screen | 1 | dedupe vs tracker, `v2.target`, employer apply URL, read postings, skip rules |
+| Build | 1 per job, in parallel | sai-resume-tailor + `v2.ats_check` |
+| Review | 1 for all resumes | red-team: 3 reasons to reject each |
+| File | 1 | fixes, filler plan, drafted answers, Notion rows (Submit? No) |
+| Report | 1 | Run Log entry on the memory page |
+
+The rules stay in `v2-cycle.md`; the script only fixes the order, the parallelism and what each stage
+hands to the next. The first stage copies Sai's decisions from the Notion memory page into
+`runs/v2/memory.md`, so later stages don't each re-read Notion. The token line in the report uses the
+workflow's output-token counter per stage, which is not the same measure as the `subagent_tokens`
+baseline from 2026-10-19.
+
 ## Modules
 
 - `auto_apply/guard.py`: parses Tsenta's `resumeInstructions` ("Never claim: A, B/C." and
@@ -71,6 +121,8 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/ledger.py`: JSONL log; dedupes on normalized URLs (tracking parameters
   stripped) and job ids; counts today's applications for the cap.
 - `auto_apply/cli.py`: `profile`, `gate`, `upload`, `record`, `list`.
+- `auto_apply/v2/boards.py`: career-page watcher (`scan`, `add`, `find`) over public ATS job-board APIs.
+- `auto_apply/v2/apify.py`: Jobright searches through Apify, normalised to the v2 job shape.
 - `auto_apply/filler/`: our own form filler (Greenhouse, Lever, Ashby).
   - `schema.py` reads the form from `boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}?questions=true`
     (field names there are the DOM ids on the form, so nothing is guessed from HTML).

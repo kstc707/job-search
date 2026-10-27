@@ -1,0 +1,229 @@
+{
+  "_note": "Career pages the boards watcher checks. Add one with: python -m auto_apply.v2.boards add <careers url> --company <name> --tier <tier>",
+  "boards": [
+    {
+      "company": "St. Jude Children's Research Hospital",
+      "url": "https://stjude.wd1.myworkdayjobs.com/StJude",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Sedgwick",
+      "url": "https://sedgwick.wd1.myworkdayjobs.com/Sedgwick",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Methodist Le Bonheur Healthcare",
+      "url": "https://methodisthealth.wd5.myworkdayjobs.com/MLH",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Rentokil Terminix",
+      "url": "https://terminix.wd1.myworkdayjobs.com/Terminix",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Smith & Nephew",
+      "url": "https://smithnephew.wd5.myworkdayjobs.com/External",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Medtronic",
+      "url": "https://medtronic.wd1.myworkdayjobs.com/MedtronicCareers",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Raymond James",
+      "url": "https://raymondjames.wd1.myworkdayjobs.com/RaymondJamesCareers",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Truist",
+      "url": "https://truist.wd1.myworkdayjobs.com/Careers",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Varsity Brands",
+      "url": "https://varsitybrands.wd503.myworkdayjobs.com/ExternalCareerSite",
+      "ats": "workday",
+      "tier": "Memphis",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Oscar Health",
+      "url": "https://job-boards.greenhouse.io/oscar",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Clover Health",
+      "url": "https://job-boards.greenhouse.io/cloverhealth",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Coinbase",
+      "url": "https://job-boards.greenhouse.io/coinbase",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Upstart",
+      "url": "https://job-boards.greenhouse.io/upstart",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Reddit",
+      "url": "https://job-boards.greenhouse.io/reddit",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Twilio",
+      "url": "https://job-boards.greenhouse.io/twilio",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Affirm",
+      "url": "https://job-boards.greenhouse.io/affirm",
+      "ats": "greenhouse",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Veeva Systems",
+      "url": "https://jobs.lever.co/veeva",
+      "ats": "lever",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Hims & Hers",
+      "url": "https://jobs.ashbyhq.com/hims-and-hers",
+      "ats": "ashby",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Ramp",
+      "url": "https://jobs.ashbyhq.com/ramp",
+      "ats": "ashby",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Lemonade",
+      "url": "https://jobs.ashbyhq.com/lemonade",
+      "ats": "ashby",
+      "tier": "Remote",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "The Home Depot",
+      "url": "https://homedepot.wd5.myworkdayjobs.com/CareerDepot",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Global Payments",
+      "url": "https://tsys.wd1.myworkdayjobs.com/TSYS",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Elevance Health",
+      "url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "NCR Voyix",
+      "url": "https://ncr.wd1.myworkdayjobs.com/ext_us",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Equifax",
+      "url": "https://equifax.wd5.myworkdayjobs.com/External",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Invesco",
+      "url": "https://invesco.wd1.myworkdayjobs.com/IVZ",
+      "ats": "workday",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "OneTrust",
+      "url": "https://job-boards.greenhouse.io/onetrust",
+      "ats": "greenhouse",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Salesloft",
+      "url": "https://job-boards.greenhouse.io/salesloft",
+      "ats": "greenhouse",
+      "tier": "Atlanta",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Regions Bank",
+      "url": "https://regions.wd5.myworkdayjobs.com/Regions_Careers",
+      "ats": "workday",
+      "tier": "Alabama",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Protective Life",
+      "url": "https://jobs.lever.co/protective",
+      "ats": "lever",
+      "tier": "Alabama",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Fleetio",
+      "url": "https://job-boards.greenhouse.io/fleetio",
+      "ats": "greenhouse",
+      "tier": "Alabama",
+      "verified": "2026-10-27"
+    },
+    {
+      "company": "Adtran",
+      "url": "https://adtran.wd3.myworkdayjobs.com/ADTRAN",
+      "ats": "workday",
+      "tier": "Alabama",
+      "verified": "2026-10-27"
+    }
+  ]
+}
