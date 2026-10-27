@@ -34,7 +34,7 @@ WORKDAY_PAGE = 20          # the cxs endpoint returns at most 20 per request
 WORKDAY_MAX_PAGES = 10     # 200 matches per search term is plenty for one company
 
 
-def http_json(method: str, url: str, body: dict | None = None, timeout: int = 30) -> object:
+def http_json(method: str, url: str, body: dict | None = None, timeout: int = 90) -> object:
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method, headers={
         "Accept": "application/json", "Content-Type": "application/json",
@@ -147,9 +147,11 @@ def fetch_board(entry: dict, *, http: Http = http_json, now: datetime,
         api = f"https://{b['host']}/wday/cxs/{b['tenant']}/{b['site']}/jobs"
         out, seen = [], set()
         for q in queries:
+            total = 0
             for page in range(WORKDAY_MAX_PAGES):
                 d = http("POST", api, {"appliedFacets": {}, "limit": WORKDAY_PAGE,
                                        "offset": page * WORKDAY_PAGE, "searchText": q})
+                total = total or d.get("total") or 0  # Workday sends the total on the first page only
                 posts = d.get("jobPostings") or []
                 for j in posts:
                     path = j.get("externalPath") or ""
@@ -159,7 +161,7 @@ def fetch_board(entry: dict, *, http: Http = http_json, now: datetime,
                     out.append(_job(company, j.get("title"), j.get("locationsText"),
                                     parse_posted(j.get("postedOn"), now),
                                     f"https://{b['host']}/{b['site']}{path}", "workday"))
-                if len(posts) < WORKDAY_PAGE or (page + 1) * WORKDAY_PAGE >= (d.get("total") or 0):
+                if len(posts) < WORKDAY_PAGE or (page + 1) * WORKDAY_PAGE >= total:
                     break
         return out
     raise ValueError(b["ats"])

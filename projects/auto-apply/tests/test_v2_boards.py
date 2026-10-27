@@ -57,10 +57,10 @@ GH = {"jobs": [
 
 
 def workday_pages(body):
-    # 25 analyst jobs over two pages
+    # 45 analyst jobs over three pages; like Workday, only the first page carries the total
     start = body["offset"]
-    n = min(20, 25 - start)
-    return {"total": 25, "jobPostings": [
+    n = min(20, 45 - start)
+    return {"total": 45 if start == 0 else 0, "jobPostings": [
         {"title": f"Reporting Analyst {start + i}", "externalPath": f"/job/Memphis/r{start + i}",
          "locationsText": "Memphis, TN", "postedOn": "Posted 2 Days Ago"} for i in range(n)]}
 
@@ -76,20 +76,20 @@ def test_scan_keeps_new_analyst_titles_and_remembers_them():
           {"company": "Gone", "url": "https://jobs.lever.co/gone", "tier": "Remote"}]
     seen = {}
     jobs, report = boards.scan(wl, seen, http=http, now=NOW)
-    assert [j["title"] for j in jobs][:1] == ["Data Analyst"] and len(jobs) == 26
+    assert [j["title"] for j in jobs][:1] == ["Data Analyst"] and len(jobs) == 46
     acme = jobs[0]
     assert acme == {"title": "Data Analyst", "company": "Acme", "location": "Memphis, TN",
                     "posted": "2026-10-26T09:00:00Z", "url": "https://boards.greenhouse.io/acme/jobs/1",
                     "source": "boards", "ats": "greenhouse", "board_tier": "Memphis"}
     wd = jobs[1]
     assert wd["url"] == "https://bigco.wd5.myworkdayjobs.com/External/job/Memphis/r0" and wd["posted"].startswith("2026-10-25")
-    assert [c[2]["offset"] for c in http.calls if c[0] == "POST"] == [0, 20]
+    assert [c[2]["offset"] for c in http.calls if c[0] == "POST"] == [0, 20, 40]
     assert report[0] == {"company": "Acme", "postings": 3, "analyst": 1, "new": 1}
     assert "error" in report[2]  # one broken board doesn't stop the scan
 
     again, _ = boards.scan(wl, seen, http=http, now=NOW)
     assert again == []
-    assert len(boards.scan(wl, seen, http=http, now=NOW, include_seen=True)[0]) == 26
+    assert len(boards.scan(wl, seen, http=http, now=NOW, include_seen=True)[0]) == 46
 
 
 def test_other_boards_normalize():
