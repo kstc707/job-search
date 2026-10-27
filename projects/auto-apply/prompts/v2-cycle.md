@@ -28,8 +28,10 @@ most 3 resumes, and send nothing (skip step 6).
 4. Resume content follows the memory page's "Resume decisions" (latest date wins). Still fixed:
    employers, titles, dates, degrees, every number; never claim clearance, citizenship,
    licenses or extra years.
-5. Tsenta: at most 15 applications a day, keep 30 credits in reserve, never change Tsenta
-   settings or the Tsenta profile. Our filler (Greenhouse/Lever/Ashby) has no credit limit.
+5. Tsenta is opt-in (the workflow's `tsenta: true`). When used: `apply-with-custom-resume` only, never
+   `apply-to-job` (Tsenta rewrites that resume; audit 2026-10-27), at most 15 applications a day, keep
+   30 credits in reserve, never change Tsenta settings or the Tsenta profile. Our filler
+   (Greenhouse/Lever/Ashby) has no credit limit. Without Tsenta, other ATSes are sent by Sai by hand.
 6. No scraping of LinkedIn or Indeed pages. Indeed jobs come from the Indeed connector; their
    apply links can't be followed automatically, so find the same job on the employer's
    board or route it to Sai.
@@ -68,6 +70,15 @@ Fill `runs/` (git-ignored, never commit it):
    start of that row's Notes and list it first in the report.
 
 ## 2. Find
+Default sources (run from `projects/auto-apply`):
+- **Career pages:** `.venv/bin/python -m auto_apply.v2.boards scan` checks every board in `watchlist.json`
+  (public Greenhouse/Lever/Ashby/SmartRecruiters/Workday APIs) and writes analyst-title postings not seen
+  before to `runs/v2/jobs-boards.json`. Add a company with `… boards add <careers url> --company … --tier …`.
+- **Jobright:** `.venv/bin/python -m auto_apply.v2.apify --search "data analyst@Memphis, TN" …` runs the Apify
+  Jobright actor (needs `APIFY_TOKEN`; ~$0.004 a job, `--budget-usd` caps a run) → `runs/v2/jobs-jobright.json`.
+  Without a token, use Jobright alert emails from Gmail (`from:noreply@jobright.ai newer_than:3d`).
+
+Optional sources (only when the run asks for them):
 - Tsenta `get-job-recommendations`: datePosted "3d", locations country:US, ENTRY_LEVEL, FULL_TIME,
   maxYearsExperience 2, limit 40.
 - Indeed `search_jobs` (country US, fulltime) for each of "data analyst", "business analyst",
@@ -81,10 +92,13 @@ Fill `runs/` (git-ignored, never commit it):
 2. `.venv/bin/python -m auto_apply.v2.target runs/v2/jobs.json --out runs/v2/ranked.json`
    keeps entry-level analyst titles posted within 72 hours and orders them
    Memphis > Remote > Atlanta > Alabama > rest of US, then score.
-3. Read each kept job's full description (Tsenta `get-job-details` / Indeed `get_job_details`).
+3. Jobright and Indeed links are not the employer's: find the same posting on the employer's board
+   (`… boards find --company "<company>" --title "<words>"`, else the careers page) and use that URL.
+   Not found or closed → skip it with the reason.
+4. Read each kept job's full description (Tsenta `get-job-details` / Indeed `get_job_details`).
    Skip and note: citizens only, clearance, more than 4 years required, degree we don't have,
    language not spoken, the hiring area excludes Tennessee (e.g. "TX, FL, GA residents only").
-4. Take the top 8 (DRY_RUN: top 3).
+5. Take the top 8 (DRY_RUN: top 3).
 
 ## 4. Build and check each resume
 1. Build with the **sai-resume-tailor** skill from the posting.
@@ -116,7 +130,7 @@ Rows from the review-queue view with Submit? = Yes AND Approved at set:
 3. `.venv/bin/python -m auto_apply.cli gate <pdf> --url <apply url>` (duplicates and daily cap).
 4. Route: Greenhouse / Lever / Ashby → `.venv/bin/python -m auto_apply.filler.cli fill <url> --pdf <pdf> --submit`
    (exit 3 = blocked on answers → NEEDS SAI note; captcha or NOT SUBMITTED → NEEDS SAI note with the link).
-   Everything else → Tsenta `request-resume-upload` → `cli upload` → `check-custom-resume` →
+   Everything else, only when Tsenta is on → Tsenta `request-resume-upload` → `cli upload` → `check-custom-resume` →
    `apply-with-custom-resume` (never `apply-to-job`).
 5. Record: Status Applied (or Waiting for a queued Tsenta application), Notes "Sent via <route> <time>".
 

@@ -1,12 +1,12 @@
 export const meta = {
   name: 'job-search',
   description: 'One job-agent v2 run: outcome sync, apply approved rows, find, screen, build resumes, batched red-team, Notion rows for Sai',
-  whenToUse: 'Run the daily job search. args: {date: "YYYY-MM-DD", mode: "dry"|"live", maxJobs?: number}. Dry (default) builds up to 3 resumes and sends nothing.',
+  whenToUse: 'Run the daily job search. args: {date: "YYYY-MM-DD", mode: "dry"|"live", maxJobs?, sources?, tsenta?}. Dry (default) builds up to 3 resumes and sends nothing.',
   phases: [
     { title: 'Sync', detail: 'setup runs/, Tsenta inbox -> tracker outcomes (v2 steps 0-1)' },
     { title: 'Apply', detail: 'live only: send rows Sai approved on the review page (v2 step 6)' },
-    { title: 'Find', detail: 'Tsenta and Indeed in parallel (v2 step 2)' },
-    { title: 'Screen', detail: 'dedupe vs tracker, target.py, read full postings (v2 step 3)' },
+    { title: 'Find', detail: 'career-page watcher + Jobright via Apify (v2 step 2)' },
+    { title: 'Screen', detail: 'dedupe, target.py, employer apply URL, read full postings (v2 step 3)' },
     { title: 'Build', detail: 'one sai-resume-tailor agent per job + ats_check (v2 step 4.1-4.2)' },
     { title: 'Review', detail: 'ONE batched red-team reviewer for all resumes (v2 step 4.3)' },
     { title: 'File', detail: 'apply fixes, filler plan, Notion rows for Sai (v2 steps 4.4-5)' },
@@ -24,12 +24,17 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(a.date || '')) {
 const DATE = a.date
 const LIVE = a.mode === 'live'
 const MAX_JOBS = a.maxJobs || (LIVE ? 8 : 3)
+// Where jobs come from. Default: employers' own boards and Jobright. Tsenta and Indeed are opt-in.
+const SOURCES = a.sources || ['boards', 'jobright']
+// Tsenta submits only when asked: otherwise jobs outside the filler's ATSes go to Sai to send by hand.
+const TSENTA = a.tsenta === true
 
 const BASE = `You are one stage of a job-agent v2 run for Sai (date ${DATE}, mode ${LIVE ? 'LIVE' : 'DRY_RUN'}).
 Work from the job-search repo root; CLI commands run from projects/auto-apply with .venv/bin/python.
 Read the "Hard rules" in projects/auto-apply/prompts/v2-cycle.md and obey them. Sai's decisions in
 projects/auto-apply/runs/v2/memory.md override that file. Do ONLY the step named below; other stages
-do the rest. Everything personal stays in projects/auto-apply/runs/ (git-ignored); never commit it.`
+do the rest. Everything personal stays in projects/auto-apply/runs/ (git-ignored); never commit it.
+Tsenta submits are ${TSENTA ? 'ON: apply-with-custom-resume only, never apply-to-job (it rewrites the resume)' : 'OFF: never submit through Tsenta; a job the filler cannot send is route "manual"'}.`
 
 const stage = {}
 const mark = (name, from) => { stage[name] = budget.spent() - from; return budget.spent() }
@@ -76,7 +81,8 @@ if (LIVE) {
 
 Step: v2-cycle step 6 (apply approved rows), every sub-step, for review-queue rows with Submit? = Yes
 AND Approved at set AND Status Drafted. Never set or change Submit? or Approved at. Two failures on the
-same job -> leave it with the LEFT note. Report Tsenta credits left (get-application-balance).`, {
+same job -> leave it with the LEFT note.${TSENTA ? ' Report Tsenta credits left (get-application-balance).' : `
+Tsenta is off: rows that need Tsenta get "NEEDS SAI: send by hand" with the apply URL in Notes; creditsLeft null.`}`, {
     label: 'apply approved rows', phase: 'Apply',
     schema: {
       type: 'object',
@@ -90,20 +96,35 @@ same job -> leave it with the LEFT note. Report Tsenta credits left (get-applica
   t = mark('apply', t)
 }
 
-// ---- Find -----------------------------------------------------------------------------------
+// ---- Find ---------------------------------------------------------------------------------
 phase('Find')
 const JOB_FILE = { type: 'object', properties: { file: STR, count: INT, problem: STR }, required: ['file', 'count'] }
-const finders = [
-  { key: 'tsenta', task: `Only the Tsenta part of v2-cycle step 2 (get-job-recommendations with the filters listed there).
-Write the jobs to projects/auto-apply/runs/v2/jobs-tsenta.json.` },
-  { key: 'indeed', task: `Only the Indeed part of v2-cycle step 2 (every query x location listed there; do not call
-get_job_details yet). Write the jobs to projects/auto-apply/runs/v2/jobs-indeed.json.` },
-]
-const found = (await parallel(finders.map(f => () =>
-  agent(`${BASE}\n\nStep: ${f.task}\nUse the job object shape from step 2. Return the file and the job count.`,
-    { label: `find: ${f.key}`, phase: 'Find', schema: JOB_FILE })))).filter(Boolean)
+const FINDERS = {
+  boards: `Run the career-page watcher from projects/auto-apply:
+.venv/bin/python -m auto_apply.v2.boards scan --watchlist watchlist.json --seen runs/v2/boards_seen.json --out runs/v2/jobs-boards.json
+Report boards that errored in "problem". Do not edit watchlist.json.`,
+  jobright: `Jobright through Apify, from projects/auto-apply:
+.venv/bin/python -m auto_apply.v2.apify --out runs/v2/jobs-jobright.json --max-per-search 15 --budget-usd 1 \\
+  --search "data analyst@Memphis, TN" --search "business analyst@Memphis, TN" --search "reporting analyst@Memphis, TN" \\
+  --search "data analyst@remote" --search "business intelligence analyst@remote" --search "reporting analyst@remote" \\
+  --search "data analyst@Atlanta, GA" --search "data analyst@Birmingham, AL"
+Exit 2 with "APIFY_TOKEN is not set": instead read Jobright alert emails from the last 3 days in Gmail
+(from:noreply@jobright.ai newer_than:3d) and write their jobs (title, company, location, posted, url = the
+jobright.ai link, source "jobright", ats "jobright") to the same file; say which you used in "problem".`,
+  tsenta: `Only the Tsenta part of v2-cycle step 2 (get-job-recommendations with the filters listed there).
+Write the jobs to projects/auto-apply/runs/v2/jobs-tsenta.json.`,
+  indeed: `Only the Indeed part of v2-cycle step 2 (every query x location listed there; do not call
+get_job_details yet). Write the jobs to projects/auto-apply/runs/v2/jobs-indeed.json.`,
+}
+const unknown = SOURCES.filter(k => !FINDERS[k])
+if (unknown.length) throw new Error(`Unknown sources: ${unknown.join(', ')} (use ${Object.keys(FINDERS).join(', ')})`)
+const found = (await parallel(SOURCES.map(k => () =>
+  agent(`${BASE}\n\nStep: find jobs, source "${k}" only. ${FINDERS[k]}\nUse the job object shape from v2-cycle step 2. Return the file and the job count.`,
+    { label: `find: ${k}`, phase: 'Find', schema: JOB_FILE, effort: 'low' })
+    .then(r => r && { ...r, source: k })))).filter(Boolean)
 t = mark('find', t)
-log(`Found ${found.map(f => f.count).join(' + ')} jobs (${found.map(f => f.file.split('/').pop()).join(', ')})`)
+log(`Found ${found.map(f => `${f.source} ${f.count}`).join(', ')}`)
+found.filter(f => f.problem).forEach(f => log(`find ${f.source}: ${f.problem}`))
 
 // ---- Screen ---------------------------------------------------------------------------------
 phase('Screen')
@@ -121,10 +142,14 @@ Step: v2-cycle step 3 (dedupe and target).
 - Merge ${found.map(f => f.file).join(' and ')} into projects/auto-apply/runs/v2/jobs.json.
 - Dedupe against projects/auto-apply/runs/v2/tracker.json (all statuses), run target.py, read each
   kept job's full description and apply the skip rules.
+- Jobs whose url is not the employer's (ats "jobright", Indeed links): find the same posting on the employer's
+  own board first: .venv/bin/python -m auto_apply.v2.boards find --company "<company>" --title "<key words>",
+  else the company's careers page (WebSearch). Use that URL as applyUrl and its ATS as ats. Not found or
+  closed -> drop it with the reason. Never scrape LinkedIn or Indeed pages.
 - Keep the top ${MAX_JOBS}. For each, make projects/auto-apply/runs/${DATE}-<company>-<role>/ (lowercase,
   hyphens) and save the full posting text there as jd.md (with the apply URL at the top).
-- route: "filler" for Greenhouse/Lever/Ashby forms, "tsenta" for other supported ATSes, "manual" otherwise
-  (e.g. an Indeed job not found on the employer's board).
+- route: "filler" for Greenhouse/Lever/Ashby forms; ${TSENTA ? '"tsenta" for other ATSes Tsenta supports; ' : ''}"manual" otherwise
+  (Sai sends it by hand with the built PDF).
 Return every kept job (dir = that folder) and every screened-out job with its reason.`, {
   label: 'dedupe + target + screen', phase: 'Screen',
   schema: {
