@@ -1,0 +1,27 @@
+[project]
+name = "scamwatch"
+version = "0.1.0"
+description = "Collect and analyse public signals of delivery-company impersonation scams"
+requires-python = ">=3.12"
+dependencies = [
+    "psycopg[binary]>=3.2",     # Postgres
+    "pydantic-settings>=2.4",   # settings from .env / environment
+    "pyyaml>=6.0",              # config/brands.yaml
+    "tldextract>=5.1",          # registered domain + public suffix (offline list, no network)
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.setuptools]
+packages = ["scamwatch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

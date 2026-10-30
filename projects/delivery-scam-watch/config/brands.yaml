@@ -1,0 +1,25 @@
+# The brands we watch. Review every line: this file decides what counts as "suspicious".
+#
+# keywords   strings that, inside a domain name, suggest the brand. Short ones like "ups"
+#            also match innocent words ("groups", "startups"); the lookalike scorer
+#            (component 5) handles that, so keep them but expect noise.
+# allowlist  domains known to be legitimate: the brand's own sites and well-known legitimate
+#            uses of the name. These and their subdomains are never flagged. Only add a
+#            domain you have checked; we will grow this list from the collected data.
+
+brands:
+  - name: FedEx
+    keywords: [fedex, fed-ex, fedx, fedeex, feddex]
+    allowlist: [fedex.com, fedex.ca, fedex.co.uk, fedexcup.com, fedexfield.com, fedexforum.com]
+
+  - name: UPS
+    keywords: [ups, upss, ups-track, upstrack]
+    allowlist: [ups.com, ups.ca, ups.co.uk, theupsstore.com]
+
+  - name: USPS
+    keywords: [usps, uspps, usp-s, uspostal, uspost]
+    allowlist: [usps.com, usps.gov, uspis.gov, uspsoig.gov]
+
+  - name: DHL
+    keywords: [dhl, dhll, dhlexpress]
+    allowlist: [dhl.com, dhl.de, dhl.co.uk, dhlparcel.co.uk]
