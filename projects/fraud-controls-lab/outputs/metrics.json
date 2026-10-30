@@ -1,0 +1,405 @@
+{
+  "test_account_months": 11235,
+  "test_fraud_cases": 444,
+  "test_dollars_at_risk": 618151.79,
+  "methods": {
+    "rules": {
+      "pr_auc": 0.845,
+      "at_capacity": {
+        "25": {
+          "precision": 0.99,
+          "recall": 0.223,
+          "dollars_caught": 528082.62,
+          "dollar_share": 0.854,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.013,
+            "RING": 0.731
+          }
+        },
+        "50": {
+          "precision": 0.865,
+          "recall": 0.39,
+          "dollars_caught": 550289.55,
+          "dollar_share": 0.89,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.225,
+            "RING": 0.788
+          }
+        },
+        "100": {
+          "precision": 0.887,
+          "recall": 0.8,
+          "dollars_caught": 614362.97,
+          "dollar_share": 0.994,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.725,
+            "RING": 1.0
+          }
+        },
+        "150": {
+          "precision": 0.68,
+          "recall": 0.919,
+          "dollars_caught": 616933.65,
+          "dollar_share": 0.998,
+          "by_scheme": {
+            "ATO": 1.0,
+            "UNDER": 0.887,
+            "RING": 1.0
+          }
+        }
+      }
+    },
+    "anomaly": {
+      "pr_auc": 0.44,
+      "at_capacity": {
+        "25": {
+          "precision": 1.0,
+          "recall": 0.225,
+          "dollars_caught": 547920.04,
+          "dollar_share": 0.886,
+          "by_scheme": {
+            "ATO": 0.0,
+            "UNDER": 0.0,
+            "RING": 0.962
+          }
+        },
+        "50": {
+          "precision": 0.655,
+          "recall": 0.295,
+          "dollars_caught": 603976.99,
+          "dollar_share": 0.977,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.025,
+            "RING": 1.0
+          }
+        },
+        "100": {
+          "precision": 0.415,
+          "recall": 0.374,
+          "dollars_caught": 607131.33,
+          "dollar_share": 0.982,
+          "by_scheme": {
+            "ATO": 1.0,
+            "UNDER": 0.131,
+            "RING": 1.0
+          }
+        },
+        "150": {
+          "precision": 0.318,
+          "recall": 0.43,
+          "dollars_caught": 607994.5,
+          "dollar_share": 0.984,
+          "by_scheme": {
+            "ATO": 1.0,
+            "UNDER": 0.209,
+            "RING": 1.0
+          }
+        }
+      }
+    },
+    "supervised": {
+      "pr_auc": 0.98,
+      "at_capacity": {
+        "25": {
+          "precision": 1.0,
+          "recall": 0.225,
+          "dollars_caught": 75408.02,
+          "dollar_share": 0.122,
+          "by_scheme": {
+            "ATO": 0.0,
+            "UNDER": 0.278,
+            "RING": 0.106
+          }
+        },
+        "50": {
+          "precision": 1.0,
+          "recall": 0.45,
+          "dollars_caught": 217608.24,
+          "dollar_share": 0.352,
+          "by_scheme": {
+            "ATO": 0.5,
+            "UNDER": 0.503,
+            "RING": 0.279
+          }
+        },
+        "100": {
+          "precision": 1.0,
+          "recall": 0.901,
+          "dollars_caught": 562939.69,
+          "dollar_share": 0.911,
+          "by_scheme": {
+            "ATO": 0.65,
+            "UNDER": 0.916,
+            "RING": 0.904
+          }
+        },
+        "150": {
+          "precision": 0.725,
+          "recall": 0.98,
+          "dollars_caught": 602557.28,
+          "dollar_share": 0.975,
+          "by_scheme": {
+            "ATO": 0.7,
+            "UNDER": 0.991,
+            "RING": 1.0
+          }
+        }
+      }
+    },
+    "expected_loss": {
+      "pr_auc": 0.986,
+      "at_capacity": {
+        "25": {
+          "precision": 1.0,
+          "recall": 0.225,
+          "dollars_caught": 552286.23,
+          "dollar_share": 0.893,
+          "by_scheme": {
+            "ATO": 0.3,
+            "UNDER": 0.003,
+            "RING": 0.894
+          }
+        },
+        "50": {
+          "precision": 1.0,
+          "recall": 0.45,
+          "dollars_caught": 596657.76,
+          "dollar_share": 0.965,
+          "by_scheme": {
+            "ATO": 0.7,
+            "UNDER": 0.256,
+            "RING": 1.0
+          }
+        },
+        "100": {
+          "precision": 0.978,
+          "recall": 0.881,
+          "dollars_caught": 601931.6,
+          "dollar_share": 0.974,
+          "by_scheme": {
+            "ATO": 0.7,
+            "UNDER": 0.853,
+            "RING": 1.0
+          }
+        },
+        "150": {
+          "precision": 0.733,
+          "recall": 0.991,
+          "dollars_caught": 615965.35,
+          "dollar_share": 0.996,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.991,
+            "RING": 1.0
+          }
+        }
+      }
+    },
+    "hybrid": {
+      "pr_auc": 0.972,
+      "at_capacity": {
+        "25": {
+          "precision": 1.0,
+          "recall": 0.225,
+          "dollars_caught": 554610.08,
+          "dollar_share": 0.897,
+          "by_scheme": {
+            "ATO": 0.3,
+            "UNDER": 0.0,
+            "RING": 0.904
+          }
+        },
+        "50": {
+          "precision": 0.97,
+          "recall": 0.437,
+          "dollars_caught": 608047.52,
+          "dollar_share": 0.984,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.222,
+            "RING": 1.0
+          }
+        },
+        "100": {
+          "precision": 0.965,
+          "recall": 0.869,
+          "dollars_caught": 613944.29,
+          "dollar_share": 0.993,
+          "by_scheme": {
+            "ATO": 0.95,
+            "UNDER": 0.822,
+            "RING": 1.0
+          }
+        },
+        "150": {
+          "precision": 0.735,
+          "recall": 0.993,
+          "dollars_caught": 618092.28,
+          "dollar_share": 1.0,
+          "by_scheme": {
+            "ATO": 1.0,
+            "UNDER": 0.991,
+            "RING": 1.0
+          }
+        }
+      }
+    }
+  },
+  "data_quality": {
+    "accounts": 3000,
+    "shipments": 460978,
+    "claims": 7288,
+    "null_cells": 0,
+    "non_positive_weights": 0,
+    "duplicate_shipment_ids": 0,
+    "claims_without_shipment": 0
+  },
+  "planted": {
+    "UNDER": 769,
+    "RING": 155,
+    "ATO": 60
+  },
+  "bootstrap_supervised_minus_rules_recall_at_50": {
+    "k": 50,
+    "mean_gap": 0.06,
+    "ci95": [
+      0.036,
+      0.088
+    ]
+  },
+  "rules": [
+    {
+      "rule": "R1_volume_spike",
+      "fired": 24,
+      "precision": 0.75,
+      "recall": 0.041
+    },
+    {
+      "rule": "R2_new_device_new_destinations",
+      "fired": 75,
+      "precision": 0.267,
+      "recall": 0.045
+    },
+    {
+      "rule": "R3_under_declared_weight",
+      "fired": 372,
+      "precision": 0.763,
+      "recall": 0.64
+    },
+    {
+      "rule": "R4_shared_device",
+      "fired": 104,
+      "precision": 1.0,
+      "recall": 0.234
+    },
+    {
+      "rule": "R5_claim_burst",
+      "fired": 104,
+      "precision": 0.74,
+      "recall": 0.173
+    },
+    {
+      "rule": "R6_mule_address",
+      "fired": 5,
+      "precision": 1.0,
+      "recall": 0.011
+    }
+  ],
+  "capacity": [
+    {
+      "capacity": 10,
+      "stopped_mean": 80475.0,
+      "net_mean": 80138.0,
+      "net_p05": 45732.0,
+      "net_p95": 125959.0,
+      "review_cost": 338.0
+    },
+    {
+      "capacity": 25,
+      "stopped_mean": 141809.0,
+      "net_mean": 140966.0,
+      "net_p05": 76748.0,
+      "net_p95": 225313.0,
+      "review_cost": 844.0
+    },
+    {
+      "capacity": 50,
+      "stopped_mean": 158119.0,
+      "net_mean": 156432.0,
+      "net_p05": 82137.0,
+      "net_p95": 256302.0,
+      "review_cost": 1688.0
+    },
+    {
+      "capacity": 75,
+      "stopped_mean": 159218.0,
+      "net_mean": 156686.0,
+      "net_p05": 81876.0,
+      "net_p95": 257461.0,
+      "review_cost": 2531.0
+    },
+    {
+      "capacity": 100,
+      "stopped_mean": 159718.0,
+      "net_mean": 156343.0,
+      "net_p05": 81322.0,
+      "net_p95": 257392.0,
+      "review_cost": 3375.0
+    },
+    {
+      "capacity": 150,
+      "stopped_mean": 160789.0,
+      "net_mean": 155726.0,
+      "net_p05": 80292.0,
+      "net_p95": 257109.0,
+      "review_cost": 5062.0
+    },
+    {
+      "capacity": 200,
+      "stopped_mean": 160806.0,
+      "net_mean": 154056.0,
+      "net_p05": 78605.0,
+      "net_p95": 255487.0,
+      "review_cost": 6750.0
+    },
+    {
+      "capacity": 300,
+      "stopped_mean": 160806.0,
+      "net_mean": 150681.0,
+      "net_p05": 75230.0,
+      "net_p95": 252112.0,
+      "review_cost": 10125.0
+    }
+  ],
+  "feature_importance": {
+    "low_weight_share": 0.835,
+    "cluster_size": 0.246,
+    "n_ship": 0.201,
+    "max_device_accounts": 0.017,
+    "express_share": 0.003,
+    "weight_ratio_median": 0.002,
+    "new_device_share": 0.0,
+    "volume_ratio": 0.0
+  },
+  "text_mining": {
+    "claims_with_5plus_near_duplicates_elsewhere": 653,
+    "share_of_those_confirmed_fraud": 0.597,
+    "fraud_claims_flagged": 0.733,
+    "example_scripted": [
+      "never received my camera package high value refund full declared amount asap",
+      "package never received high value medication please refund full declared amount urgently"
+    ],
+    "example_genuine": [
+      "label was smudged and the parcel went to the apartment lobby instead. we can provide the original receipt. order 179932",
+      "the recipient says the driver left it at the suite in the rain, tools unusable. the recipient checked with the building manager. order 913827"
+    ]
+  },
+  "network": {
+    "accounts_in_clusters_of_3plus": 84,
+    "share_confirmed_fraud": 0.345
+  }
+}

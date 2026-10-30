@@ -1,0 +1,7 @@
+rule,fired,precision,recall
+R1_volume_spike,24,0.75,0.041
+R2_new_device_new_destinations,75,0.267,0.045
+R3_under_declared_weight,372,0.763,0.64
+R4_shared_device,104,1.0,0.234
+R5_claim_burst,104,0.74,0.173
+R6_mule_address,5,1.0,0.011
