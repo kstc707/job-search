@@ -1,41 +1,41 @@
 {
-  "generated_at": "2026-11-01T19:25:59+00:00",
+  "generated_at": "2026-11-01T21:14:20+00:00",
   "collection": {
     "sources": {
       "ctlog": {
-        "runs": 84,
-        "items_scanned_or_matched": 16840,
-        "stored": 15,
+        "runs": 136,
+        "items_scanned_or_matched": 218995,
+        "stored": 185,
         "first_run": "2026-11-01 19:15:26.375451+00:00",
-        "last_run": "2026-11-01 19:25:42.813937+00:00"
+        "last_run": "2026-11-01 21:10:34.179522+00:00"
       },
       "openphish": {
-        "runs": 3,
-        "items_scanned_or_matched": 33,
+        "runs": 6,
+        "items_scanned_or_matched": 66,
         "stored": 11,
         "first_run": "2026-11-01 19:06:22.549151+00:00",
-        "last_run": "2026-11-01 19:23:42.169336+00:00"
+        "last_run": "2026-11-01 20:54:57.159989+00:00"
       },
       "phishingarmy": {
-        "runs": 3,
-        "items_scanned_or_matched": 240,
+        "runs": 6,
+        "items_scanned_or_matched": 598,
         "stored": 120,
         "first_run": "2026-11-01 19:06:21.312449+00:00",
-        "last_run": "2026-11-01 19:23:44.677320+00:00"
+        "last_run": "2026-11-01 20:54:59.702785+00:00"
       },
       "phishingdb": {
-        "runs": 3,
-        "items_scanned_or_matched": 8196,
+        "runs": 6,
+        "items_scanned_or_matched": 16392,
         "stored": 2732,
         "first_run": "2026-11-01 19:06:12.956275+00:00",
-        "last_run": "2026-11-01 19:23:43.356300+00:00"
+        "last_run": "2026-11-01 20:54:58.338477+00:00"
       },
       "rdap": {
-        "runs": 4,
-        "items_scanned_or_matched": 232,
+        "runs": 11,
+        "items_scanned_or_matched": 356,
         "stored": 0,
         "first_run": "2026-11-01 19:08:52.725954+00:00",
-        "last_run": "2026-11-01 19:23:45.664192+00:00"
+        "last_run": "2026-11-01 21:12:12.099856+00:00"
       },
       "tranco": {
         "runs": 1,
@@ -53,8 +53,8 @@
       }
     },
     "rdap_lookups": {
-      "not_found": 163,
-      "ok": 144
+      "not_found": 274,
+      "ok": 150
     }
   },
   "labelled": {
@@ -139,29 +139,44 @@
   },
   "stream": {
     "days_covered": 8,
-    "keyword_domains": 329,
-    "after_stage1_rule": 41,
-    "after_stage2_model": 41,
+    "keyword_domains": 498,
+    "after_stage1_rule": 53,
+    "infrastructure_suppressed": 7,
+    "infrastructure_examples": [
+      "ysgnhpypatwgvjibvklkbhgnzdhl[.]fis[.]pdx[.]test[.]prod[.]sadbirds[.]aws[.]dev",
+      "dhlsknqfmltzqpgiapsjzvnjirlp[.]fis[.]iad[.]test[.]prod[.]sadbirds[.]aws[.]dev",
+      "bnym-dhlprodazus[.]eastus2[.]azure[.]privatelink[.]snowflake[.]app",
+      "bnym-dhlprodazus[.]eastus2[.]azure[.]snowflake[.]app",
+      "dhliawwtsqoykxszuuozukjjy[.]fis[.]thf[.]test[.]prod[.]sadbirds[.]aws[.]a2z[.]eu"
+    ],
+    "after_infrastructure_filter": 46,
+    "after_stage2_model": 46,
+    "model_threshold": 0.0002,
+    "model_note": "threshold set for 95% precision on lab data; on the stream it keeps every name the rule passes, so the rule does the cutting and the score only orders the queue",
     "review_counts": {
       "likely_scam": 35,
-      "unsure": 4,
-      "legitimate": 2
+      "unsure": 8,
+      "legitimate": 3
     },
+    "likely_scam_share_of_reviewed": 0.761,
     "flagged_that_review_calls_likely_scam": 35,
     "likely_scams_missed_by_model": 0,
-    "flagged_that_review_calls_legitimate": 2,
+    "flagged_that_review_calls_legitimate": 3,
     "on_a_blocklist_now": 0,
     "likely_scams_not_on_any_blocklist": 35,
     "analyst_hours_per_month": {
-      "review_every_keyword_domain": 102.8,
-      "review_after_rule_and_model": 12.8,
+      "review_every_keyword_domain": 155.6,
+      "review_after_rule_and_model": 14.4,
       "assumption_minutes_per_review": 5
     },
     "flagged_examples": [
+      "urwmjiwdhl[.]ctn[.]gts[.]multisan[.]pr-mec2[.]ap[.]gtr[.]certsbridge[.]com",
       "dhlentrega[.]eu[.]cc",
+      "fedex[.]santechservices[.]com",
       "ba56z-nokku-tmfdhl[.]cyou",
       "dhlabelprint[.]com",
       "dhl-tracking[.]live",
+      "www[.]uspss[.]org",
       "fedex-vipdsf[.]shop",
       "imports-dhl[.]com",
       "fedex-vipbvrfb[.]shop",
@@ -169,10 +184,7 @@
       "dhl-logisticservices[.]live",
       "dhleregamx[.]top",
       "fedex-vipvujg[.]shop",
-      "fedex-vipbtb[.]shop",
-      "dhlpyljh[.]eu[.]cc",
-      "dhlyclz[.]cc",
-      "dhlaolunsideqizi2[.]baby"
+      "fedex-vipbtb[.]shop"
     ],
     "rows": [
       {
@@ -185,22 +197,13 @@
         "first_signal": "2026-10-30"
       },
       {
-        "fqdn": "ba56z-nokku-tmfdhl[.]cyou",
+        "fqdn": "dhlabelprint[.]com",
         "brand": "DHL",
         "score": 1.0,
         "flagged": true,
         "review": "unsure",
         "on_blocklist": false,
-        "first_signal": "2026-10-28"
-      },
-      {
-        "fqdn": "fedex-vipdsf[.]shop",
-        "brand": "FedEx",
-        "score": 1.0,
-        "flagged": true,
-        "review": "likely_scam",
-        "on_blocklist": false,
-        "first_signal": "2026-10-28"
+        "first_signal": "2026-10-30"
       },
       {
         "fqdn": "dhl-tracking[.]live",
@@ -221,13 +224,58 @@
         "first_signal": "2026-10-26"
       },
       {
-        "fqdn": "dhlabelprint[.]com",
+        "fqdn": "fedex-vipdsf[.]shop",
+        "brand": "FedEx",
+        "score": 1.0,
+        "flagged": true,
+        "review": "likely_scam",
+        "on_blocklist": false,
+        "first_signal": "2026-10-28"
+      },
+      {
+        "fqdn": "ba56z-nokku-tmfdhl[.]cyou",
         "brand": "DHL",
         "score": 1.0,
         "flagged": true,
         "review": "unsure",
         "on_blocklist": false,
-        "first_signal": "2026-10-30"
+        "first_signal": "2026-10-28"
+      },
+      {
+        "fqdn": "fedex[.]santechservices[.]com",
+        "brand": "FedEx",
+        "score": 1.0,
+        "flagged": true,
+        "review": "unsure",
+        "on_blocklist": false,
+        "first_signal": "2026-11-01"
+      },
+      {
+        "fqdn": "urwmjiwdhl[.]ctn[.]gts[.]multisan[.]pr-mec2[.]ap[.]gtr[.]certsbridge[.]com",
+        "brand": "DHL",
+        "score": 1.0,
+        "flagged": true,
+        "review": "legitimate",
+        "on_blocklist": false,
+        "first_signal": "2026-11-01"
+      },
+      {
+        "fqdn": "www[.]uspss[.]org",
+        "brand": "USPS",
+        "score": 1.0,
+        "flagged": true,
+        "review": "unsure",
+        "on_blocklist": false,
+        "first_signal": "2026-11-01"
+      },
+      {
+        "fqdn": "dhl-logisticservices[.]live",
+        "brand": "DHL",
+        "score": 0.999,
+        "flagged": true,
+        "review": "likely_scam",
+        "on_blocklist": false,
+        "first_signal": "2026-10-26"
       },
       {
         "fqdn": "fedex-vipbvrfb[.]shop",
@@ -241,15 +289,6 @@
       {
         "fqdn": "fedex-vipvujg[.]shop",
         "brand": "FedEx",
-        "score": 0.999,
-        "flagged": true,
-        "review": "likely_scam",
-        "on_blocklist": false,
-        "first_signal": "2026-10-26"
-      },
-      {
-        "fqdn": "dhl-logisticservices[.]live",
-        "brand": "DHL",
         "score": 0.999,
         "flagged": true,
         "review": "likely_scam",
@@ -275,15 +314,6 @@
         "first_signal": "2026-10-25"
       },
       {
-        "fqdn": "fedex-vipbtb[.]shop",
-        "brand": "FedEx",
-        "score": 0.998,
-        "flagged": true,
-        "review": "likely_scam",
-        "on_blocklist": false,
-        "first_signal": "2026-10-28"
-      },
-      {
         "fqdn": "dhlpyljh[.]eu[.]cc",
         "brand": "DHL",
         "score": 0.998,
@@ -293,13 +323,13 @@
         "first_signal": "2026-10-30"
       },
       {
-        "fqdn": "dhlyclz[.]cc",
-        "brand": "DHL",
-        "score": 0.996,
+        "fqdn": "fedex-vipbtb[.]shop",
+        "brand": "FedEx",
+        "score": 0.998,
         "flagged": true,
         "review": "likely_scam",
         "on_blocklist": false,
-        "first_signal": "2026-10-31"
+        "first_signal": "2026-10-28"
       },
       {
         "fqdn": "dhlaolunsideqizi2[.]baby",
@@ -309,6 +339,15 @@
         "review": "unsure",
         "on_blocklist": false,
         "first_signal": "2026-10-28"
+      },
+      {
+        "fqdn": "dhlyclz[.]cc",
+        "brand": "DHL",
+        "score": 0.996,
+        "flagged": true,
+        "review": "likely_scam",
+        "on_blocklist": false,
+        "first_signal": "2026-10-31"
       },
       {
         "fqdn": "nabt-jadhl[.]com",
@@ -338,7 +377,7 @@
         "first_signal": "2026-10-30"
       },
       {
-        "fqdn": "fedexrb[.]com",
+        "fqdn": "fedexrz[.]com",
         "brand": "FedEx",
         "score": 0.979,
         "flagged": true,
@@ -347,7 +386,7 @@
         "first_signal": "2026-10-25"
       },
       {
-        "fqdn": "fedexrz[.]com",
+        "fqdn": "fedexrb[.]com",
         "brand": "FedEx",
         "score": 0.979,
         "flagged": true,
@@ -365,7 +404,7 @@
         "first_signal": "2026-10-25"
       },
       {
-        "fqdn": "dhllycl[.]cc",
+        "fqdn": "dhlycly[.]cc",
         "brand": "DHL",
         "score": 0.975,
         "flagged": true,
@@ -374,7 +413,7 @@
         "first_signal": "2026-10-31"
       },
       {
-        "fqdn": "dhlycly[.]cc",
+        "fqdn": "dhllycl[.]cc",
         "brand": "DHL",
         "score": 0.975,
         "flagged": true,
@@ -410,15 +449,6 @@
         "first_signal": "2026-10-31"
       },
       {
-        "fqdn": "fedexqwq[.]com",
-        "brand": "FedEx",
-        "score": 0.95,
-        "flagged": true,
-        "review": "likely_scam",
-        "on_blocklist": false,
-        "first_signal": "2026-10-26"
-      },
-      {
         "fqdn": "fedexkfj[.]com",
         "brand": "FedEx",
         "score": 0.95,
@@ -428,7 +458,25 @@
         "first_signal": "2026-10-31"
       },
       {
-        "fqdn": "pcldhl[.]cc",
+        "fqdn": "fedexpcf[.]org",
+        "brand": "FedEx",
+        "score": 0.95,
+        "flagged": true,
+        "review": "unsure",
+        "on_blocklist": false,
+        "first_signal": "2026-11-01"
+      },
+      {
+        "fqdn": "fedexqwq[.]com",
+        "brand": "FedEx",
+        "score": 0.95,
+        "flagged": true,
+        "review": "likely_scam",
+        "on_blocklist": false,
+        "first_signal": "2026-10-26"
+      },
+      {
+        "fqdn": "kcldhl[.]cc",
         "brand": "DHL",
         "score": 0.926,
         "flagged": true,
@@ -437,7 +485,7 @@
         "first_signal": "2026-10-25"
       },
       {
-        "fqdn": "kcldhl[.]cc",
+        "fqdn": "pcldhl[.]cc",
         "brand": "DHL",
         "score": 0.926,
         "flagged": true,
@@ -500,6 +548,15 @@
         "first_signal": "2026-10-31"
       },
       {
+        "fqdn": "fedexhlp[.]com",
+        "brand": "FedEx",
+        "score": 0.807,
+        "flagged": true,
+        "review": "likely_scam",
+        "on_blocklist": false,
+        "first_signal": "2026-10-25"
+      },
+      {
         "fqdn": "fedexwcp[.]com",
         "brand": "FedEx",
         "score": 0.807,
@@ -509,7 +566,7 @@
         "first_signal": "2026-10-29"
       },
       {
-        "fqdn": "fedexhlp[.]com",
+        "fqdn": "fedexqwm[.]com",
         "brand": "FedEx",
         "score": 0.807,
         "flagged": true,
@@ -527,15 +584,6 @@
         "first_signal": "2026-10-25"
       },
       {
-        "fqdn": "fedexqwm[.]com",
-        "brand": "FedEx",
-        "score": 0.807,
-        "flagged": true,
-        "review": "likely_scam",
-        "on_blocklist": false,
-        "first_signal": "2026-10-25"
-      },
-      {
         "fqdn": "dhlyico[.]cc",
         "brand": "DHL",
         "score": 0.693,
@@ -543,6 +591,15 @@
         "review": "likely_scam",
         "on_blocklist": false,
         "first_signal": "2026-10-25"
+      },
+      {
+        "fqdn": "uspss[.]org",
+        "brand": "USPS",
+        "score": 0.05,
+        "flagged": true,
+        "review": "unsure",
+        "on_blocklist": false,
+        "first_signal": "2026-11-01"
       }
     ]
   },
@@ -557,9 +614,9 @@
   },
   "registrations": {
     "blocklisted_registered_domains": 1758,
-    "looked_up": 187,
+    "looked_up": 296,
     "still_registered": 38,
-    "already_gone_not_found": 149,
+    "already_gone_not_found": 258,
     "age_days_when_seen_listed": {
       "n": 38,
       "median": 171.1,
@@ -577,8 +634,8 @@
       "Dominet (HK) Limited": 18,
       "GNAME.COM PTE. LTD.": 3,
       "Spaceship, Inc.": 3,
-      "Dynadot Inc": 2,
-      "PDR Ltd. d/b/a PublicDomainRegistry.com": 2
+      "MarkMonitor Inc.": 3,
+      "Name.com, Inc.": 2
     }
   },
   "experiment": {

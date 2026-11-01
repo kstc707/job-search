@@ -21,7 +21,7 @@ from ..config import PROJECT_ROOT  # noqa: E402
 from ..defang import defang  # noqa: E402
 from . import dataset  # noqa: E402
 from . import experiment as ex  # noqa: E402
-from .features import FEATURES, frame  # noqa: E402
+from .features import FEATURES, frame, is_infrastructure  # noqa: E402
 from .model import MODEL_FEATURES, evaluate, make_model, out_of_fold, recall_at_precision  # noqa: E402
 
 OUT = PROJECT_ROOT / "outputs"
@@ -57,8 +57,11 @@ def collection_stats(conn) -> dict:
 
 
 def stream_triage(df: pd.DataFrame, scam_model, threshold: float) -> dict:
+    """Funnel for new domains: keyword match -> brand-word rule -> infrastructure suppression -> model."""
     stream = df[df.set == "stream"].copy()
-    stage1 = stream[stream.brand.notna()].copy()
+    branded = stream[stream.brand.notna()].copy()
+    infra = branded.fqdn.map(is_infrastructure).astype(bool) if len(branded) else pd.Series(dtype=bool)
+    stage1 = branded[~infra].copy()
     stage1["score"] = scam_model.predict_proba(frame(stage1.fqdn.tolist())[FEATURES])[:, 1] if len(stage1) else []
     stage1["flagged"] = stage1.score >= threshold
     review = {r["fqdn"]: r for r in csv.DictReader(REVIEW.open())} if REVIEW.exists() else {}
@@ -67,12 +70,20 @@ def stream_triage(df: pd.DataFrame, scam_model, threshold: float) -> dict:
     flagged = stage1[stage1.flagged]
     days = max(1, (stream.first_new_signal.max() - stream.first_new_signal.min()).days + 1)
     per_month = 30 / days
+    reviewed = stage1[stage1.review != "not_reviewed"]
     return {
         "days_covered": int(days),
         "keyword_domains": len(stream),
-        "after_stage1_rule": len(stage1),
+        "after_stage1_rule": len(branded),
+        "infrastructure_suppressed": int(infra.sum()),
+        "infrastructure_examples": [defang(d) for d in branded[infra].fqdn.head(5)],
+        "after_infrastructure_filter": len(stage1),
         "after_stage2_model": int(stage1.flagged.sum()),
+        "model_threshold": round(float(threshold), 4),
+        "model_note": "threshold set for 95% precision on lab data; on the stream it keeps every name the rule passes, "
+        "so the rule does the cutting and the score only orders the queue",
         "review_counts": stage1.review.value_counts().to_dict(),
+        "likely_scam_share_of_reviewed": round(float(likely.sum() / max(1, len(reviewed))), 3),
         "flagged_that_review_calls_likely_scam": int((stage1.flagged & likely).sum()),
         "likely_scams_missed_by_model": int((~stage1.flagged & likely).sum()),
         "flagged_that_review_calls_legitimate": int((stage1.flagged & (stage1.review == "legitimate")).sum()),
@@ -250,10 +261,11 @@ def charts(res: dict) -> None:
     steps = [
         ("keyword matches", s["keyword_domains"]),
         ("brand named as a word", s["after_stage1_rule"]),
+        ("minus cloud infrastructure", s["after_infrastructure_filter"]),
         ("flagged by model", s["after_stage2_model"]),
     ]
     fig, ax = plt.subplots(figsize=(7.5, 2.8))
-    ax.barh([n for n, _ in steps][::-1], [v for _, v in steps][::-1], color=[accent, grey, grey])
+    ax.barh([n for n, _ in steps][::-1], [v for _, v in steps][::-1], color=[accent] + [grey] * (len(steps) - 1))
     for i, (_, v) in enumerate(steps[::-1]):
         ax.text(v, i, f"  {v}", va="center", fontsize=10)
     ax.set_xlabel(f"new domains over {s['days_covered']} days")

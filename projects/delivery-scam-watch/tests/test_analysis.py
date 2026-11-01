@@ -77,3 +77,12 @@ def test_rdap_goes_straight_to_the_registry():
     assert rdap_url("example.com", servers) == "https://rdap.verisign.com/com/v1/domain/example.com"
     assert rdap_url("usps-fee.top", servers) == "https://rdap.zdnsgtld.com/top/domain/usps-fee.top"
     assert rdap_url("x.unknownending", servers).startswith("https://rdap.org/")
+
+
+def test_cloud_infrastructure_names_are_suppressed():
+    from scamwatch.analysis.features import is_infrastructure
+
+    assert is_infrastructure("dhlsknqfmltzqpgiapsjzvnjirlp.fis.iad.test.prod.sadbirds.aws.dev")
+    assert is_infrastructure("bnym-dhlprodazus.eastus2.azure.privatelink.snowflake.app")
+    assert not is_infrastructure("dhl-tracking.live")
+    assert not is_infrastructure("fedex-vipbtb.shop")

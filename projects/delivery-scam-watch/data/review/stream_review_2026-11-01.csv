@@ -41,3 +41,15 @@ nabt-jadhl.com,unsure,'jadhl' may be a name rather than the brand
 neoncactusps.com,legitimate,'cactus' contains 'usps' by accident
 thecountypop-ups.shop,legitimate,'pop-ups' (pop-up shop)
 twn-ups1.twncommunications.net,legitimate,an ISP host named after a UPS (power supply) device
+urwmjiwdhl.ctn.gts.multisan.pr-mec2.ap.gtr.certsbridge.com,legitimate,machine-generated internal host name; dhl is part of a random string
+ysgnhpypatwgvjibvklkbhgnzdhl.fis.pdx.test.prod.sadbirds.aws.dev,legitimate,AWS internal test host (aws.dev); random string
+dhlsknqfmltzqpgiapsjzvnjirlp.fis.iad.test.prod.sadbirds.aws.dev,legitimate,AWS internal test host (aws.dev); random string
+dhliawwtsqoykxszuuozukjjy.fis.thf.test.prod.sadbirds.aws.a2z.eu,legitimate,Amazon internal host (a2z.eu); random string
+bnym-dhlprodazus.eastus2.azure.privatelink.snowflake.app,legitimate,Snowflake account endpoint (company data warehouse)
+bnym-dhlprodazus.eastus2.azure.snowflake.app,legitimate,Snowflake account endpoint (company data warehouse)
+gonadhl-hi31695.centralus.azure.snowflake.com,legitimate,Snowflake account endpoint
+gonadhl-hi31695.centralus.azure.privatelink.snowflake.com,legitimate,Snowflake account endpoint
+www.uspss.org,unsure,typo of usps (extra s) on .org with a new certificate; no delivery words; could be parked
+uspss.org,unsure,typo of usps (extra s) on .org; no delivery words; could be parked
+fedex.santechservices.com,unsure,fedex as a subdomain of an unrelated services company: the common scam pattern but also a plausible shipping page
+fedexpcf.org,unsure,fedex + short acronym on .org; could be an employee or charity group

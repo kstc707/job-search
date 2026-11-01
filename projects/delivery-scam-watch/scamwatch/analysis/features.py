@@ -80,6 +80,18 @@ HOSTING = [
     "ipfs.io",
     "dweb.link",
 ]
+# Company-internal cloud infrastructure. Certificate logs are full of machine-generated host names under
+# these (AWS internal test hosts, Snowflake account endpoints); nobody can serve a public phishing page
+# there, and their random labels sometimes start or end with 'dhl' or 'usps'. Found in the live stream
+# on 2026-11-01 (8 of 12 new flags), so this list is a suppression step, reported separately.
+INFRASTRUCTURE = [
+    "aws.dev",
+    "a2z.eu",
+    "a2z.com",
+    "snowflake.app",
+    "snowflake.com",
+    "snowflakecomputing.com",
+]
 COMMON_TLDS = {
     "com",
     "org",
@@ -169,6 +181,11 @@ def brand_token(fqdn: str) -> str | None:
             if any(part.startswith("ups" + w) or part.endswith(w + "ups") for w in DELIVERY_WORDS):
                 return "UPS"
     return None
+
+
+def is_infrastructure(fqdn: str) -> bool:
+    fqdn = fqdn.lower().rstrip(".")
+    return any(fqdn == h or fqdn.endswith("." + h) for h in INFRASTRUCTURE)
 
 
 def features(fqdn: str) -> dict:

@@ -13,11 +13,11 @@ snapshot, open it in a browser).
 
 | Question | Answer |
 |---|---|
-| How many brand-keyword new domains a week? | 329 in 8 days from WhoisDS registrations and the CT log sample |
-| How many reach the analyst? | **41** after the brand-word rule and the model (about **103 → 13 analyst hours a month**, at 5 minutes per review) |
-| Are they real? | Name-only review: **35 likely scams**, 4 unsure, 2 legitimate (85% precision). The model missed none of the likely scams |
+| How many brand-keyword new domains? | 498 in 8 days from WhoisDS registrations and the CT log sample |
+| How many reach the analyst? | **46** after the brand-word rule and a cloud-infrastructure filter (about **156 → 14 analyst hours a month**, at 5 minutes per review) |
+| Are they real? | Name-only review: **35 likely scams**, 8 unsure, 3 legitimate (76% likely scams) |
 | Are they already blocked? | **None of the 35** is on any of the blocklists we read |
-| Do blocklists act in time? | Of 187 blocklisted brand domains we looked up, **149 (80%) no longer exist** at the registry, so by listing time the campaign has often moved on |
+| Do blocklists act in time? | Of 296 blocklisted brand domains we looked up, **258 (87%) no longer exist** at the registry, so by listing time the campaign has often moved on |
 | Campaign signals | Series such as `fedex-vip*.shop` and `dhl+letters.cc`; one registrar (Dominet (HK) Limited) handled 18 of the flagged registrations |
 
 ### How good is the detector, honestly?
@@ -29,6 +29,14 @@ snapshot, open it in a browser).
 - **Live stream:** before the brand-word rule was tightened, the model flagged 108 of 198 names,
   most of them innocent ("groups", "syrups", device names like "ups1"). The fix was the rule,
   not the model. Lesson: lab scores did not predict the stream.
+- **What the model does today:** its cut-off, set for 95% precision on lab data, is 0.0002, so
+  it keeps every name the rule passes. The rule and the filter do the cutting; the score only
+  orders the queue. The reviewed stream names (`data/review/`) are the hard negatives it needs.
+- **Noise found on 2026-11-01:** certificate logs carry company-internal cloud host names (AWS test
+  hosts, Snowflake account endpoints) whose random strings start with "dhl". 7 of 12 new flags
+  that day were these. They are now suppressed by suffix (`INFRASTRUCTURE` in
+  `analysis/features.py`) and counted separately in the report. The list was written after seeing
+  them, so it is a fix for known noise, not a measured result.
 
 ### Does synthetic data help when real labels are scarce?
 
@@ -86,7 +94,7 @@ db/migrations/             0001_init.sql, 0002_keyless_sources.sql (never edit a
 data/synthetic/            generator A output (frozen)
 data/review/               name-only review of the flagged stream domains
 dashboard/index.html       static dashboard snapshot
-tests/                     pytest, 66 tests
+tests/                     pytest, 67 tests
 ```
 
 ## Run it
