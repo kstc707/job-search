@@ -4,6 +4,7 @@ migrate      apply new migration files to the database in DATABASE_URL
 hello        record one empty 'selftest' run, to prove the pipeline end to end
 status       per source: enabled?, last run, its status and counts
 purge-raw    clear raw source records older than 30 days
+synth-a      write generator A's frozen synthetic data to data/synthetic/ (no database needed)
 """
 
 from __future__ import annotations
@@ -46,7 +47,22 @@ def cmd_purge(conn) -> None:
     log("purge_raw", cleared=n)
 
 
-COMMANDS = {"migrate": cmd_migrate, "hello": cmd_hello, "status": cmd_status, "purge-raw": cmd_purge}
+def cmd_synth_a(_conn) -> None:
+    from .config import PROJECT_ROOT
+    from .synthetic import generator_a
+
+    paths = generator_a.write(PROJECT_ROOT / "data" / "synthetic")
+    log("synth_a", files=[str(p.relative_to(PROJECT_ROOT)) for p in paths])
+
+
+COMMANDS = {
+    "migrate": cmd_migrate,
+    "hello": cmd_hello,
+    "status": cmd_status,
+    "purge-raw": cmd_purge,
+    "synth-a": cmd_synth_a,
+}
+NO_DATABASE = {"synth-a"}
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -55,6 +71,9 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument("command", choices=COMMANDS)
     args = parser.parse_args(argv)
+    if args.command in NO_DATABASE:
+        COMMANDS[args.command](None)
+        return
     settings = Settings()
     with db.connect(settings.database_url) as conn:
         COMMANDS[args.command](conn)
