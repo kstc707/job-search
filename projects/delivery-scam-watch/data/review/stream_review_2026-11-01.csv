@@ -53,3 +53,4 @@ www.uspss.org,unsure,typo of usps (extra s) on .org with a new certificate; no d
 uspss.org,unsure,typo of usps (extra s) on .org; no delivery words; could be parked
 fedex.santechservices.com,unsure,fedex as a subdomain of an unrelated services company: the common scam pattern but also a plausible shipping page
 fedexpcf.org,unsure,fedex + short acronym on .org; could be an employee or charity group
+uspsoig.kaizendemos.app,unsure,usps oig (Office of Inspector General) on a vendor demo platform; not a delivery lure but uses the name

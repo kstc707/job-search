@@ -176,6 +176,37 @@ def registration_summary(df: pd.DataFrame, conn) -> dict:
     }
 
 
+def text_mining(conn) -> dict:
+    """Real scam texts (SmishTank): lures, campaigns, script reuse, and how their links meet our domain data."""
+    from . import texts as tx
+
+    rows = conn.execute(
+        """SELECT r.text, r.sender, r.sender_type, r.brand_claimed, r.posted_at,
+                  CASE WHEN r.external_id LIKE 'feed:%%' THEN 'feed 2026' ELSE 'dataset 2022-23' END,
+                  r.extracted_urls
+           FROM reports r JOIN sources s ON s.id = r.source_id WHERE s.name = 'smishtank'"""
+    ).fetchall()
+    if not rows:
+        return {}
+    cols = ["text", "sender", "sender_type", "brand_claimed", "posted_at", "origin", "extra_urls"]
+    df = tx.message_frame([dict(zip(cols, r, strict=True)) for r in rows])
+    gen_a = pd.read_csv(PROJECT_ROOT / "data" / "synthetic" / "generator_a_texts.csv")
+    out = tx.summarize(df, gen_a)
+    doms = out.pop("link_domains")
+    seen_by = dict(
+        conn.execute(
+            """SELECT s.name, count(DISTINCT d.registered_domain) FROM domains d
+               JOIN observations o ON o.domain_id = d.id JOIN sources s ON s.id = o.source_id
+               WHERE s.name <> 'smishtank' AND d.registered_domain = ANY(%s) GROUP BY s.name""",
+            (doms,),
+        ).fetchall()
+    )
+    out["link_domains_cross_check"] = {"distinct_registered_domains": len(doms), "also_seen_by_source": seen_by}
+    for c in out["campaigns"]["top"]:
+        c["example"] = tx.defang_links(c["example"])
+    return out
+
+
 def run(conn) -> dict:
     OUT.mkdir(exist_ok=True)
     started = conn.execute(
@@ -220,6 +251,7 @@ def run(conn) -> dict:
     }
     res["experiment"].update(ex.learning_curves(keyword_scope, a))
     res["experiment"]["generator_B_examples"] = [defang(d) for d in res["experiment"]["generator_B_examples"]]
+    res["texts"] = text_mining(conn)
     (OUT / "results.json").write_text(json.dumps(res, indent=2, default=str))
     charts(res)
     return res
@@ -272,4 +304,20 @@ def charts(res: dict) -> None:
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(OUT / "stream_funnel.png", dpi=150)
+    # 4. scam text lures: real vs generator A
+    t = res.get("texts") or {}
+    if t.get("generator_a"):
+        names = sorted(set(t["lures"]) | set(t["generator_a"]["lures"]), key=lambda k: t["lures"].get(k, 0))
+        y = np.arange(len(names))
+        fig, ax = plt.subplots(figsize=(7.5, 3.2))
+        ax.barh(y + 0.2, [t["lures"].get(n, 0) for n in names], 0.4, color=accent, label="real delivery-scam texts")
+        ax.barh(
+            y - 0.2, [t["generator_a"]["lures"].get(n, 0) for n in names], 0.4, color=grey, label="our assumption (A)"
+        )
+        ax.set_yticks(y, names)
+        ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0))
+        ax.legend(frameon=False, fontsize=9)
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout()
+        fig.savefig(OUT / "text_lures.png", dpi=150)
     plt.close("all")

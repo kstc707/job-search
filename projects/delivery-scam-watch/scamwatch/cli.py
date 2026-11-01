@@ -61,7 +61,7 @@ def cmd_synth_a(_conn) -> None:
 
 
 def _collect(conn, name: str, minutes: float) -> None:
-    from .collectors import ctlog, lists, rdap
+    from .collectors import ctlog, lists, rdap, smishtank
     from .http import Fetcher
 
     interval = conn.execute("SELECT min_interval_seconds FROM sources WHERE name = %s", (name,)).fetchone()
@@ -77,6 +77,8 @@ def _collect(conn, name: str, minutes: float) -> None:
             lists.collect_whoisds(conn, fetcher)
         elif name == "ctlog":
             ctlog.collect_ctlog(conn, fetcher, minutes=minutes)
+        elif name == "smishtank":
+            smishtank.collect_smishtank(conn, fetcher)
         elif name == "rdap":
             fetcher.max_tries = 1  # a rate limit ends the run at once instead of a long wait
             rdap.collect_rdap(conn, fetcher, limit=300)
@@ -89,7 +91,11 @@ def _collect(conn, name: str, minutes: float) -> None:
 def _watch(hours: float, lists_only: bool = False, ct_only: bool = False) -> None:
     import time
 
-    every = {} if ct_only else {"openphish": 30, "phishingdb": 30, "phishingarmy": 30, "whoisds": 360, "rdap": 15}
+    every = (
+        {}
+        if ct_only
+        else {"openphish": 30, "phishingdb": 30, "phishingarmy": 30, "whoisds": 360, "rdap": 15, "smishtank": 180}
+    )
     last = {name: 0.0 for name in every}
     stop = time.monotonic() + hours * 3600
     while time.monotonic() < stop:
@@ -112,7 +118,7 @@ def _watch(hours: float, lists_only: bool = False, ct_only: bool = False) -> Non
             time.sleep(60)
 
 
-ORDER = ["phishingdb", "phishingarmy", "openphish", "tranco", "whoisds", "ctlog", "rdap"]
+ORDER = ["phishingdb", "phishingarmy", "openphish", "tranco", "whoisds", "ctlog", "rdap", "smishtank"]
 
 
 def cmd_report(conn) -> None:

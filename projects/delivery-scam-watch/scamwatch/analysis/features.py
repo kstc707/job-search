@@ -91,6 +91,8 @@ INFRASTRUCTURE = [
     "snowflake.app",
     "snowflake.com",
     "snowflakecomputing.com",
+    "sfdc.net",  # Salesforce internal hosts (added 2026-11-02, same kind of noise)
+    "viam.cloud",  # robot/device fleet host names
 ]
 COMMON_TLDS = {
     "com",
