@@ -1,6 +1,8 @@
 """RDAP enrichment: when was a domain registered, and by which registrar.
 
-rdap.org redirects each query to the registry that runs the domain's ending (.com, .top ...).
+Each query goes straight to the registry that runs the domain's ending (.com -> Verisign,
+.top -> ZDNS ...), found through IANA's official RDAP directory. Going direct spreads requests
+across many registries; a registry that rate-limits us is skipped for the rest of the run.
 Only brand-keyword domains that are not allowlisted are looked up, each registered domain
 once, at most `limit` per run, with a polite gap between requests.
 """
@@ -15,7 +17,23 @@ import psycopg
 from ..http import Fetcher
 from ..runlog import CollectorRun
 
-RDAP_URL = "https://rdap.org/domain/{domain}"
+IANA_BOOTSTRAP = "https://data.iana.org/rdap/dns.json"
+FALLBACK_URL = "https://rdap.org/domain/{domain}"
+
+
+def parse_bootstrap(doc: dict) -> dict[str, str]:
+    """IANA dns.json -> {ending: registry base URL}."""
+    out = {}
+    for endings, urls in doc.get("services", []):
+        https = [u for u in urls if u.startswith("https://")] or urls
+        for e in endings:
+            out[e.lower()] = https[0] if https[0].endswith("/") else https[0] + "/"
+    return out
+
+
+def rdap_url(domain: str, servers: dict[str, str]) -> str:
+    base = servers.get(domain.rsplit(".", 1)[-1])
+    return f"{base}domain/{domain}" if base else FALLBACK_URL.format(domain=domain)
 
 
 def parse_rdap(doc: dict) -> tuple[datetime | None, str | None]:
@@ -54,17 +72,26 @@ def pending_domains(conn: psycopg.Connection, limit: int) -> list[str]:
 
 
 def collect_rdap(conn: psycopg.Connection, fetcher: Fetcher, limit: int = 200, only: list[str] | None = None) -> None:
+    from urllib.parse import urlsplit
+
     with CollectorRun(conn, "rdap") as run:
+        servers = parse_bootstrap(fetcher.get(IANA_BOOTSTRAP).json())
+        blocked: set[str] = set()
         for domain in only or pending_domains(conn, limit):
+            url = rdap_url(domain, servers)
+            host = urlsplit(url).hostname
+            if host in blocked:
+                continue
             run.seen += 1
             try:
-                resp = fetcher.get(RDAP_URL.format(domain=domain))
+                resp = fetcher.get(url)
                 created, registrar = parse_rdap(resp.json())
                 status = "ok"
             except RuntimeError as exc:
-                if "429" in str(exc):  # rdap.org asked us to slow down: stop now, resume next cycle
-                    run.partial("rate limited by rdap.org; stopped early")
-                    break
+                if "429" in str(exc):  # this registry asked us to slow down: skip it until next run
+                    blocked.add(host)
+                    run.partial(f"rate limited by {host}; skipped for this run")
+                    continue
                 created = registrar = None
                 status = "error"
             except httpx.HTTPStatusError as exc:

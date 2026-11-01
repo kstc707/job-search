@@ -21,8 +21,12 @@ from sklearn.model_selection import GroupShuffleSplit, cross_val_predict
 
 from ..config import PROJECT_ROOT
 from ..synthetic import generator_b
-from .features import brand_token, features, frame
-from .model import MODEL_FEATURES, make_model, recall_at_precision
+from .features import FEATURES, brand_token, features, frame
+from .model import make_model, recall_at_precision
+
+# The experiment works in generator A's scope: every domain that contains a brand keyword,
+# innocent words included, so 'brand as a word' is a legitimate input here.
+MODEL_FEATURES = FEATURES
 
 LOOKALIKE = re.compile(r"(fed3x|fede x|up5|u5ps|usp5|dh1|xn--)")
 
@@ -109,8 +113,7 @@ def learning_curves(
     test_X = frame(test.fqdn.tolist())[MODEL_FEATURES]
     test_y = (test.label == "scam").astype(int).values
 
-    a_in_scope = a[a.brand.notna()]
-    a_domains, a_y = a_in_scope.domain.tolist(), (a_in_scope.label == "scam").astype(int).values
+    a_domains, a_y = a.domain.tolist(), (a.label == "scam").astype(int).values
     b_rows = generator_b.generate(list(zip(train.fqdn, train.tld, train.label, strict=True)), n=5000)
     b_domains, b_y = [d for d, _ in b_rows], np.array([int(lab == "scam") for _, lab in b_rows])
 

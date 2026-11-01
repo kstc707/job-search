@@ -1,0 +1,43 @@
+fqdn,label,reason
+fedex-vipbtb.shop,likely_scam,campaign series fedex-vip + random letters on .shop registered over several days
+fedex-vipbvrfb.shop,likely_scam,campaign series fedex-vip + random letters on .shop
+fedex-vipdsf.shop,likely_scam,campaign series fedex-vip + random letters on .shop
+fedex-vipmvbf.shop,likely_scam,campaign series fedex-vip + random letters on .shop
+fedex-vipvujg.shop,likely_scam,campaign series fedex-vip + random letters on .shop
+fedexabw.com,likely_scam,series fedex + 2-3 random letters on .com registered Oct 25-31
+fedexhlp.com,likely_scam,fedex + 'hlp' (help); same series
+fedexhyp.com,likely_scam,same series fedex + random letters
+fedexkfj.com,likely_scam,same series fedex + random letters
+fedexqwm.com,likely_scam,same series fedex + random letters
+fedexqwq.com,likely_scam,same series fedex + random letters
+fedexrb.com,likely_scam,same series fedex + random letters
+fedexrz.com,likely_scam,same series fedex + random letters
+fedextqy.com,likely_scam,same series fedex + random letters
+fedexwcp.com,likely_scam,same series fedex + random letters
+fedexi.eu.cc,likely_scam,brand + one letter on a free eu.cc subdomain service
+dhl-tracking.live,likely_scam,brand + 'tracking' on a cheap ending
+dhl-logisticservices.live,likely_scam,brand + 'logistic services' on a cheap ending
+dhlentrega.eu.cc,likely_scam,brand + Spanish 'entrega' (delivery) on eu.cc
+dhleregamx.top,likely_scam,brand + 'entrega' misspelt + mx on .top
+dhlmx.lat,likely_scam,brand + country code on a cheap ending
+dhlsgamx.help,likely_scam,brand + random + mx on .help
+eservice-dhl.com,likely_scam,'eservice' + brand
+imports-dhl.com,likely_scam,'imports' + brand (customs-fee lure)
+dhllycl.cc,likely_scam,series dhl + random letters on .cc
+dhlycly.cc,likely_scam,series dhl + random letters on .cc
+dhlyclz.cc,likely_scam,series dhl + random letters on .cc
+dhlyico.cc,likely_scam,series dhl + random letters on .cc
+dhlpyljh.eu.cc,likely_scam,dhl + random letters on eu.cc
+kcldhl.cc,likely_scam,series random + dhl on .cc
+pcldhl.cc,likely_scam,series random + dhl on .cc
+wcldhl.cc,likely_scam,series random + dhl on .cc
+dhltotog.com,likely_scam,dhl + random letters
+dhlzjw661.cfd,likely_scam,dhl + random letters and digits on .cfd
+0dhl.rest,likely_scam,digit + brand on a cheap ending
+ba56z-nokku-tmfdhl.cyou,unsure,random string ending in dhl on .cyou; could be any random name
+dhlabelprint.com,unsure,'dhl label print' could be a legitimate shipping-label tool or a lure
+dhlaolunsideqizi2.baby,unsure,brand followed by a pinyin-like phrase; unclear
+nabt-jadhl.com,unsure,'jadhl' may be a name rather than the brand
+neoncactusps.com,legitimate,'cactus' contains 'usps' by accident
+thecountypop-ups.shop,legitimate,'pop-ups' (pop-up shop)
+twn-ups1.twncommunications.net,legitimate,an ISP host named after a UPS (power supply) device

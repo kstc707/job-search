@@ -121,22 +121,53 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
+DELIVERY_WORDS = (
+    "track",
+    "deliver",
+    "parcel",
+    "package",
+    "post",
+    "ship",
+    "express",
+    "entrega",
+    "paket",
+    "login",
+    "update",
+    "verify",
+    "pay",
+    "fee",
+    "help",
+    "care",
+    "redeliver",
+    "notice",
+    "customs",
+)
+
+
 def brand_token(fqdn: str) -> str | None:
     """The brand the name refers to as a word of its own, or None.
 
-    'usps-track.top' -> USPS; 'track.ups.example' -> UPS; 'groups.com' -> None ('ups' is inside
-    a word). fedex, usps and dhl rarely occur inside English words, so any occurrence counts;
-    'ups' counts only when it is not glued to letters on both sides.
+    Checked part by part (split on dots and hyphens):
+      ups              must be a whole part ('ups', 'ups1') or sit next to a delivery word ('upstrack');
+                       'groups', 'syrups', 'doups' do not count
+      fedex/usps/dhl   must start or end a part ('wusps', 'dhlentrega', 'fedexi'), or sit in a short
+                       part that also holds a delivery word ('mylogindhlupdate'); a brand buried in a long
+                       random string ('wtrdhldkzjb...', 'tarncuspsettlements') does not count
     """
-    s = fqdn.lower()
-    for kw in ("fedex", "usps", "dhl"):
-        if kw in s:
-            return BRANDS[kw]
-    for m in re.finditer("ups", s):
-        before = s[m.start() - 1] if m.start() > 0 else "."
-        after = s[m.end()] if m.end() < len(s) else "."
-        if not before.isalpha() or not after.isalpha():
-            return "UPS"
+    for part in re.split(r"[.\-_]+", fqdn.lower()):
+        letters = part.rstrip("0123456789")
+        for kw in ("fedex", "usps", "dhl"):
+            if kw not in part:
+                continue
+            if letters.startswith(kw) or letters.endswith(kw) or part.lstrip("0123456789").startswith(kw):
+                return BRANDS[kw]
+            if len(part) <= 20 and any(w in part for w in DELIVERY_WORDS):
+                return BRANDS[kw]
+        if "ups" in part:
+            if letters == "ups" or part.lstrip("0123456789") == "ups":
+                return "UPS"
+            if any(part.startswith("ups" + w) or part.endswith(w + "ups") for w in DELIVERY_WORDS):
+                return "UPS"
     return None
 
 

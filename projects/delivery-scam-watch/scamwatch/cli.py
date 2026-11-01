@@ -7,6 +7,7 @@ purge-raw    clear raw source records older than 30 days
 synth-a      write generator A's frozen synthetic data to data/synthetic/ (no database needed)
 collect X    run one collector: phishingdb, phishingarmy, openphish, tranco, whoisds, ctlog, rdap
 collect-all  run every keyless collector once, in a sensible order
+report       recompute every result and chart into outputs/ from the database
 watch        keep collecting for --hours: CT log sampling continuously, blocklist and OpenPhish
              snapshots every 30 minutes, new-registration list every 6 hours, RDAP as it goes
 """
@@ -78,7 +79,7 @@ def _collect(conn, name: str, minutes: float) -> None:
             ctlog.collect_ctlog(conn, fetcher, minutes=minutes)
         elif name == "rdap":
             fetcher.max_tries = 1  # a rate limit ends the run at once instead of a long wait
-            rdap.collect_rdap(conn, fetcher, limit=60)
+            rdap.collect_rdap(conn, fetcher, limit=300)
         else:
             raise SystemExit(f"unknown collector {name!r}")
     finally:
@@ -107,13 +108,29 @@ def _watch(hours: float, lists_only: bool = False, ct_only: bool = False) -> Non
                 _collect(conn, "ctlog", min(10.0, max(0.5, (stop - time.monotonic()) / 60)))
             except Exception as exc:  # noqa: BLE001
                 log("collector_failed", source="ctlog", error=f"{type(exc).__name__}: {exc}")
-                time.sleep(30)
+            # the log publishes a new size only every few minutes: once caught up, wait
+            time.sleep(60)
 
 
 ORDER = ["phishingdb", "phishingarmy", "openphish", "tranco", "whoisds", "ctlog", "rdap"]
 
 
+def cmd_report(conn) -> None:
+    from .analysis import report
+
+    res = report.run(conn)
+    s = res["stream"]
+    log(
+        "report",
+        labelled=res["labelled"]["brand_scope"],
+        stream_keyword=s["keyword_domains"],
+        stage1=s["after_stage1_rule"],
+        flagged=s["after_stage2_model"],
+    )
+
+
 COMMANDS = {
+    "report": cmd_report,
     "migrate": cmd_migrate,
     "hello": cmd_hello,
     "status": cmd_status,
