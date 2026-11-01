@@ -77,17 +77,18 @@ def _collect(conn, name: str, minutes: float) -> None:
         elif name == "ctlog":
             ctlog.collect_ctlog(conn, fetcher, minutes=minutes)
         elif name == "rdap":
-            rdap.collect_rdap(conn, fetcher)
+            fetcher.max_tries = 1  # a rate limit ends the run at once instead of a long wait
+            rdap.collect_rdap(conn, fetcher, limit=60)
         else:
             raise SystemExit(f"unknown collector {name!r}")
     finally:
         fetcher.close()
 
 
-def _watch(hours: float) -> None:
+def _watch(hours: float, lists_only: bool = False, ct_only: bool = False) -> None:
     import time
 
-    every = {"openphish": 30, "phishingdb": 30, "phishingarmy": 30, "whoisds": 360, "rdap": 15}  # minutes
+    every = {} if ct_only else {"openphish": 30, "phishingdb": 30, "phishingarmy": 30, "whoisds": 360, "rdap": 15}
     last = {name: 0.0 for name in every}
     stop = time.monotonic() + hours * 3600
     while time.monotonic() < stop:
@@ -99,6 +100,9 @@ def _watch(hours: float) -> None:
                     except Exception as exc:  # noqa: BLE001
                         log("collector_failed", source=name, error=f"{type(exc).__name__}: {exc}")
                     last[name] = time.monotonic()
+            if lists_only:
+                time.sleep(60)
+                continue
             try:
                 _collect(conn, "ctlog", min(10.0, max(0.5, (stop - time.monotonic()) / 60)))
             except Exception as exc:  # noqa: BLE001
@@ -127,9 +131,11 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("source", nargs="?", help="collector name for `collect`")
     parser.add_argument("--minutes", type=float, default=5.0, help="time budget for the CT log sampler")
     parser.add_argument("--hours", type=float, default=1.0, help="how long `watch` runs")
+    parser.add_argument("--lists-only", action="store_true", help="watch: lists and RDAP, no CT sampling")
+    parser.add_argument("--ct-only", action="store_true", help="watch: CT sampling only")
     args = parser.parse_args(argv)
     if args.command == "watch":
-        _watch(args.hours)
+        _watch(args.hours, lists_only=args.lists_only, ct_only=args.ct_only)
         return
     if args.command in ("collect", "collect-all"):
         with db.connect(Settings().database_url) as conn:

@@ -35,14 +35,22 @@ def parse_rdap(doc: dict) -> tuple[datetime | None, str | None]:
 
 
 def pending_domains(conn: psycopg.Connection, limit: int) -> list[str]:
+    """Registered domains still to look up, most useful first: those on a blocklist or newly
+    surfaced by the certificate log / registration list, and that mention a brand as a word.
+    Domains on a free hosting platform are skipped: the registration date would be the platform's."""
+    from ..analysis.features import HOSTING, brand_token
+
     rows = conn.execute(
-        """SELECT d.registered_domain, min(d.first_seen) AS first
-           FROM domains d LEFT JOIN registrations r ON r.registered_domain = d.registered_domain
+        """SELECT d.registered_domain, min(d.fqdn),
+                  bool_or(s.name IN ('openphish', 'whoisds', 'ctlog')) AS fresh
+           FROM domains d JOIN observations o ON o.domain_id = d.id JOIN sources s ON s.id = o.source_id
+           LEFT JOIN registrations r ON r.registered_domain = d.registered_domain
            WHERE d.brand_guess IS NOT NULL AND NOT d.allowlisted AND r.registered_domain IS NULL
-           GROUP BY d.registered_domain ORDER BY first DESC LIMIT %s""",
-        (limit,),
+             AND s.name IN ('openphish', 'phishingdb', 'phishingarmy', 'whoisds', 'ctlog')
+           GROUP BY d.registered_domain ORDER BY fresh DESC, max(d.first_seen) DESC"""
     ).fetchall()
-    return [r[0] for r in rows]
+    keep = [rd for rd, fqdn, _ in rows if brand_token(fqdn) and rd not in HOSTING]
+    return keep[:limit]
 
 
 def collect_rdap(conn: psycopg.Connection, fetcher: Fetcher, limit: int = 200, only: list[str] | None = None) -> None:
@@ -53,10 +61,16 @@ def collect_rdap(conn: psycopg.Connection, fetcher: Fetcher, limit: int = 200, o
                 resp = fetcher.get(RDAP_URL.format(domain=domain))
                 created, registrar = parse_rdap(resp.json())
                 status = "ok"
+            except RuntimeError as exc:
+                if "429" in str(exc):  # rdap.org asked us to slow down: stop now, resume next cycle
+                    run.partial("rate limited by rdap.org; stopped early")
+                    break
+                created = registrar = None
+                status = "error"
             except httpx.HTTPStatusError as exc:
                 created = registrar = None
                 status = "not_found" if exc.response.status_code == 404 else "unsupported"
-            except (RuntimeError, ValueError):
+            except ValueError:
                 created = registrar = None
                 status = "error"
             conn.execute(

@@ -60,6 +60,8 @@ class Fetcher:
                 retry_after = resp.headers.get("Retry-After", "")
                 if retry_after.isdigit():
                     delay = max(delay, min(float(retry_after), 300.0))
+                if attempt == self.max_tries:
+                    raise RuntimeError(f"{url} failed after {attempt} tries: {problem}")
             if attempt == self.max_tries:
                 raise RuntimeError(f"{url} failed after {attempt} tries: {problem}")
             log("retry", url=url, attempt=attempt, problem=problem, wait_seconds=delay)
