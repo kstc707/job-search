@@ -57,7 +57,8 @@ def upsert_domain(conn: psycopg.Connection, host: str, brands: list[Brand], seen
     row = conn.execute(
         """INSERT INTO domains (fqdn, registered_domain, tld, brand_guess, allowlisted, first_seen, last_seen)
            VALUES (%s, %s, %s, %s, %s, COALESCE(%s, now()), COALESCE(%s, now()))
-           ON CONFLICT (fqdn) DO UPDATE SET last_seen = GREATEST(domains.last_seen, EXCLUDED.last_seen)
+           ON CONFLICT (fqdn) DO UPDATE SET last_seen = GREATEST(domains.last_seen, EXCLUDED.last_seen),
+             first_seen = LEAST(domains.first_seen, EXCLUDED.first_seen)
            RETURNING id""",
         (parts.fqdn, parts.registered_domain, parts.tld, brand, allowlisted, seen, seen),
     ).fetchone()
@@ -75,7 +76,8 @@ def upsert_url(
     row = conn.execute(
         """INSERT INTO urls (url, domain_id, first_seen, last_seen)
            VALUES (%s, %s, COALESCE(%s, now()), COALESCE(%s, now()))
-           ON CONFLICT (url) DO UPDATE SET last_seen = GREATEST(urls.last_seen, EXCLUDED.last_seen)
+           ON CONFLICT (url) DO UPDATE SET last_seen = GREATEST(urls.last_seen, EXCLUDED.last_seen),
+             first_seen = LEAST(urls.first_seen, EXCLUDED.first_seen)
            RETURNING id""",
         (url, domain_id, seen, seen),
     ).fetchone()

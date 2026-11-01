@@ -36,10 +36,11 @@ def test_edited_migration_is_refused(conn, tmp_path):
         db.migrate(conn, copy)
 
 
-def test_planned_sources_are_seeded_disabled(conn):
+def test_sources_needing_keys_stay_disabled(conn):
     rows = dict(conn.execute("SELECT name, enabled FROM sources").fetchall())
-    assert {"crtsh", "urlscan", "urlhaus", "phishtank", "openphish", "reddit", "rdap"} <= set(rows)
-    assert not any(rows.values())
+    assert {"crtsh", "urlscan", "urlhaus", "phishtank", "reddit"} <= set(rows)
+    assert not any(rows[n] for n in ("urlscan", "urlhaus", "phishtank", "reddit"))  # need your accounts
+    assert all(rows[n] for n in ("phishingdb", "phishingarmy", "openphish", "tranco", "whoisds", "ctlog", "rdap"))
 
 
 def test_successful_run_is_logged(conn):
