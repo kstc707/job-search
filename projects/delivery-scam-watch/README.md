@@ -1,68 +1,131 @@
 # Delivery Scam Watch
 
-Collects public signals of scams that impersonate delivery companies (FedEx, UPS, USPS, DHL):
-lookalike domains, phishing URLs and scam text messages. It stores every sighting with where
-and when it came from, then (in later components) scores, clusters and links them into
-campaigns, shown on a live dashboard.
+Fake "your package is on hold" texts were the most reported text scam in the US in 2024, when
+reported losses to text scams reached $470M (FTC, April 2025). Those texts link to domains that
+impersonate delivery companies. This project watches **new** domains (fresh registrations and
+fresh website certificates), spots the ones that impersonate FedEx, UPS, USPS or DHL, and gives
+an analyst a short list to review **before** public blocklists catch up.
 
-**Status:** component 0 (foundation) is built. No scraping yet.
+Everything runs on real, public, keyless data. Dashboard: `dashboard/index.html` (a static
+snapshot, open it in a browser).
 
-## Languages and where things are saved
+## Results (data as of 2026-11-01, 8 days of new-domain data)
 
-| What | Language / tool | Saved in |
+| Question | Answer |
+|---|---|
+| How many brand-keyword new domains a week? | 329 in 8 days from WhoisDS registrations and the CT log sample |
+| How many reach the analyst? | **41** after the brand-word rule and the model (about **103 → 13 analyst hours a month**, at 5 minutes per review) |
+| Are they real? | Name-only review: **35 likely scams**, 4 unsure, 2 legitimate (85% precision). The model missed none of the likely scams |
+| Are they already blocked? | **None of the 35** is on any of the blocklists we read |
+| Do blocklists act in time? | Of 187 blocklisted brand domains we looked up, **149 (80%) no longer exist** at the registry, so by listing time the campaign has often moved on |
+| Campaign signals | Series such as `fedex-vip*.shop` and `dhl+letters.cc`; one registrar (Dominet (HK) Limited) handled 18 of the flagged registrations |
+
+### How good is the detector, honestly?
+
+- **Lab** (2,230 real blocklisted scams vs 66 popular-site names, grouped by registered domain):
+  PR-AUC 0.997. Optimistic: popular sites are easy negatives.
+- **Unseen brand** (train on three brands, test on the fourth): PR-AUC 0.87 (UPS) to 1.00 (USPS).
+  UPS is hardest because "ups" hides inside ordinary words.
+- **Live stream:** before the brand-word rule was tightened, the model flagged 108 of 198 names,
+  most of them innocent ("groups", "syrups", device names like "ups1"). The fix was the rule,
+  not the model. Lesson: lab scores did not predict the stream.
+
+### Does synthetic data help when real labels are scarce?
+
+Before collecting anything I wrote down how I expected scam domains to look and froze it as
+**generator A** (`FREEZE.md`, checksums). Then I built **generator B**, which learns templates
+from real training labels.
+
+- Reality differed from the guess: 60% of real scams put the brand in a **subdomain**
+  (`usps.com-trackdqf.top`), A assumed 16%. A's two favourite tricks, misspellings and lookalike
+  characters, appear in **0%** of real scams. 20% of real scams use endings A never used.
+- A classifier tells real from A with AUC 0.91 and real from B with AUC 0.45 (cannot tell).
+- With 25 real labels, real data alone reaches 0% recall at 95% precision; adding A lifts it to
+  87%. From about 200 labels, real data alone is best and A's wrong assumptions start to cost.
+
+Numbers come from `python -m scamwatch report` → `outputs/results.json` and the charts in
+`outputs/`.
+
+## How it works
+
+```
+ new registrations (WhoisDS)  ─┐
+ new certificates (CT log)    ─┼─► stage 1: brand as a word ─► stage 2: model score ─► analyst list
+ blocklists, OpenPhish        ─┤        (rule)                     (gradient boosting)
+ Tranco top sites             ─┘  labels: blocklisted = scam, top site = legitimate
+ RDAP (registries)            ───► registration date, registrar, still alive?
+```
+
+| Source | What it gives | Key needed? |
 |---|---|---|
-| Scrapers, analysis, command-line tool | Python 3.12 | `scamwatch/` (this Git repository) |
-| Database tables | SQL (PostgreSQL 16) | `db/migrations/` as numbered files |
-| Collected data | PostgreSQL | Neon (cloud) in production; a local Postgres for tests |
-| Brands and keywords | YAML | `config/brands.yaml` |
-| Secrets (database URL, API keys) | environment variables | `.env` on your computer (never committed); GitHub Secrets in scheduled jobs |
-| Schedules and tests in the cloud | GitHub Actions (YAML) | `.github/workflows/` |
-| Dashboard (component 11) | Next.js | `web/` (added later) |
+| Google Argon CT log | new website certificates (RFC 6962 `get-entries`, sampled) | no |
+| WhoisDS | daily newly registered domains (~70k a day) | no |
+| Phishing.Database, phishing.army | phishing blocklists (392k and 152k domains) | no |
+| OpenPhish community feed | recent phishing URLs | no |
+| Tranco top 1M | popular, legitimate sites | no |
+| RDAP via the IANA bootstrap | registration date, registrar, whether it still exists | no |
 
 ## Layout
 
 ```
-scamwatch/            the Python package
-  config.py           settings from .env, and the brand list
-  db.py               database connection; applies migrations, refuses edited ones
-  store.py            saves domains, URLs and sightings without duplicates; 30-day raw purge
-  runlog.py           one row per scraper run (success / partial / failed) + JSON logs
-  defang.py           makes URLs safe to display: https://x.com -> hxxps://x[.]com
-  cli.py              python -m scamwatch migrate | hello | status | purge-raw
-config/brands.yaml    brands, keywords and allowlisted (legitimate) domains
-db/migrations/        0001_init.sql, then 0002_..., never edit an applied file
-tests/                pytest: migrations, run logging, no duplicates, brand matching,
-                      retention, defanging, no secrets committed
-.github/workflows/    ci.yml: lint and tests on every push
+scamwatch/
+  config.py, db.py, store.py, runlog.py, defang.py, http.py   foundation (settings, migrations,
+                                                               dedup storage, run log, polite fetcher)
+  collectors/lists.py      blocklists, OpenPhish, Tranco, WhoisDS
+  collectors/ctlog.py      certificate transparency log reader
+  collectors/rdap.py       registration lookups straight from each registry
+  synthetic/generator_a.py frozen guess (do not edit; see FREEZE.md)
+  synthetic/generator_b.py templates learned from real training labels
+  analysis/features.py     name-only signals + the brand-word rule
+  analysis/dataset.py      builds labelled and stream sets from the database
+  analysis/model.py        detector + grouped / leave-one-brand-out evaluation
+  analysis/experiment.py   synthetic vs real experiment
+  analysis/report.py       every number and chart in outputs/
+  cli.py                   python -m scamwatch ...
+db/migrations/             0001_init.sql, 0002_keyless_sources.sql (never edit an applied file)
+data/synthetic/            generator A output (frozen)
+data/review/               name-only review of the flagged stream domains
+dashboard/index.html       static dashboard snapshot
+tests/                     pytest, 66 tests
 ```
 
-## The database (migration 0001)
-
-| Table | One row per |
-|---|---|
-| `sources` | data source (crt.sh, urlscan, URLhaus, PhishTank, OpenPhish, Reddit, RDAP), with its terms and our politeness limit; all start disabled |
-| `collector_runs` | scraper run: start, end, status, items seen, items new, error |
-| `domains` | unique domain: full name, registered domain, suffix, first/last seen, brand keyword, allowlisted |
-| `urls` | unique URL (raw for analysis, only ever shown defanged) |
-| `observations` | sighting from a source (append-only; unique per source and the source's own ID) |
-| `reports` | public scam report text (e.g. a Reddit post) and the links in it |
-| `labels` | your hand label for a domain: scam, legitimate or unsure |
-
-## Setup
+## Run it
 
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-cp .env.example .env            # then put your Neon connection strings in .env
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
+cp .env.example .env                       # DATABASE_URL, TEST_DATABASE_URL
 .venv/bin/python -m scamwatch migrate
-.venv/bin/python -m scamwatch hello
-.venv/bin/python -m scamwatch status
-.venv/bin/python -m pytest -q   # needs TEST_DATABASE_URL (a separate database: tests drop every table)
+.venv/bin/python -m scamwatch collect-all  # every collector once
+.venv/bin/python -m scamwatch watch --hours 2   # keep collecting (CT sample + lists + RDAP)
+.venv/bin/python -m scamwatch report       # recompute outputs/results.json and charts
+.venv/bin/python -m pytest -q              # tests drop tables: use a separate TEST_DATABASE_URL
 ```
+
+## Limits (stated plainly)
+
+- The CT log is **sampled** (one Google log, a few thousand certificates an hour) and the WhoisDS
+  free list is a partial daily sample, so counts are a floor, not a census.
+- "Likely scam" on new domains comes from a **name-only review**, not a visit to the site and not
+  a confirmation. Confirmation is a domain reaching a blocklist later; the lead-time check
+  (`report` → `lead_time`) fills in as the collectors keep running.
+- Negatives are popular sites, which are easier than real innocent names. The live stream showed
+  this.
+- The analyst-hours figure assumes 5 minutes per review.
+
+## Scale-up path (needs accounts)
+
+| Account | What it adds |
+|---|---|
+| urlscan.io (free key) | page screenshots and hosting details, so a review sees the page, not only the name |
+| URLhaus, PhishTank | more confirmations, faster lead-time measurement |
+| Reddit app | real scam text reports, to link texts to domains and cluster campaigns |
+| Neon (Postgres) | hosted database |
+| GitHub Actions | scheduled collectors (secrets in GitHub Secrets) |
+| Vercel | live Next.js dashboard reading Neon |
 
 ## Ground rules
 
-Public data only, within each source's terms and robots.txt, with polite rate limits. The
-project never submits forms on, or downloads files from, a scam site. URLs are stored raw for
-analysis but every display goes through `defang()`. It covers four carriers, uses no company
-logos and does not claim to act for any of them.
+Public data only, within each source's terms, with polite rate limits and a descriptive
+User-Agent. The project never visits, submits forms on, or downloads from a suspected scam site.
+Every name shown is defanged (`fedex-vip[.]shop`). Not affiliated with FedEx, UPS, USPS or DHL;
+no company marks are used.

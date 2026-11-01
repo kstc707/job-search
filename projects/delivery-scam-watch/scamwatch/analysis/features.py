@@ -148,8 +148,8 @@ def brand_token(fqdn: str) -> str | None:
     """The brand the name refers to as a word of its own, or None.
 
     Checked part by part (split on dots and hyphens):
-      ups              must be a whole part ('ups', 'ups1') or sit next to a delivery word ('upstrack');
-                       'groups', 'syrups', 'doups' do not count
+      ups              must be a whole part ('ups') or sit next to a delivery word ('upstrack');
+                       'groups', 'syrups', 'doups' and device names like 'ups1' do not count
       fedex/usps/dhl   must start or end a part ('wusps', 'dhlentrega', 'fedexi'), or sit in a short
                        part that also holds a delivery word ('mylogindhlupdate'); a brand buried in a long
                        random string ('wtrdhldkzjb...', 'tarncuspsettlements') does not count
@@ -164,7 +164,7 @@ def brand_token(fqdn: str) -> str | None:
             if len(part) <= 20 and any(w in part for w in DELIVERY_WORDS):
                 return BRANDS[kw]
         if "ups" in part:
-            if letters == "ups" or part.lstrip("0123456789") == "ups":
+            if part == "ups" or part.lstrip("0123456789") == "ups":  # 'ups', '19563ups'; not 'ups1' (device names)
                 return "UPS"
             if any(part.startswith("ups" + w) or part.endswith(w + "ups") for w in DELIVERY_WORDS):
                 return "UPS"

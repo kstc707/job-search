@@ -1,0 +1,286 @@
+<title>Delivery Scam Watch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an incident-report column: alert strip, live findings table, then the evidence sections. */
+:root {
+  --bg: #f3f4f1;
+  --surface: #ffffff;
+  --ink: #17201d;
+  --muted: #5a6662;
+  --line: #d6dcd8;
+  --signal: #c2410c;
+  --signal-soft: #fbe7dc;
+  --safe: #1e6b4f;
+  --safe-soft: #dbeee5;
+  --neutral: #6b7280;
+  --bar: #e5e9e7;
+  --display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111614; --surface: #19201d; --ink: #e4ebe7; --muted: #9aa7a2; --line: #2b3531;
+    --signal: #f08a4b; --signal-soft: #3b2216; --safe: #5cc79a; --safe-soft: #173428; --neutral: #9ca3af; --bar: #253029;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111614; --surface: #19201d; --ink: #e4ebe7; --muted: #9aa7a2; --line: #2b3531;
+  --signal: #f08a4b; --signal-soft: #3b2216; --safe: #5cc79a; --safe-soft: #173428; --neutral: #9ca3af; --bar: #253029;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 36px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.1; }
+h1 { font-size: clamp(36px, 6.5vw, 54px); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 26px; font-weight: 700; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; max-width: 70ch; }
+a { color: var(--safe); }
+a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); }
+.num { font-variant-numeric: tabular-nums; }
+header { display: flex; flex-direction: column; gap: 14px; }
+.lede { font-size: 19px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-size: 14px; align-items: center; }
+.pill { font: 500 12px var(--mono); padding: 3px 9px; border-radius: 999px; }
+.pill.real { background: var(--safe-soft); color: var(--safe); }
+.pill.warn { background: var(--signal-soft); color: var(--signal); }
+.pill.grey { background: var(--bar); color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 3px solid var(--signal); background: var(--surface); border-radius: 0 0 6px 6px; border: 1px solid var(--line); border-top: 3px solid var(--signal); }
+.strip > div { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.strip > div + div { border-left: 1px solid var(--line); }
+.big { font: 800 34px/1 var(--display); }
+.big.alert { color: var(--signal); }
+.small { font-size: 14px; color: var(--muted); }
+@media (max-width: 680px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .strip > div:nth-child(3) { border-left: 0; } .strip > div:nth-child(n+3) { border-top: 1px solid var(--line); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls label { font-size: 14px; color: var(--muted); }
+select { font: 14px var(--body); padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 500 12px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+td.d { font-family: var(--mono); font-size: 13px; }
+td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tr.series td.d { color: var(--signal); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 680px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.chart { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
+.findings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 28px; }
+.findings div { border-top: 2px solid var(--ink); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 680px) { .findings { grid-template-columns: minmax(0, 1fr); } }
+.stat { font: 800 26px var(--display); }
+ul.flat { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+pre { margin: 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; overflow-x: auto; font: 13px var(--mono); }
+footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Brand-impersonation monitoring · FedEx · UPS · USPS · DHL</span>
+    <h1>Delivery Scam Watch</h1>
+    <p class="lede">Fake "your package is on hold" texts were the most reported text scam in the US last year. This monitor reads new website certificates and new domain registrations, spots names that impersonate delivery companies, and hands analysts a short list before the public blocklists catch up.</p>
+    <div class="meta">
+      <span>Sai Teja Koppolu · MS Data Science, University of Memphis</span>
+      <span class="pill real">real public data</span>
+      <span class="pill grey" id="gen"></span>
+    </div>
+  </header>
+
+  <div class="strip" aria-label="Headline numbers">
+    <div><span class="big alert num" id="k1"></span><span class="small">likely delivery-scam domains registered in the last <span id="k1d"></span> days that no public blocklist lists yet</span></div>
+    <div><span class="big num" id="k2"></span><span class="small">fewer domains for analysts to check: <span id="k2a"></span> keyword matches cut to <span id="k2b"></span></span></div>
+    <div><span class="big num" id="k3"></span><span class="small">of blocklisted delivery-scam domains we looked up are already gone from the registry</span></div>
+    <div><span class="big num" id="k4"></span><span class="small">confirmed delivery-scam domains studied from community blocklists</span></div>
+  </div>
+
+  <section aria-labelledby="live-h">
+    <span class="eyebrow">Live findings · WhoisDS new registrations and Certificate Transparency log</span>
+    <h2 id="live-h">What the monitor found this week</h2>
+    <p>Every new domain that names a delivery brand as a word, scored by the detector and checked in a name-only review. Campaign series stand out: the same brand plus a few random letters, registered day after day. Names are defanged so none can be clicked.</p>
+    <div class="panel">
+      <div class="controls">
+        <label for="filter">Show</label>
+        <select id="filter">
+          <option value="all">all</option>
+          <option value="likely_scam">likely scams</option>
+          <option value="unsure">unsure</option>
+          <option value="legitimate">legitimate</option>
+        </select>
+        <span class="small" id="count"></span>
+      </div>
+      <div class="tablewrap"><table><thead><tr><th>Domain</th><th>Brand</th><th>First seen</th><th>Model score</th><th>Review</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p class="small" id="registrar"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="find-h">
+    <h2 id="find-h">What the data shows</h2>
+    <div class="findings">
+      <div><span class="stat num" id="f1"></span><h3>Scam domains die fast</h3><p>Most blocklisted delivery-scam domains we looked up no longer exist in the registry. By the time a domain reaches a blocklist, the campaign has often moved on, so the useful moment to act is when the domain is registered or gets its certificate.</p></div>
+      <div><span class="stat num" id="f2"></span><h3>The subdomain trick dominates</h3><p>Most real scam names put the brand in front of an unrelated domain, like usps.com-trackdqf[.]top: on a phone screen, only the first part shows.</p></div>
+      <div><span class="stat num" id="f3"></span><h3>Analyst time, before and after</h3><p>Hours a month to check every new brand-keyword domain, against checking only what the rule and model flag (five minutes per domain, an assumption).</p></div>
+      <div><span class="stat num">$470M</span><h3>Why it matters</h3><p>Reported US losses to text-message scams in 2024; fake package delivery was the most reported type (<a href="https://www.ftc.gov/news-events/news/press-releases/2025/04/new-ftc-data-show-top-text-message-scams-2024-overall-losses-text-scams-hit-470-million">FTC, April 2025</a>). The FTC does not split losses by scam type, so this monitor reports operational numbers rather than a dollar figure.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pat-h">
+    <span class="eyebrow">Real scam domains vs our assumptions (generator A, frozen before collection)</span>
+    <h2 id="pat-h">What real delivery-scam domains look like</h2>
+    <p>Before collecting anything, I wrote down how I expected scam domains to look and froze that guess as a synthetic data generator. The real data disagreed. <span id="endings"></span></p>
+    <div class="panel">
+      <div class="legend"><span><i style="background:var(--signal)"></i>real scam domains</span><span><i style="background:var(--neutral)"></i>our assumption</span></div>
+      <svg class="chart" id="patchart" role="img" aria-label="Share of each naming pattern in real data and in our assumptions"></svg>
+    </div>
+  </section>
+
+  <section aria-labelledby="exp-h">
+    <span class="eyebrow">Experiment · held-out real test set, grouped by registered domain</span>
+    <h2 id="exp-h">Does synthetic data help when real labels are scarce?</h2>
+    <p>Real confirmed scams are expensive to label, so fraud teams often lean on synthetic data. I trained the detector on a few real labels, with and without synthetic examples, and measured recall at 95% precision on real domains it had never seen. Generator B learns templates only from the same few real labels; a classifier can barely tell its output from real data (AUC <span id="aucB"></span>), while it spots our assumption-based generator A easily (AUC <span id="aucA"></span>).</p>
+    <div class="panel">
+      <div class="legend"><span><i style="background:var(--ink)"></i>real labels only</span><span><i style="background:var(--neutral)"></i>real + generator A</span><span><i style="background:var(--safe)"></i>real + generator B</span></div>
+      <svg class="chart" id="curve" role="img" aria-label="Recall at 95% precision by number of real labels"></svg>
+      <p class="small">Read it this way: with 25 real labels, a real-only model reaches 0% recall at that precision; adding assumption-based data lifts it to 87%. From about 200 labels, real data alone is best, and generator A's wrong assumptions start to cost recall.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="det-h">
+    <h2 id="det-h">How good is the detector, honestly?</h2>
+    <ul class="flat">
+      <li><b>In the lab:</b> PR-AUC <span id="lab"></span> with folds grouped by registered domain. This is optimistic: the legitimate examples are popular websites, which are easy to tell from scams.</li>
+      <li><b>On a brand it never saw:</b> trained on three brands and tested on the fourth, PR-AUC ranges from <span id="lobo"></span>. UPS is hardest, because "ups" also appears in many innocent names.</li>
+      <li><b>On the live stream:</b> a name-only review of everything flagged found <span id="rev"></span>. On live data the brand-as-a-word rule does most of the work: there are still too few legitimate domains that mention a brand to teach the model the hard cases.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="pipe-h">
+    <span class="eyebrow">Collection · keyless public sources, polite rate limits</span>
+    <h2 id="pipe-h">How it works</h2>
+    <div class="tablewrap"><table id="src"><thead><tr><th>Source</th><th>What it gives</th><th>Runs</th><th>Rows checked (all runs)</th><th>Stored</th></tr></thead><tbody></tbody></table></div>
+    <pre>python -m scamwatch collect-all     # every collector once
+python -m scamwatch watch --hours 2 # keep collecting
+python -m scamwatch report          # recompute every number on this page</pre>
+    <p class="small">Python, PostgreSQL, scikit-learn. 66 tests, including one that fails if the frozen generator A changes. A domain name is never visited: everything here comes from names, certificates and registry records.</p>
+  </section>
+
+  <section aria-labelledby="next-h">
+    <h2 id="next-h">Limits, and how it scales</h2>
+    <ul class="flat">
+      <li>The certificate log is sampled (one Google log, a few thousand certificates an hour), and the WhoisDS free list is a partial daily sample.</li>
+      <li>"Likely scam" labels on new domains come from a name-only review and are not yet confirmed; confirmation comes when the domains reach a blocklist, which also measures the warning time.</li>
+      <li>With free accounts: urlscan.io (page screenshots and hosting), URLhaus and PhishTank (more confirmations), a Reddit app (real scam texts for campaign clustering), Neon and Vercel (a hosted live dashboard), and GitHub Actions (scheduled runs).</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Data: Phishing.Database, phishing.army, OpenPhish community feed, Tranco top 1M, WhoisDS newly registered domains, Google Argon 2026h2 Certificate Transparency log, registry RDAP via IANA. Context: FTC.</span>
+    <span>Not affiliated with FedEx, UPS, USPS or DHL; no company marks are used.</span>
+  </footer>
+</div>
+
+<script>
+const D = {"generated":"2026-11-01T19:25:59+00:00","labelled":{"keyword_scope":{"scam":2230,"legitimate":635},"brand_scope":{"scam":2230,"legitimate":66},"scam_by_brand":{"USPS":1633,"DHL":479,"FedEx":63,"UPS":55}},"stream":{"days_covered":8,"keyword_domains":329,"after_stage1_rule":41,"after_stage2_model":41,"review_counts":{"likely_scam":35,"unsure":4,"legitimate":2},"analyst_hours_per_month":{"review_every_keyword_domain":102.8,"review_after_rule_and_model":12.8,"assumption_minutes_per_review":5},"likely_scams_not_on_any_blocklist":35},"rows":[{"d":"imports-dhl[.]com","b":"DHL","r":"likely_scam","t":"2026-10-30","s":1.0},{"d":"ba56z-nokku-tmfdhl[.]cyou","b":"DHL","r":"unsure","t":"2026-10-28","s":1.0},{"d":"fedex-vipdsf[.]shop","b":"FedEx","r":"likely_scam","t":"2026-10-28","s":1.0},{"d":"dhl-tracking[.]live","b":"DHL","r":"likely_scam","t":"2026-10-26","s":1.0},{"d":"dhlentrega[.]eu[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-26","s":1.0},{"d":"dhlabelprint[.]com","b":"DHL","r":"unsure","t":"2026-10-30","s":1.0},{"d":"fedex-vipbvrfb[.]shop","b":"FedEx","r":"likely_scam","t":"2026-10-29","s":0.999},{"d":"fedex-vipvujg[.]shop","b":"FedEx","r":"likely_scam","t":"2026-10-26","s":0.999},{"d":"dhl-logisticservices[.]live","b":"DHL","r":"likely_scam","t":"2026-10-26","s":0.999},{"d":"fedex-vipmvbf[.]shop","b":"FedEx","r":"likely_scam","t":"2026-10-26","s":0.999},{"d":"dhleregamx[.]top","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.999},{"d":"fedex-vipbtb[.]shop","b":"FedEx","r":"likely_scam","t":"2026-10-28","s":0.998},{"d":"dhlpyljh[.]eu[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-30","s":0.998},{"d":"dhlyclz[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-31","s":0.996},{"d":"dhlaolunsideqizi2[.]baby","b":"DHL","r":"unsure","t":"2026-10-28","s":0.996},{"d":"nabt-jadhl[.]com","b":"DHL","r":"unsure","t":"2026-10-31","s":0.993},{"d":"0dhl[.]rest","b":"DHL","r":"likely_scam","t":"2026-10-28","s":0.988},{"d":"dhlzjw661[.]cfd","b":"DHL","r":"likely_scam","t":"2026-10-30","s":0.981},{"d":"fedexrb[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.979},{"d":"fedexrz[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.979},{"d":"thecountypop-ups[.]shop","b":"UPS","r":"legitimate","t":"2026-10-25","s":0.976},{"d":"dhllycl[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-31","s":0.975},{"d":"dhlycly[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-31","s":0.975},{"d":"eservice-dhl[.]com","b":"DHL","r":"likely_scam","t":"2026-10-26","s":0.974},{"d":"fedexi[.]eu[.]cc","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.952},{"d":"dhltotog[.]com","b":"DHL","r":"likely_scam","t":"2026-10-31","s":0.95},{"d":"fedexqwq[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-26","s":0.95},{"d":"fedexkfj[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-31","s":0.95},{"d":"pcldhl[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.926},{"d":"kcldhl[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.926},{"d":"wcldhl[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.926},{"d":"dhlsgamx[.]help","b":"DHL","r":"likely_scam","t":"2026-10-31","s":0.923},{"d":"dhlmx[.]lat","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.914},{"d":"neoncactusps[.]com","b":"USPS","r":"legitimate","t":"2026-10-31","s":0.896},{"d":"fedexabw[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-29","s":0.86},{"d":"fedextqy[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-31","s":0.807},{"d":"fedexwcp[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-29","s":0.807},{"d":"fedexhlp[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.807},{"d":"fedexhyp[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.807},{"d":"fedexqwm[.]com","b":"FedEx","r":"likely_scam","t":"2026-10-25","s":0.807},{"d":"dhlyico[.]cc","b":"DHL","r":"likely_scam","t":"2026-10-25","s":0.693}],"patterns":{"brand_numbers":{"real_share":0.018,"generator_a_share":0.114},"brand_service":{"real_share":0.022,"generator_a_share":0.296},"brand_subdomain":{"real_share":0.602,"generator_a_share":0.156},"hosting_platform (not in A)":{"real_share":0.059,"generator_a_share":0.0},"lookalike_chars":{"real_share":0.0,"generator_a_share":0.092},"misspelled_brand":{"real_share":0.0,"generator_a_share":0.15},"other (brand only, or not in A)":{"real_share":0.245,"generator_a_share":0.0},"random_with_brand_subdomain":{"real_share":0.047,"generator_a_share":0.051},"service_brand":{"real_share":0.007,"generator_a_share":0.143}},"endings":{"real_top_endings":{"top":0.43,"com":0.136,"xyz":0.12,"cc":0.086,"xin":0.026,"vip":0.02,"dev":0.019,"app":0.016,"shop":0.014,"net":0.01},"share_of_real_scams_with_endings_A_never_uses":0.202},"aucA":0.911,"aucB":0.454,"curve":[{"n":25,"real_only":0.0,"real+A":0.867,"real+B":0.53},{"n":50,"real_only":0.825,"real+A":0.894,"real+B":0.795},{"n":100,"real_only":0.934,"real+A":0.921,"real+B":0.985},{"n":200,"real_only":1.0,"real+A":0.935,"real+B":0.993},{"n":400,"real_only":1.0,"real+A":0.953,"real+B":0.999},{"n":2119,"real_only":1.0,"real+A":0.984,"real+B":1.0}],"detector":{"lab":{"pr_auc":0.997,"recall_at_95_precision":1.0},"lobo":{"DHL":{"n":511,"pr_auc":0.98},"FedEx":{"n":66,"pr_auc":0.998},"UPS":{"n":77,"pr_auc":0.867},"USPS":{"n":1642,"pr_auc":1.0}}},"regs":{"blocklisted_registered_domains":1758,"looked_up":187,"still_registered":38,"already_gone_not_found":149,"age_days_when_seen_listed":{"n":38,"median":171.1,"share_under_7_days":0.053,"share_under_30_days":0.079},"top_registrars_blocklisted":{"Dynadot Inc":8,"Gname.com Pte. Ltd.":4,"NameSilo, LLC":3,"Amazon Registrar, Inc.":2,"NameSilo,LLC":2},"top_registrars_stream":{"Dominet (HK) Limited":18,"GNAME.COM PTE. LTD.":3,"Spaceship, Inc.":3,"Dynadot Inc":2,"PDR Ltd. d/b/a PublicDomainRegistry.com":2}},"sources":{"ctlog":{"runs":84,"seen":16840,"stored":15},"openphish":{"runs":3,"seen":33,"stored":11},"phishingarmy":{"runs":3,"seen":240,"stored":120},"phishingdb":{"runs":3,"seen":8196,"stored":2732},"rdap":{"runs":4,"seen":232,"stored":0},"tranco":{"runs":1,"seen":646,"stored":646},"whoisds":{"runs":2,"seen":742,"stored":314}},"bExamples":["zjqdb[.]vusps[.]xyz","usps[.]com-uknmfy[.]icu","skup85-dhl[.]zbcwb[.]io","03obw[.]susps[.]xyz","dhlrrxpho[.]click"]};
+const pct = (x, d = 0) => (x * 100).toFixed(d) + "%";
+const $ = id => document.getElementById(id);
+
+$("gen").textContent = "data as of " + D.generated.slice(0, 10);
+const s = D.stream;
+$("k1").textContent = s.likely_scams_not_on_any_blocklist;
+$("k1d").textContent = s.days_covered;
+$("k2").textContent = pct(1 - s.after_stage2_model / s.keyword_domains);
+$("k2a").textContent = s.keyword_domains;
+$("k2b").textContent = s.after_stage2_model;
+const gone = D.regs.already_gone_not_found / D.regs.looked_up;
+$("k3").textContent = pct(gone);
+$("k4").textContent = D.labelled.brand_scope.scam.toLocaleString("en-US");
+$("f1").textContent = pct(gone) + " gone";
+$("f2").textContent = pct(D.patterns.brand_subdomain.real_share) + " of real scams";
+const h = s.analyst_hours_per_month;
+$("f3").textContent = Math.round(h.review_every_keyword_domain) + " → " + Math.round(h.review_after_rule_and_model) + " h";
+$("aucA").textContent = D.aucA.toFixed(2);
+$("aucB").textContent = D.aucB.toFixed(2);
+$("lab").textContent = D.detector.lab.pr_auc.toFixed(3);
+const lobo = Object.entries(D.detector.lobo).map(([b, v]) => [b, v.pr_auc]).sort((a, b) => a[1] - b[1]);
+$("lobo").textContent = `${lobo[0][1].toFixed(2)} (${lobo[0][0]}) to ${lobo[lobo.length - 1][1].toFixed(2)} (${lobo[lobo.length - 1][0]})`;
+const rc = s.review_counts;
+$("rev").textContent = `${rc.likely_scam || 0} likely scams, ${rc.unsure || 0} unsure and ${rc.legitimate || 0} innocent names among ${s.after_stage2_model} flagged (${pct((rc.likely_scam || 0) / s.after_stage2_model)} precision by review), with no likely scam missed`;
+const e = D.endings;
+$("endings").textContent = `${pct(e.share_of_real_scams_with_endings_A_never_uses)} of real scam domains use endings our assumptions never listed; .top alone is ${pct(e.real_top_endings.top)}.`;
+const regs = Object.entries(D.regs.top_registrars_stream);
+if (regs.length) $("registrar").textContent = `Registrar concentration among new brand domains: ${regs[0][0]} handled ${regs[0][1]} of them, a lead for a registrar abuse report.`;
+
+// live table
+const SERIES = [/^fedex-vip[a-z]+\[\.\]shop$/, /^fedex[a-z]{2,3}\[\.\]com$/, /^dhl[a-z]{3,5}\[\.\]cc$/, /^[a-z]{3}dhl\[\.\]cc$/];
+const LABEL = { likely_scam: ["likely scam", "warn"], unsure: ["unsure", "grey"], legitimate: ["legitimate", "real"], not_reviewed: ["not reviewed", "grey"] };
+function renderRows() {
+  const f = $("filter").value;
+  const rows = D.rows.filter(r => f === "all" || r.r === f);
+  $("count").textContent = `${rows.length} of ${D.rows.length} domains`;
+  $("rows").innerHTML = rows.map(r => {
+    const series = SERIES.some(re => re.test(r.d));
+    const [lab, cls] = LABEL[r.r] || LABEL.not_reviewed;
+    return `<tr class="${series ? "series" : ""}"><td class="d">${r.d}${series ? " ·series" : ""}</td><td>${r.b}</td><td class="mono">${r.t}</td><td class="n">${r.s.toFixed(2)}</td><td><span class="pill ${cls}">${lab}</span></td></tr>`;
+  }).join("");
+}
+$("filter").addEventListener("change", renderRows);
+renderRows();
+
+// pattern chart
+function patternChart() {
+  const names = { brand_subdomain: "brand as subdomain", "other (brand only, or not in A)": "brand + random letters", "hosting_platform (not in A)": "free hosting platform", random_with_brand_subdomain: "random name, brand subdomain", brand_service: "brand + service word", service_brand: "service word + brand", brand_numbers: "brand + numbers", misspelled_brand: "misspelled brand", lookalike_chars: "look-alike characters" };
+  const rows = Object.entries(D.patterns).map(([k, v]) => [names[k] || k, v.real_share, v.generator_a_share]).sort((a, b) => b[1] - a[1]);
+  const W = 760, L = 210, R = 50, row = 34, H = rows.length * row + 30, x = v => L + v / 0.65 * (W - L - R);
+  let g = "";
+  for (const t of [0, 0.2, 0.4, 0.6]) g += `<line x1="${x(t)}" x2="${x(t)}" y1="0" y2="${H - 24}" stroke="var(--line)"/><text x="${x(t)}" y="${H - 6}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="JetBrains Mono, monospace">${t * 100}%</text>`;
+  rows.forEach(([n, real, a], i) => {
+    const y = i * row + 4;
+    g += `<text x="${L - 10}" y="${y + 17}" text-anchor="end" font-size="13" fill="var(--ink)">${n}</text>`;
+    g += `<rect x="${L}" y="${y + 3}" width="${Math.max(0.5, x(real) - L)}" height="11" fill="var(--signal)"/>`;
+    g += `<rect x="${L}" y="${y + 16}" width="${Math.max(0.5, x(a) - L)}" height="9" fill="var(--neutral)"/>`;
+    g += `<text x="${x(real) + 6}" y="${y + 13}" font-size="11" fill="var(--muted)" font-family="JetBrains Mono, monospace">${pct(real)}</text>`;
+  });
+  const svg = $("patchart");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = g;
+}
+patternChart();
+
+// learning curve
+function curveChart() {
+  const W = 760, H = 300, L = 56, R = 20, T = 14, B = 40;
+  const ns = D.curve.map(c => c.n), lx = Math.log10;
+  const x = n => L + (lx(n) - lx(ns[0])) / (lx(ns[ns.length - 1]) - lx(ns[0])) * (W - L - R);
+  const y = v => T + (1 - v) * (H - T - B);
+  let g = "";
+  for (const v of [0, 0.25, 0.5, 0.75, 1]) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="JetBrains Mono, monospace">${v * 100}%</text>`;
+  for (const n of ns) g += `<text x="${x(n)}" y="${H - 18}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="JetBrains Mono, monospace">${n}</text>`;
+  g += `<text x="${(L + W - R) / 2}" y="${H - 2}" text-anchor="middle" font-size="12" fill="var(--muted)">real labelled domains used for training</text>`;
+  for (const [k, c] of [["real_only", "var(--ink)"], ["real+A", "var(--neutral)"], ["real+B", "var(--safe)"]]) {
+    g += `<polyline fill="none" stroke="${c}" stroke-width="2.5" points="${D.curve.map(p => `${x(p.n)},${y(p[k])}`).join(" ")}"/>`;
+    for (const p of D.curve) g += `<circle cx="${x(p.n)}" cy="${y(p[k])}" r="4" fill="var(--surface)" stroke="${c}" stroke-width="2"/>`;
+  }
+  const svg = $("curve");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = g;
+}
+curveChart();
+
+// sources
+const SRC = { ctlog: "new certificates, sampled (rows = certificates read)", whoisds: "new registrations, ~70k a day (rows = brand-keyword names)", phishingdb: "phishing blocklist, 392,178 domains (rows = brand-keyword names)", phishingarmy: "phishing blocklist, 151,992 domains (rows = brand-keyword names)", openphish: "phishing feed, 300 URLs a snapshot (rows = brand-keyword URLs)", tranco: "popular sites (legitimate)", rdap: "registration dates (rows = lookups; stored in its own table)" };
+document.querySelector("#src tbody").innerHTML = Object.entries(D.sources).map(([k, v]) =>
+  `<tr><td class="mono">${k}</td><td>${SRC[k] || ""}</td><td class="n">${v.runs}</td><td class="n">${v.seen.toLocaleString("en-US")}</td><td class="n">${v.stored.toLocaleString("en-US")}</td></tr>`).join("");
+</script>

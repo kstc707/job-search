@@ -18,6 +18,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from ..config import PROJECT_ROOT  # noqa: E402
+from ..defang import defang  # noqa: E402
 from . import dataset  # noqa: E402
 from . import experiment as ex  # noqa: E402
 from .features import FEATURES, frame  # noqa: E402
@@ -82,9 +83,13 @@ def stream_triage(df: pd.DataFrame, scam_model, threshold: float) -> dict:
             "review_after_rule_and_model": round(len(flagged) * per_month * MINUTES_PER_TRIAGE / 60, 1),
             "assumption_minutes_per_review": MINUTES_PER_TRIAGE,
         },
-        "flagged_examples": flagged.sort_values("score", ascending=False).fqdn.head(15).tolist(),
+        "flagged_examples": [defang(d) for d in flagged.sort_values("score", ascending=False).fqdn.head(15)],
         "rows": stage1[["fqdn", "brand", "score", "flagged", "review", "on_blocklist"]]
-        .assign(first_signal=stage1.first_new_signal.astype(str), score=stage1.score.round(3))
+        .assign(
+            fqdn=stage1.fqdn.map(defang),
+            first_signal=stage1.first_new_signal.dt.strftime("%Y-%m-%d"),
+            score=stage1.score.round(3),
+        )
         .sort_values("score", ascending=False)
         .to_dict(orient="records"),
     }
@@ -113,15 +118,50 @@ def lead_times(df: pd.DataFrame, conn, started: datetime) -> dict:
     ]
     return {
         "stream_domains_later_listed": [
-            {"fqdn": r.fqdn, "hours": round((r.first_listed - r.first_new_signal).total_seconds() / 3600, 1)}
+            {"fqdn": defang(r.fqdn), "hours": round((r.first_listed - r.first_new_signal).total_seconds() / 3600, 1)}
             for r in later.itertuples()
         ],
-        "newly_listed_with_registration_date": [{"fqdn": f, "age_days": round(a, 1)} for f, a in ages],
+        "newly_listed_with_registration_date": [{"fqdn": defang(f), "age_days": round(a, 1)} for f, a in ages],
         "blocklisted_brand_domains_with_registration_date": len(listed_ages),
         "age_when_we_saw_them_listed_days": {
             "median": round(float(np.median(listed_ages)), 1) if listed_ages else None,
             "share_under_30_days": round(float(np.mean(np.array(listed_ages) < 30)), 3) if listed_ages else None,
         },
+    }
+
+
+def registration_summary(df: pd.DataFrame, conn) -> dict:
+    """What registry records say about blocklisted brand domains: still registered or already gone,
+    and how old the registered ones were when we first saw them listed."""
+    regs = pd.DataFrame(
+        conn.execute("SELECT registered_domain, created_at, registrar, status FROM registrations").fetchall(),
+        columns=["registered_domain", "created_at", "registrar", "status"],
+    )
+    listed = df[df.on_blocklist & df.brand.notna()].drop_duplicates("registered_domain")
+    from .features import HOSTING
+
+    listed = listed[~listed.registered_domain.isin(HOSTING)]
+    m = listed.merge(regs, on="registered_domain", how="inner")
+    ok = m[m.status == "ok"].dropna(subset=["created_at"])
+    age = (ok.first_listed - ok.created_at).dt.total_seconds() / 86400
+    stream = (
+        df[(df.set == "stream") & df.brand.notna()]
+        .drop_duplicates("registered_domain")
+        .merge(regs, on="registered_domain", how="inner")
+    )
+    return {
+        "blocklisted_registered_domains": int(len(listed)),
+        "looked_up": int(len(m)),
+        "still_registered": int((m.status == "ok").sum()),
+        "already_gone_not_found": int((m.status == "not_found").sum()),
+        "age_days_when_seen_listed": {
+            "n": int(len(age)),
+            "median": round(float(age.median()), 1) if len(age) else None,
+            "share_under_7_days": round(float((age < 7).mean()), 3) if len(age) else None,
+            "share_under_30_days": round(float((age < 30).mean()), 3) if len(age) else None,
+        },
+        "top_registrars_blocklisted": ok.registrar.value_counts().head(5).to_dict(),
+        "top_registrars_stream": stream[stream.status == "ok"].registrar.value_counts().head(5).to_dict(),
     }
 
 
@@ -158,6 +198,7 @@ def run(conn) -> dict:
     model = make_model().fit(Xk, yk)
     res["stream"] = stream_triage(df, model, thr)
     res["lead_time"] = lead_times(df, conn, started)
+    res["registrations"] = registration_summary(df, conn)
 
     # synthetic vs real
     scams = keyword_scope[keyword_scope.label == "scam"]
@@ -167,6 +208,7 @@ def run(conn) -> dict:
         "real_vs_A_auc": ex.distinguishability(scams.fqdn.tolist()[:1500], a[a.label == "scam"].domain.tolist()[:1500]),
     }
     res["experiment"].update(ex.learning_curves(keyword_scope, a))
+    res["experiment"]["generator_B_examples"] = [defang(d) for d in res["experiment"]["generator_B_examples"]]
     (OUT / "results.json").write_text(json.dumps(res, indent=2, default=str))
     charts(res)
     return res

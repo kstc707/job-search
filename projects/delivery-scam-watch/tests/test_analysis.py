@@ -29,6 +29,8 @@ BRAND_CASES = {
     "wtrdhldkzjbzooorcockuircvajr.fis.iad.test.prod.sadbirds.aws.dev": None,
     "uuidhlevv2.urawatchdog.sfdc.net": None,
     "doucs-epris-doups.top": None,
+    "twn-ups1.twncommunications.net": None,  # an ISP's power-supply host, seen in the CT log
+    "ac2374-view-mail-ups.web.app": "UPS",
 }
 
 
