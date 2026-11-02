@@ -5,6 +5,10 @@ description: Apply to jobs with a resume Claude tailored. Use when Sai asks to f
 
 # Tsenta apply pipeline
 
+**Read `permissions/POLICY.md` first.** It lists what runs without asking Sai (Notion edits, Tsenta reads,
+uploads and `apply-with-custom-resume` for fully gated resumes), what needs him, and what is never done. Give
+every agent you launch the same instruction.
+
 Code and background: `projects/auto-apply/` (README explains why each step exists).
 Run CLI commands from `projects/auto-apply` with `.venv/bin/python -m auto_apply.cli …`
 (create the venv with `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`).

@@ -1,5 +1,7 @@
 # Job agent v2: one run
 
+**Read `permissions/POLICY.md` first** (what needs no permission, what needs Sai, what is never done); pass the same instruction to every agent you launch.
+
 Goal: **a callback from a person.** Fewer, better-aimed applications: entry-level analyst roles,
 Sai's locations first, fresh postings, a checked resume, and nothing sent without Sai's approval.
 
@@ -99,8 +101,11 @@ Fill `runs/` (git-ignored, never commit it):
    facts only into `answers.json` there; put the drafts in Notes as "Drafted answers — approve?".
 
 ## 5. Add rows for Sai
+**Strategy arms** (`prompts/strategy-loop.md`): pick jobs for each arm in the numbers the memory page's
+**Next run plan** gives, follow that arm's choices when finding and building, and write `[arm:<id>]` in the
+row's Notes. A row without an arm tag cannot be learned from.
 For each built job create a tracker row: Job, Company, Location, Date (today), Apply URL,
-Source URL, Score, Status **Drafted**, Submit? **No**, and Notes: location tier, why it fits,
+Source URL, Score, Status **Drafted**, Submit? **No**, and Notes: `[arm:<id>]`, location tier, why it fits,
 gaps (including red-team reasons accepted), how it will be sent (filler or Tsenta or manual),
 drafted answers. Attach the resume (memory page Workflow step 5: Tsenta request-resume-upload
 → PUT → check-custom-resume → Notion create-attachment with source_url = viewUrl → Resume).
