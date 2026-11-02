@@ -14,6 +14,9 @@ Run CLI commands from `projects/auto-apply` with `.venv/bin/python -m auto_apply
 (create the venv with `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`).
 All personal data goes in `projects/auto-apply/runs/` (git-ignored; the repo is public).
 
+Sai hands-free (voice, can't touch the phone)? Use `.claude/skills/voice-apply/SKILL.md` on top of this
+file: spoken read-back instead of the screenshot, "submit <company>" as the go-ahead.
+
 Submitting is real and uses an application credit. Never call `apply-with-custom-resume`
 without Sai's go-ahead for that job, or a batch go-ahead he gave in this conversation.
 

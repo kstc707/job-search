@@ -71,6 +71,8 @@ login-based ATSes and costs one credit per application.
 - `auto_apply/ledger.py`: JSONL log; dedupes on normalized URLs (tracking parameters
   stripped) and job ids; counts today's applications for the cap.
 - `auto_apply/cli.py`: `profile`, `gate`, `upload`, `record`, `list`.
+- `auto_apply/voice.py`: hands-free mode: spoken read-backs, the "submit <company>" check tied to a digest
+  of what was read, dictated-URL parsing, the hands-on list (see Hands-free mode below).
 - `auto_apply/filler/`: our own form filler (Greenhouse, Lever, Ashby).
   - `schema.py` reads the form from `boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}?questions=true`
     (field names there are the DOM ids on the form, so nothing is guessed from HTML).
@@ -91,6 +93,29 @@ login-based ATSes and costs one credit per application.
 The design follows how client-side autofill tools are built (per-ATS form locators, a
 field-category/answer layer, events that React forms register), learned by static analysis
 of public extensions; the code here is written from scratch.
+
+## Hands-free mode (voice)
+
+For when Sai can't touch the phone: he searches, picks a job or dictates a link, answers form questions and
+approves the submit by voice. The agent steps are in
+[`.claude/skills/voice-apply/SKILL.md`](../../.claude/skills/voice-apply/SKILL.md); the parts that must not
+rely on the agent's judgment are code in `auto_apply/voice.py`:
+
+| Screen workflow | Voice workflow | Enforced by |
+|---|---|---|
+| Sai reads the plan table and the screenshot | Every answer is read aloud (`filler.cli plan --speak`, `voice readback-tsenta`) | read-back text built from the same plan the filler sends |
+| Sai approves in chat | Sai says "submit <company>" | `--voice-confirm` / `voice confirm`: needs "submit" and the company, refuses "don't", "wait", "cancel"; a bare "yes" is refused |
+| Screenshot shows what was filled | The approval is tied to what he heard | a digest of every answer and the resume PDF; any change after the read-back, a different job, or a read-back older than 30 minutes refuses the submit |
+| Pasting a link | Dictating it ("jobs dot lever dot co slash acme") or "the link I emailed myself" | `voice url` turns speech into a URL; Gmail read finds the emailed one |
+| Captcha, password, verification link | Hands-on list for later | `voice later add/list` |
+
+Account creation: login-based ATSes go through Tsenta, which signs in or creates the account. Our filler only
+fills public, login-free forms, and passwords are never taken by voice (they would sit in the transcript).
+
+**On the phone:** the Claude app session is the agent; turn on the phone's own voice control (iOS Voice
+Control, Android Voice Access) so dictating, sending and having replies read aloud need no touch. Pick **Auto**
+mode and start the session with only this repository attached, so no permission prompt waits for a tap
+(`permissions/POLICY.md`).
 
 ## Setup
 

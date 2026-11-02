@@ -3,11 +3,16 @@
     python -m auto_apply.filler.cli plan <job url> --pdf runs/<job>/resume.pdf
     python -m auto_apply.filler.cli fill <job url> --pdf runs/<job>/resume.pdf [--submit]
 
+Hands-free (see auto_apply/voice.py): `plan --speak` prints every answer as sentences to read
+to Sai and remembers that read-back; `fill --submit --voice-confirm "<what Sai said>"` sends
+only if he said "submit <company>" after hearing exactly this plan.
+
 Greenhouse questions come from its public API; Lever and Ashby forms are read from the page.
 `plan` only reads the form and prints every field's answer and source.
 `fill` opens a browser, fills, verifies and screenshots; it submits only with --submit,
 and never when a required field is unanswered or a field failed to fill.
-Exit codes: 0 ok, 2 failed fill/submit, 3 blocked on answers you must provide.
+Exit codes: 0 ok, 2 failed fill/submit, 3 blocked on answers you must provide,
+4 spoken go-ahead refused (nothing was opened or sent).
 """
 
 from __future__ import annotations
@@ -19,6 +24,7 @@ from pathlib import Path
 
 from ..cli import _load_rules
 from ..guard import check_answers
+from .. import voice
 from .answers import AnswerBank
 from .domform import detect_ats, open_and_plan
 from .greenhouse import fill_form
@@ -52,10 +58,15 @@ def write_questions(plan, path: Path) -> None:
         "questions": rows}, indent=2))
 
 
-def _gate(plan, cmd: str, test_fill: bool = False, questions_file: Path | None = None) -> int | None:
+def _gate(plan, cmd: str, test_fill: bool = False, questions_file: Path | None = None,
+          spoken: "_Spoken | None" = None) -> int | None:
     """Print the plan; return an exit code if the run stops here, None to go on and fill."""
     _print_plan(plan)
     blocking = [r for r in plan if r.blocking]
+    if spoken is not None:
+        code = spoken.handle(plan, cmd, bool(blocking))
+        if code is not None:
+            return code
     if questions_file is not None:
         write_questions(plan, questions_file)
     if blocking:
@@ -73,6 +84,29 @@ def _gate(plan, cmd: str, test_fill: bool = False, questions_file: Path | None =
     return None
 
 
+class _Spoken:
+    """Voice mode: read the plan back (plan --speak) or check the go-ahead (fill --voice-confirm)."""
+
+    def __init__(self, runs: Path, url: str, pdf: Path, company: str, title: str,
+                 speak: bool, confirm: str | None):
+        self.runs, self.url, self.pdf = runs, url, pdf
+        self.company, self.title, self.speak, self.confirm = company, title, speak, confirm
+
+    def handle(self, plan, cmd: str, blocked: bool) -> int | None:
+        digest = voice.plan_digest(plan, self.pdf)
+        if self.speak:
+            print("\nSPOKEN:\n" + voice.speak_plan(plan, self.company, self.title))
+            if not blocked:
+                voice.record_readback(self.runs, self.url, self.company, self.title, digest, "filler", self.pdf)
+        if cmd == "fill" and self.confirm is not None and not blocked:
+            ok, reason = voice.check_confirmation(self.confirm, voice.Pending.load(self.runs), self.url, digest)
+            print(("CONFIRMED: " if ok else "REFUSED: ") + reason)
+            if not ok:
+                return 4
+            voice.Pending.clear(self.runs)
+        return None
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="filler")
     p.add_argument("cmd", choices=["plan", "fill"])
@@ -84,9 +118,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--submit", action="store_true")
     p.add_argument("--test-fill", action="store_true",
                    help="testing only: fill even when blocked (never submits), to check the filling itself")
+    p.add_argument("--company", help="company name to speak and to expect in 'submit <company>' "
+                                     "(default: from the form or the board slug)")
+    p.add_argument("--speak", action="store_true",
+                   help="voice mode: print the plan as sentences to read to Sai and remember the read-back")
+    p.add_argument("--voice-confirm", metavar="TRANSCRIPT",
+                   help="voice mode: Sai's words; --submit goes ahead only if he said 'submit <company>' "
+                        "after hearing this exact plan")
     a = p.parse_args(argv)
     if a.test_fill and a.submit:
         p.error("--test-fill never submits; drop --submit")
+    if a.voice_confirm is not None and not a.submit:
+        p.error("--voice-confirm is the go-ahead for --submit; add --submit")
 
     runs, pdf = Path(a.runs), Path(a.pdf)
     job_answers = Path(a.job_answers) if a.job_answers else pdf.parent / "answers.json"
@@ -108,7 +151,8 @@ def main(argv: list[str] | None = None) -> int:
         session = open_and_plan(a.url, ats, bank)
         try:
             print(f"{session.title} ({len(session.questions)} questions, read from the {ats} page)")
-            code = _gate(session.plan, a.cmd, a.test_fill, questions_file)
+            spoken = _spoken(a, runs, pdf, _company_from_url(a.url), session.title)
+            code = _gate(session.plan, a.cmd, a.test_fill, questions_file, spoken)
             if code is not None:
                 return code
             rep = session.fill(shot, submit=a.submit)
@@ -118,7 +162,8 @@ def main(argv: list[str] | None = None) -> int:
         data, questions = fetch_form(a.url)
         print(f"{data.get('company_name') or ''} — {data['title']} ({len(questions)} questions)")
         plan = bank.plan(questions)
-        code = _gate(plan, a.cmd, a.test_fill, questions_file)
+        spoken = _spoken(a, runs, pdf, data.get("company_name") or _company_from_url(a.url), data["title"])
+        code = _gate(plan, a.cmd, a.test_fill, questions_file, spoken)
         if code is not None:
             return code
         rep = fill_form(a.url, plan, shot, submit=a.submit)
@@ -131,6 +176,19 @@ def main(argv: list[str] | None = None) -> int:
         print("SUBMITTED" if rep.submitted else "NOT SUBMITTED", "-", rep.confirmation[:200])
         return 0 if rep.submitted else 2
     return 2 if rep.failed else 0
+
+
+def _company_from_url(url: str) -> str:
+    """Board slug as a stand-in company name (jobs.ashbyhq.com/acme-labs/... → "Acme Labs")."""
+    from urllib.parse import urlsplit
+    parts = [x for x in urlsplit(url).path.split("/") if x]
+    return parts[0].replace("-", " ").replace("_", " ").title() if parts else ""
+
+
+def _spoken(a, runs: Path, pdf: Path, company: str, title: str) -> "_Spoken | None":
+    if not (a.speak or a.voice_confirm is not None):
+        return None
+    return _Spoken(runs, a.url, pdf, a.company or company, title, a.speak, a.voice_confirm)
 
 
 if __name__ == "__main__":
