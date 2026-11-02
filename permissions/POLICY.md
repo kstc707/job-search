@@ -16,7 +16,7 @@ the same change.
 |---|---|---|
 | Notion | Read, search, create and edit pages, rows, properties, attachments and comments in the job-search workspace (tracker, memory page, Resume Knowledge Base, Projects, ledgers) | Never delete pages, databases or comments. Never set or clear `Submit?` or `Approved at` (Sai's toggles). |
 | Tsenta | Read everything: jobs, recommendations, balance, subscription, preferences, profiles, applications, inbox | |
-| Tsenta | `request-resume-upload`, `check-custom-resume`, `apply-with-custom-resume` | Only for a resume that passed every gate in `sai-resume-tailor` (exact title, `numbers.py`, ATS 80+, no `LOW ODDS`) and `cli gate`. At most 15 a day; keep 30 credits in reserve. |
+| Tsenta | `request-resume-upload`, `check-custom-resume`, `apply-with-custom-resume` | Only for a job with Tsenta matchScore 70 or more (Sai, 2026-11-02) whose resume passed every gate in `sai-resume-tailor` (exact title, `numbers.py`, ATS 80+, no `LOW ODDS`) and `cli gate`. Under 70: build it and leave it for Sai. At most 15 a day; keep 30 credits in reserve. |
 | Gmail | Search and read threads and messages | Read only, to sync outcomes. |
 | Indeed | `search_jobs`, `get_job_details` | |
 | Shell | The pipeline: `.venv/bin/python -m auto_apply ...`, venv setup and `pip install -r requirements.txt`, LaTeX builds (`pdflatex`, `build.sh`), `screen.py`, `numbers.py`, `pdftotext`, `pdftoppm`, `pdfinfo`, the `curl` PUT of a resume PDF to Tsenta's upload URL | Personal data stays in `projects/auto-apply/runs/` (git-ignored). |
