@@ -1,5 +1,7 @@
 # Apply step: the Submit? toggle is the filter
 
+**Read `permissions/POLICY.md` first** (what needs no permission, what needs Sai, what is never done); pass the same instruction to every agent you launch.
+
 Replaces step 3 ("Apply") of `agent/prompts/cycle.md`. Sai's rule (2026-10-14): when a row's
 **Submit? = Yes**, the agent drafts the resume if the row has none, checks it, and submits.
 No other approval. Rows without Submit? = Yes are never sent.
