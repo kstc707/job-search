@@ -1,0 +1,5 @@
+# deploy/rollback working area: release artifacts, data store, backups, pid and log files
+.deploy/
+# local dev data store (npm start)
+data/
+*.log

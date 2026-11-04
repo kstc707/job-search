@@ -1,0 +1,952 @@
+[
+  {
+    "report": "R1",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 349,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "13414",
+      "TotalValuation": "2687801065.01",
+      "MissingValuationCount": "64"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 432,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "40000",
+      "TotalValuation": "8084363803.33",
+      "MissingValuationCount": "195"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 209,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "3201",
+      "TotalValuation": "658080420.70",
+      "MissingValuationCount": "14"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 17,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "99",
+      "TotalValuation": "15886579.73",
+      "MissingValuationCount": "1"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "839",
+      "TotalValuation": "140467197.20",
+      "MissingValuationCount": "3"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 80,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "1874",
+      "TotalValuation": "375104659.36",
+      "MissingValuationCount": "10"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 48,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "379",
+      "TotalValuation": "310157652.21",
+      "MissingValuationCount": "1"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 6,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "7",
+      "TotalValuation": "864656.91",
+      "MissingValuationCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 4,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "5",
+      "TotalValuation": "61709.12",
+      "MissingValuationCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R1",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "PermitCount": "0",
+      "TotalValuation": "0.00",
+      "MissingValuationCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "9918",
+      "Assessed": "11637639.13",
+      "Collected": "9159325.61",
+      "Outstanding": "2478313.52"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "29368",
+      "Assessed": "34668078.62",
+      "Collected": "28957503.03",
+      "Outstanding": "5710575.59"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "2447",
+      "Assessed": "2814113.40",
+      "Collected": "1440122.26",
+      "Outstanding": "1373991.14"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 7,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "65",
+      "Assessed": "88034.34",
+      "Collected": "2685.52",
+      "Outstanding": "85348.82"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 7,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "648",
+      "Assessed": "781695.62",
+      "Collected": "607501.40",
+      "Outstanding": "174194.22"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "1443",
+      "Assessed": "1740417.16",
+      "Collected": "1363660.31",
+      "Outstanding": "376756.85"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 53,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "273",
+      "Assessed": "892406.13",
+      "Collected": "298298.23",
+      "Outstanding": "594107.90"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 2,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "2",
+      "Assessed": "412.46",
+      "Collected": "0.00",
+      "Outstanding": "412.46"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "0",
+      "Assessed": "0.00",
+      "Collected": "0.00",
+      "Outstanding": "0.00"
+    },
+    "ok": true
+  },
+  {
+    "report": "R2",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "0",
+      "Assessed": "0.00",
+      "Collected": "0.00",
+      "Outstanding": "0.00"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 40,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "2554",
+      "Balance": "2478313.52"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 40,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "6071",
+      "Balance": "5710575.59"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "1263",
+      "Balance": "1373991.14"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 1,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "58",
+      "Balance": "85348.82"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 5,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "208",
+      "Balance": "174194.22"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 40,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "414",
+      "Balance": "376756.85"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 20,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "192",
+      "Balance": "594107.90"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 1,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "2",
+      "Balance": "412.46"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "0",
+      "Balance": "0.00"
+    },
+    "ok": true
+  },
+  {
+    "report": "R3",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "FeeCount": "0",
+      "Balance": "0.00"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "11357",
+      "Passed": "7259",
+      "Failed": "2562",
+      "Partial": "711",
+      "Canceled": "816",
+      "Pending": "9"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "29605",
+      "Passed": "19145",
+      "Failed": "6541",
+      "Partial": "1826",
+      "Canceled": "2084",
+      "Pending": "9"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "2720",
+      "Passed": "1739",
+      "Failed": "597",
+      "Partial": "180",
+      "Canceled": "204",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 7,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "94",
+      "Passed": "59",
+      "Failed": "21",
+      "Partial": "9",
+      "Canceled": "5",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 7,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "892",
+      "Passed": "574",
+      "Failed": "196",
+      "Partial": "63",
+      "Canceled": "59",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 56,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "1572",
+      "Passed": "1042",
+      "Failed": "329",
+      "Partial": "92",
+      "Canceled": "109",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Partial": "0",
+      "Canceled": "0",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 6,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "7",
+      "Passed": "4",
+      "Failed": "1",
+      "Partial": "0",
+      "Canceled": "2",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Partial": "0",
+      "Canceled": "0",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R4",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Scheduled": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Partial": "0",
+      "Canceled": "0",
+      "Pending": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "12215",
+      "TotalDays": "211704",
+      "WithinTargetCount": "8115"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "37714",
+      "TotalDays": "698444",
+      "WithinTargetCount": "24694"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "3074",
+      "TotalDays": "59084",
+      "WithinTargetCount": "2003"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "96",
+      "TotalDays": "1893",
+      "WithinTargetCount": "58"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "839",
+      "TotalDays": "14511",
+      "WithinTargetCount": "558"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 10,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "1874",
+      "TotalDays": "34256",
+      "WithinTargetCount": "1223"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "0",
+      "TotalDays": "0",
+      "WithinTargetCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 5,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "6",
+      "TotalDays": "108",
+      "WithinTargetCount": "3"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "0",
+      "TotalDays": "0",
+      "WithinTargetCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R5",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "IssuedCount": "0",
+      "TotalDays": "0",
+      "WithinTargetCount": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "11357",
+      "Completed": "10532",
+      "Passed": "7259",
+      "Failed": "2562",
+      "Canceled": "816"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2023-01-01 to 2025-12-31 | district ALL | status ALL",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "29605",
+      "Completed": "27512",
+      "Passed": "19145",
+      "Failed": "6541",
+      "Canceled": "2084"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2024-01-01 to 2024-03-31 | district ALL | status ALL",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "2720",
+      "Completed": "2516",
+      "Passed": "1739",
+      "Failed": "597",
+      "Canceled": "204"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2024-07-01 to 2024-07-31 | district HBR | status ALL",
+    "rows": 16,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "94",
+      "Completed": "89",
+      "Passed": "59",
+      "Failed": "21",
+      "Canceled": "5"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2025-01-01 to 2025-06-30 | district CEN | status Finaled",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "892",
+      "Completed": "833",
+      "Passed": "574",
+      "Failed": "196",
+      "Canceled": "59"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2023-06-01 to 2024-05-31 | district ALL | status Expired",
+    "rows": 24,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "1572",
+      "Completed": "1463",
+      "Passed": "1042",
+      "Failed": "329",
+      "Canceled": "109"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2025-10-01 to 2025-12-31 | district ALL | status In Review",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "0",
+      "Completed": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Canceled": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2024-02-29 to 2024-02-29 | district NTH | status ALL",
+    "rows": 4,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "7",
+      "Completed": "5",
+      "Passed": "4",
+      "Failed": "1",
+      "Canceled": "2"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2025-12-01 to 2025-12-31 | district UNV | status Withdrawn",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "0",
+      "Completed": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Canceled": "0"
+    },
+    "ok": true
+  },
+  {
+    "report": "R6",
+    "params": "2022-01-01 to 2022-12-31 | district ALL | status ALL",
+    "rows": 0,
+    "rows_match_baseline": true,
+    "totals_match_control": true,
+    "pdf_matches_control": true,
+    "xlsx_matches_control": true,
+    "control": {
+      "Assigned": "0",
+      "Completed": "0",
+      "Passed": "0",
+      "Failed": "0",
+      "Canceled": "0"
+    },
+    "ok": true
+  }
+]

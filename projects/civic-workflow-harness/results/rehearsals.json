@@ -1,0 +1,150 @@
+{
+  "generatedAt": "2026-11-04T00:18:11.767Z",
+  "environment": {
+    "node": "v22.23.4",
+    "platform": "linux 6.18.44-fc-v230",
+    "cpus": 4,
+    "cpuModel": "Intel(R) Xeon(R) Processor @ 2.10GHz"
+  },
+  "summary": {
+    "runs": 3,
+    "allPassed": true,
+    "rollbackMs": {
+      "min": 369,
+      "median": 377,
+      "max": 388
+    },
+    "allWithinTenMinutes": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "startedAt": "2026-11-04T00:18:07.576Z",
+      "install": {
+        "ok": true,
+        "ms": 350,
+        "smoke": {
+          "total": 20,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 3
+        }
+      },
+      "seeded": 5,
+      "upgrade": {
+        "ok": true,
+        "ms": 386,
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "rollback": {
+        "ok": true,
+        "ms": 388,
+        "dataPath": "down-migration (post-upgrade records kept)",
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "checks": {
+        "runningVersionAfterRollback": "1.0.0",
+        "postUpgradePermitPreserved": true,
+        "seededPermitsVerifiedBySmoke": true
+      },
+      "ok": true,
+      "withinTenMinutes": true
+    },
+    {
+      "run": 2,
+      "startedAt": "2026-11-04T00:18:09.037Z",
+      "install": {
+        "ok": true,
+        "ms": 303,
+        "smoke": {
+          "total": 20,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 3
+        }
+      },
+      "seeded": 5,
+      "upgrade": {
+        "ok": true,
+        "ms": 369,
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "rollback": {
+        "ok": true,
+        "ms": 377,
+        "dataPath": "down-migration (post-upgrade records kept)",
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "checks": {
+        "runningVersionAfterRollback": "1.0.0",
+        "postUpgradePermitPreserved": true,
+        "seededPermitsVerifiedBySmoke": true
+      },
+      "ok": true,
+      "withinTenMinutes": true
+    },
+    {
+      "run": 3,
+      "startedAt": "2026-11-04T00:18:10.421Z",
+      "install": {
+        "ok": true,
+        "ms": 298,
+        "smoke": {
+          "total": 20,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 3
+        }
+      },
+      "seeded": 5,
+      "upgrade": {
+        "ok": true,
+        "ms": 362,
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "rollback": {
+        "ok": true,
+        "ms": 369,
+        "dataPath": "down-migration (post-upgrade records kept)",
+        "smoke": {
+          "total": 20,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "checks": {
+        "runningVersionAfterRollback": "1.0.0",
+        "postUpgradePermitPreserved": true,
+        "seededPermitsVerifiedBySmoke": true
+      },
+      "ok": true,
+      "withinTenMinutes": true
+    }
+  ]
+}
