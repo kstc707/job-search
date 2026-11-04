@@ -1,0 +1,46 @@
+{
+  "states": ["draft", "submitted", "fees_assessed", "paid", "in_review", "approved", "rejected", "issued", "finaled"],
+  "terminalStates": ["rejected", "finaled"],
+  "transitions": [
+    { "action": "submit", "from": ["draft"], "to": "submitted", "event": "Submit" },
+    { "action": "assess_fees", "from": ["submitted"], "to": "fees_assessed", "event": "AssessFees", "system": true },
+    { "action": "payment_received", "from": ["fees_assessed"], "to": "paid", "event": "PaymentReceived", "system": true },
+    { "action": "start_review", "from": ["paid"], "to": "in_review", "event": "StartReview" },
+    { "action": "approve", "from": ["in_review"], "to": "approved", "event": "Approve" },
+    { "action": "reject", "from": ["in_review"], "to": "rejected", "event": "Reject", "requires": ["reason"] },
+    { "action": "issue", "from": ["approved"], "to": "issued", "event": "Issue" },
+    { "action": "final_inspection_passed", "from": ["issued"], "to": "finaled", "event": "Final", "system": true }
+  ],
+  "eventHooks": {
+    "beforeSubmit": ["validateRequiredFields", "checkParcelZoning", "checkRequiredDocuments"],
+    "afterSubmit": ["advanceToFeeAssessment"],
+    "beforeAssessFees": ["calculateFees"],
+    "afterAssessFees": ["notify:fees_due"],
+    "afterPaymentReceived": ["notify:payment_received"],
+    "afterApprove": ["notify:permit_approved"],
+    "afterReject": ["notify:permit_rejected"],
+    "afterIssue": ["notify:permit_issued"],
+    "afterFinal": ["notify:permit_finaled"]
+  },
+  "permitTypes": {
+    "building": {
+      "requiredFields": ["applicant.name", "applicant.email", "parcelId", "description", "valuation"],
+      "requiredDocuments": ["site_plan", "construction_drawings"],
+      "allowedZoning": ["R1", "R2", "C1"]
+    },
+    "electrical": {
+      "requiredFields": ["applicant.name", "applicant.email", "parcelId", "description"],
+      "requiredDocuments": ["load_calculation"],
+      "allowedZoning": ["R1", "R2", "C1", "I1"]
+    },
+    "demolition": {
+      "requiredFields": ["applicant.name", "applicant.email", "parcelId", "description", "valuation"],
+      "requiredDocuments": ["site_plan", "asbestos_survey"],
+      "allowedZoning": ["R1", "R2", "C1", "I1"]
+    }
+  },
+  "documentTypes": ["site_plan", "construction_drawings", "load_calculation", "asbestos_survey", "elevation_certificate"],
+  "inspectionTypes": ["footing", "framing", "electrical_rough", "final"],
+  "floodZones": { "highRisk": ["A", "AE", "VE"], "extraDocuments": ["elevation_certificate"] },
+  "maxDocumentBytes": 5242880
+}

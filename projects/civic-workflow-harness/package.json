@@ -1,0 +1,22 @@
+{
+  "name": "civic-workflow-harness",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Mock permit workflow with payment, GIS, document and notification adapters, a fault-injecting downstream mock, and rehearsed deploy/rollback.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "start": "node src/server.js",
+    "mocks": "node mocks/downstream.js",
+    "smoke": "node smoke/run.js",
+    "package": "node deploy/package.js",
+    "deploy": "node deploy/deploy.js",
+    "rollback": "node deploy/rollback.js",
+    "rehearse": "node deploy/rehearse.js --runs 3",
+    "drill": "node deploy/drill-failed-upgrade.js"
+  },
+  "license": "MIT"
+}

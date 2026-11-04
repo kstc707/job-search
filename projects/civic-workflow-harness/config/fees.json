@@ -1,0 +1,9 @@
+{
+  "currency": "USD",
+  "technologyFeePercent": 4,
+  "types": {
+    "building": { "baseCents": 15000, "perThousandValuationCents": 750, "minimumCents": 20000 },
+    "electrical": { "baseCents": 9000 },
+    "demolition": { "baseCents": 12000, "perThousandValuationCents": 200, "minimumCents": 15000 }
+  }
+}

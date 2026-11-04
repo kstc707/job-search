@@ -21,6 +21,8 @@ boundaries.
 | [llm-data-analyst](projects/llm-data-analyst) | AI Engineering + Data Science (hybrid) | Working scaffold |
 | [gemma4-paper-track](projects/gemma4-paper-track) | AI Engineering research (Kaggle paper track) | Plan + tooling |
 | [auto-apply](projects/auto-apply) | AI Engineering (agent pipeline + guardrails) | Working, tested |
+| [permit-reporting-suite](projects/permit-reporting-suite) | Reporting / SQL Server (six reconciled reports, SQL Command tuning) | Working, tested |
+| [civic-workflow-harness](projects/civic-workflow-harness) | Integration testing (mock permit workflow, deploy + rollback) | Working, tested |
 
 ## Working on a project
 

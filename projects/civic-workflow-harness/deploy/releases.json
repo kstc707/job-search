@@ -1,0 +1,4 @@
+{
+  "1.0.0": { "schemaVersion": 1, "notes": "Permit workflow, payment/GIS/document/notification adapters, email notifications" },
+  "1.1.0": { "schemaVersion": 2, "notes": "GIS flood-zone flag (high-risk zones need an elevation certificate) and SMS notification preference; migration 002" }
+}
