@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-11-04T00:08:25+00:00",
+  "runs": 20,
+  "environment": {
+    "sql_server": "16.0.4305.5",
+    "python": "3.13.18",
+    "os": "Linux-6.18.44-fc-v230-x86_64-with-glibc2.39",
+    "cpus": 4,
+    "network": "SQL Server in a local Docker container (no real network hop)"
+  },
+  "scenarios": {
+    "full-year, all districts": {
+      "params": "2025-01-01 to 2025-12-31 | district ALL | status ALL",
+      "reports": {
+        "R1": {
+          "baseline_median_s": 0.4528,
+          "optimized_median_s": 0.0206,
+          "baseline_rows_fetched": 40000,
+          "optimized_rows_fetched": 349
+        },
+        "R2": {
+          "baseline_median_s": 0.4885,
+          "optimized_median_s": 0.025,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 56
+        },
+        "R3": {
+          "baseline_median_s": 0.476,
+          "optimized_median_s": 0.0143,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 40
+        },
+        "R4": {
+          "baseline_median_s": 0.3332,
+          "optimized_median_s": 0.0285,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 56
+        },
+        "R5": {
+          "baseline_median_s": 0.4504,
+          "optimized_median_s": 0.1198,
+          "baseline_rows_fetched": 40000,
+          "optimized_rows_fetched": 10
+        },
+        "R6": {
+          "baseline_median_s": 0.3233,
+          "optimized_median_s": 0.0425,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 24
+        }
+      },
+      "suite_baseline_median_s": 2.53,
+      "suite_optimized_median_s": 0.259,
+      "suite_baseline_runs_s": [
+        2.6,
+        2.617,
+        2.475,
+        2.512,
+        2.475,
+        2.514,
+        2.517,
+        2.527,
+        2.489,
+        2.553,
+        2.578,
+        2.533,
+        2.775,
+        2.59,
+        2.565,
+        2.508,
+        2.46,
+        2.635,
+        2.536,
+        2.451
+      ],
+      "suite_optimized_runs_s": [
+        0.347,
+        0.294,
+        0.25,
+        0.247,
+        0.282,
+        0.244,
+        0.246,
+        0.283,
+        0.305,
+        0.245,
+        0.268,
+        0.247,
+        0.303,
+        0.246,
+        0.327,
+        0.248,
+        0.276,
+        0.273,
+        0.249,
+        0.25
+      ]
+    },
+    "one quarter, one district": {
+      "params": "2025-04-01 to 2025-06-30 | district CEN | status ALL",
+      "reports": {
+        "R1": {
+          "baseline_median_s": 0.4456,
+          "optimized_median_s": 0.0066,
+          "baseline_rows_fetched": 40000,
+          "optimized_rows_fetched": 28
+        },
+        "R2": {
+          "baseline_median_s": 0.4795,
+          "optimized_median_s": 0.0105,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 7
+        },
+        "R3": {
+          "baseline_median_s": 0.4736,
+          "optimized_median_s": 0.0094,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 3
+        },
+        "R4": {
+          "baseline_median_s": 0.326,
+          "optimized_median_s": 0.0114,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 7
+        },
+        "R5": {
+          "baseline_median_s": 0.4501,
+          "optimized_median_s": 0.0139,
+          "baseline_rows_fetched": 40000,
+          "optimized_rows_fetched": 10
+        },
+        "R6": {
+          "baseline_median_s": 0.3216,
+          "optimized_median_s": 0.0139,
+          "baseline_rows_fetched": 30000,
+          "optimized_rows_fetched": 24
+        }
+      },
+      "suite_baseline_median_s": 2.508,
+      "suite_optimized_median_s": 0.067,
+      "suite_baseline_runs_s": [
+        2.697,
+        2.607,
+        2.507,
+        2.512,
+        2.508,
+        2.532,
+        2.579,
+        2.487,
+        2.447,
+        2.489,
+        2.535,
+        2.536,
+        2.522,
+        2.482,
+        2.566,
+        2.458,
+        2.466,
+        2.496,
+        2.474,
+        2.426
+      ],
+      "suite_optimized_runs_s": [
+        0.071,
+        0.077,
+        0.067,
+        0.065,
+        0.065,
+        0.063,
+        0.073,
+        0.076,
+        0.065,
+        0.072,
+        0.099,
+        0.066,
+        0.064,
+        0.065,
+        0.071,
+        0.086,
+        0.075,
+        0.068,
+        0.062,
+        0.065
+      ]
+    }
+  }
+}
