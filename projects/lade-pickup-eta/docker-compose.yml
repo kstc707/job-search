@@ -1,0 +1,22 @@
+# PostgreSQL + the API. Load data with `python -m lade_eta ingest` from the host (LADE_DATABASE_URL below).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: lade
+      POSTGRES_PASSWORD: lade
+      POSTGRES_DB: lade
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lade"]
+      interval: 5s
+  api:
+    build: .
+    environment:
+      LADE_DATABASE_URL: postgresql://lade:lade@db:5432/lade
+    ports: ["8000:8000"]
+    depends_on:
+      db: {condition: service_healthy}
+volumes:
+  pgdata:

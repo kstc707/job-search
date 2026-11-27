@@ -1,0 +1,5 @@
+data/
+artifacts/
+mlruns/
+mlflow.db
+.env

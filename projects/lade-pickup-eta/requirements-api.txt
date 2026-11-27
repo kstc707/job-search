@@ -1,0 +1,12 @@
+# Runtime dependencies of the API container only (requirements.txt adds training, dashboard and test tools).
+fastapi==0.165.0
+uvicorn==0.54.0
+pydantic-settings==2.16.3
+pandas==3.1.1
+pyarrow==26.0.1
+numpy
+lightgbm==4.7.0
+scikit-learn==1.9.1
+joblib
+psycopg[binary]==3.3.9
+psycopg-pool==3.3.0
