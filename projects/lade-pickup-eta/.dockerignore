@@ -1,0 +1,8 @@
+.venv
+data
+mlruns
+artifacts/*
+!artifacts/bundle.joblib
+tests
+dashboard
+**/__pycache__
